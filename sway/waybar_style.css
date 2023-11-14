@@ -1,0 +1,186 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "FiraCode Nerd Font";
+    font-size: 15px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(0,0,0,0);
+    color: #ffffff;
+}
+
+window#waybar.hidden {
+    opacity: 0.0;
+}
+
+#workspaces {
+    background-color: #282a36;
+    border-radius: 20px;
+    padding: 0 15px;
+}
+
+#workspaces button {
+    margin: 0 5px;
+    padding: 0;
+    background: transparent;
+    color: #ffffff;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button.persistent {
+    color: #4e4f57;
+}
+
+#workspaces button.focused {
+    border-bottom: 2px solid #ff79c6;
+    color: #ff79c6;
+}
+
+#workspaces button.urgent {
+    color: #ff5555;
+}
+
+#workspaces button:hover {
+    box-shadow: none;
+    text-shadow: none;
+    border-bottom: 2px solid #ff79c6;
+}
+
+#window {
+    background-color: #282a36;
+    border-radius: 20px;
+    padding: 1px 20px;
+}
+
+window#waybar.empty #window {  
+ background:none;  
+}
+
+#clock, #battery, #cpu, #memory, #temperature, #backlight, #network, #pulseaudio, #custom-media, #tray, #mode, #idle_inhibitor {
+    padding: 0 20px;
+    margin: 0 5px;
+    background-color: #282a36;
+    color: #ffffff;
+    border-radius: 20px;
+}
+
+#clock {
+    margin: 0;
+    border-radius: 0;
+    padding: 1px 0 0 20px;
+}
+
+#custom-launcher {
+    padding: 0 0 0 20px;
+    color: #ffffff;
+    background-color: #282a36;
+    border-radius: 20px 0 0 20px;
+    margin: 0 0;
+}
+
+#custom-notification {
+    padding: 0px 20px 0 20px;
+    color: #ffffff;
+    background-color: #282a36;
+    border-radius: 20px;
+    margin: 0 0;
+}
+
+#custom-keyboard {
+    padding: 0px 20px 0 20px;
+    color: #ffffff;
+    background-color: #282a36;
+    border-radius: 20px;
+    margin: 0 0;
+}
+
+#custom-powermenu {
+    padding: 0px 20px 0 20px;
+    color: #ffffff;
+    background-color: #282a36;
+    border-radius: 0 20px 20px 0;
+    margin: 0 0;
+}
+
+#battery {
+}
+
+#battery.charging {
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background: #f53c3c;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#cpu {
+}
+
+#memory {
+}
+
+#backlight {
+}
+
+#network {
+    margin: 0 0 0 5px;
+    padding:  0 10px 0 20px;
+    border-radius: 20px 0 0 20px;
+}
+
+#network.disconnected {
+}
+
+#pulseaudio {
+}
+
+#pulseaudio.muted {
+}
+
+#custom-media {
+}
+
+.custom-spotify {
+}
+
+.custom-vlc {
+}
+
+#temperature {
+}
+
+#temperature.critical {
+}
+
+#tray {
+    margin: 0;
+    border-radius: 0;
+}
+
+#idle_inhibitor {
+}
+
+#idle_inhibitor.activated {
+    color: #ff7955;
+}
+
+tooltip {
+    border: 1px solid #ff79c6;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #282a36;
+}
+
