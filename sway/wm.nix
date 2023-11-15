@@ -23,10 +23,11 @@ in {
       terminal = "~/.config/openTerminal.sh";
       bars = [{ command = "waybar"; }];
       menu = "wofi --show drun -I -m -a -p 'Search ...'";
+      focus.newWindow = "focus";
       gaps.inner = 10;
       gaps.smartBorders = "on";
       fonts = {
-	      names = [ "DroidSansMono"];
+	      names = [ "DroidSansM Nerd Font"];
 	      size = 11.0;
       };
       keybindings = pkgs.lib.mkOptionDefault {
@@ -43,6 +44,12 @@ in {
       window.hideEdgeBorders = "smart";
       window.titlebar = false;
       window.commands = [
+      {
+	      command = "focus";
+	      criteria = {
+	        urgent = "latest";
+	      };
+      }
       {
 	      command = "floating enable";
 	      criteria = {

@@ -1,10 +1,15 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
       ../sway/sway.nix
   ];
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig.enable = true; 
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "slack"
+      "lens-6.3.0"
+  ];
+
   home.stateVersion = "23.05";
   home.packages = with pkgs; [
     # programming
@@ -12,10 +17,12 @@
     # utils cli
       jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
     # clouds
-      google-cloud-sdk-gce
+      mysql-workbench lens awscli2 google-cloud-sdk-gce
     # utils gui
       octave
       libreoffice
+    # comms
+      slack
     # sync
       maestral
       maestral-gui
@@ -35,8 +42,8 @@
   home.file.".config/nvim/lua/user" = {
     recursive = true;
     source = builtins.fetchGit {
-		  # url = "https://github.com/SMFloris/astronvim-config";
-		  url = "/home/flow/Projects/astronvim-config";
+		  url = "https://github.com/SMFloris/astronvim-config";
+		  # url = "/home/flow/Projects/astronvim-config";
 		  ref = "try_orgmode";
 	  };
   };

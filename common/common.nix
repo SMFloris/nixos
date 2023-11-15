@@ -112,7 +112,17 @@
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })
     corefonts
+    cantarell-fonts
+    twitter-color-emoji
+    source-code-pro
+    gentium
   ];
+  fonts.fontconfig.defaultFonts = {
+      serif = [ "Gentium Plus" ];
+      sansSerif = [ "Cantarell" ];
+      monospace = [ "Source Code Pro" ];
+      emoji = [ "Twitter Color Emoji" ];
+  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

@@ -6,6 +6,10 @@
 @define-color current-line rgb(68, 71, 90);
 @define-color comment rgb(98, 114, 164);
 
+* {
+  font-family: "FiraCode Nerd Font";
+}
+
 .notification-row {
   transition: all 200ms ease;
   outline: none;
@@ -37,7 +41,7 @@
 }
 
 .notification-row {
-	opacity: 0.5;
+	opacity: 1;
 	margin: -5px;
 }
 
@@ -45,9 +49,8 @@
   transition: all 200ms ease;
   border-radius: 8px;
   margin: 12px 7px 0px 7px;
-  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3);
   padding: 0;
-  background: @background-alpha;
 }
 
 /* Uncomment to enable specific urgency colors
@@ -166,7 +169,7 @@
 .body {
   font-size: 15px;
   font-weight: normal;
-  background: transparent;
+  background: @background-alpha;
   color: @foreground;
   text-shadow: none;
 }
@@ -293,8 +296,8 @@
 }
 .widget-mpris-title {
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
 }
 .widget-mpris-subtitle {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
