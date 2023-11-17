@@ -71,7 +71,11 @@
     xfce.ristretto
     vlc
   ];
-
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
   programs.light.enable = true;
   programs.dconf.enable = true;
 
@@ -106,8 +110,11 @@
   };
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      # Add additional package names here
-      "corefonts"
+        # Add additional package names here
+        "corefonts"
+        "steam"
+        "steam-original"
+        "steam-run"
   ];
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })

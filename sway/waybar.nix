@@ -2,13 +2,33 @@
 	enable = true;
 	settings = {
 		mainbar = {
-			layer = "top";
+			layer = "bottom";
 			position = "top";
 			height = 40;
 			margin = "10 10 0 10";
-			modules-left = ["custom/notification" "sway/window" "sway/mode"];
+			modules-left = ["sway/window" "sway/mode"];
 			modules-center = ["sway/workspaces"];
-			modules-right = ["memory" "pulseaudio" "battery" "sway/language" "network" "tray" "clock" "custom/powermenu"];
+			modules-right = ["idle_inhibitor" "memory" "pulseaudio" "battery" "sway/language" "network" "tray" "clock" "custom/notification"];
+			"custom/notification" = {
+      	tooltip = false;
+      	format = "";
+      	format-icons = {
+        	"notification" = "";
+        	"none" = "";
+        	"dnd-notification" = "";
+        	"dnd-none" = "";
+        	"inhibited-notification" = "";
+        	"inhibited-none" = "";
+        	"dnd-inhibited-notification" = "";
+        	"dnd-inhibited-none" = "";
+      	};
+      	return-type = "json";
+      	exec-if = "which swaync-client";
+      	exec = "swaync-client -swb";
+      	on-click = "swaync-client -t -sw";
+      	on-click-right = "swaync-client -d -sw";
+      	escape = true;
+			};
 			"sway/workspaces" = {
 			  disable-scroll = true;
 				disable-markup = true;
@@ -30,26 +50,6 @@
 				  focused = "";
 				  default = "";
 				};
-			};
-			"custom/notification" = {
-        tooltip = false;
-        format = "{icon}";
-        format-icons = {
-          "notification" = "<span foreground='red'><sup></sup></span>";
-          "none" = "<span foreground='#282a36'><sup></sup></span>";
-          "dnd-notification" = "<span foreground='red'><sup></sup></span>";
-          "dnd-none" = "";
-          "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-          "inhibited-none" = "";
-          "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-          "dnd-inhibited-none" = "";
-        };
-        return-type = "json";
-        exec-if = "which swaync-client";
-        exec = "swaync-client -swb";
-        on-click = "swaync-client -t -sw";
-        on-click-right = "swaync-client -d -sw";
-        escape = true;
 			};
 			"sway/window" = {
 				format = "{}";

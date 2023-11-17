@@ -7,17 +7,18 @@
   fonts.fontconfig.enable = true; 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "slack"
-      "lens-6.3.0"
+      "postman"
+      "mongodb-compass"
   ];
 
   home.stateVersion = "23.05";
   home.packages = with pkgs; [
     # programming
-      neovim cargo alacritty git gcc
+      neovim cargo nodejs alacritty git gcc
     # utils cli
-      jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
+      ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
     # clouds
-      mysql-workbench lens awscli2 google-cloud-sdk-gce
+      mysql-workbench mongodb-compass openlens postman awscli2 google-cloud-sdk-gce
     # utils gui
       octave
       libreoffice

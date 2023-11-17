@@ -81,11 +81,17 @@ window#waybar.empty #window {
 }
 
 #custom-notification {
-    padding: 0px 15px 0 15px;
-    margin: 0 5px 0 0;
-    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 20px 0 10px;
     background-color: #282a36;
-    border-radius: 20px;
+    color: #ff79c6;
+    border-radius: 0 20px 20px 0;
+}
+
+#custom-notification.notification {
+    text-shadow: 0 -1px rgba(255, 255, 255, 0.1);
+    color: #ff5555;
 }
 
 #custom-keyboard {
@@ -182,7 +188,7 @@ window#waybar.empty #window {
 }
 
 #idle_inhibitor {
-    padding: 0 5px;
+    padding: 0 15px 0 20px;
     margin: 0 0;
     background-color: #282a36;
     color: #ffffff;
