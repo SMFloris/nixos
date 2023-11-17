@@ -27,10 +27,9 @@
     source = ./hosts/gastly/modem/8086-fcc_unlock.py;
   };
 
-  services.udev.extraRules = with pkgs; ''
-SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="${writeShellScriptBin "udev_on_bat" (builtins.readFile ./hosts/gastly/udev_on_bat.sh)}"
-SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="${writeShellScriptBin "udev_on_ac" (builtins.readFile ./hosts/gastly/udev_on_ac.sh)}"
-'';
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="leds", KERNEL=="platform::micmute" ATTR{trigger}="audio-micmute"
+  '';
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

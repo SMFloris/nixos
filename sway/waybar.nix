@@ -63,7 +63,7 @@
 				interval = 1;
 				format = "<span color=\"#f1fa8c\"></span> {}%";
 				tooltip = false;
-				on-click = "alacritty --class Float -e htop";
+				on-click = "foot --app-id Float -e htop";
 			};
 			disk = {
 				interval = 60;
@@ -103,7 +103,7 @@
 					  "<span color=\"#50fa7b\"></span>" 
 					  "<span color=\"#50fa7b\"></span>" 
 				];
-				on-click = "alacritty --class Float -e sudo powertop";
+				on-click = "foot --app-id Float -e sudo powertop";
 			};
 			"sway/language" = {
         format = "<span color=\"#ff6699\"></span> {shortDescription}";
@@ -157,10 +157,10 @@
 				format-ethernet = "Wired ";
 				format-disconnected = " ⚠";
 				tooltip = false;
-				on-click = "alacritty --class Float -e nmtui";
+				on-click = "foot --app-id Float -e nmtui";
 			};
 			"custom/launcher" = {
-				on-click = "alacritty --config ~/.config/foot/foot-solid.ini --app-id=launcher ~/.config/sway/scripts/launcher.sh";
+				on-click = "foot --config ~/.config/foot/foot-solid.ini --app-id=launcher ~/.config/sway/scripts/launcher.sh";
 				format = "<span color=\"#ff79c6\">  </span>";
 				tooltip = false;
 			};

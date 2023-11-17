@@ -14,7 +14,7 @@
   home.stateVersion = "23.05";
   home.packages = with pkgs; [
     # programming
-      neovim cargo nodejs alacritty git gcc
+      neovim cargo nodejs foot git gcc
     # utils cli
       ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
     # clouds
@@ -48,5 +48,6 @@
 		  ref = "try_orgmode";
 	  };
   };
-  home.file.".config/alacritty/alacritty.yml".source = ./alacritty.yml;
+  # home.file.".config/alacritty/alacritty.yml".source = ./alacritty.yml;
+  home.file.".config/foot/foot.ini".source = ./foot.ini;
 }

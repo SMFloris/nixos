@@ -5,7 +5,7 @@ terminalLastSession=$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(
 
 if [[ ${terminalLastSession} =~ ^${host}.* ]]; then
   wd=$(echo "$terminalLastSession" | cut -d':' -f2)
-  alacritty --working-directory ${wd/'~'/"$HOME"}
+  foot --working-directory ${wd/'~'/"$HOME"}
 else
-  alacritty
+  foot
 fi

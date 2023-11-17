@@ -12,7 +12,7 @@
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
-  boot.kernelParams = ["mem_sleep_default=deep" "amd-pstate=passive"]; 
+  boot.kernelParams = ["mem_sleep_default=deep" "amd-pstate=active"]; 
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/32d335e1-2d46-4013-b514-f5bee5b8488f";

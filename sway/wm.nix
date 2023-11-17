@@ -89,6 +89,7 @@ in {
       ];
     };
     extraConfig = ''
+      #other
       exec swayidle -w timeout 300 "swaylock-fancy --daemonize" timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" before-sleep "swaylock-fancy --daemonize"
 
       input "type:keyboard" {
@@ -128,7 +129,7 @@ in {
       exec_always /home/flow/.config/waybar/setBackground.sh
 
       # neovim orgmode
-      exec alacritty --title NeoOrg --class NeoOrg --working-directory ~/Dropbox/NeoOrg -e nvim .
+      exec foot --title NeoOrg --app-id NeoOrg --working-directory ~/Dropbox/NeoOrg -e nvim .
       exec maestral start
       '';
 }
