@@ -18,7 +18,7 @@
     # utils cli
       ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
     # clouds
-      mysql-workbench mongodb-compass openlens postman awscli2 google-cloud-sdk-gce
+      terraform kubectl mysql-workbench mongodb-compass openlens postman awscli2 google-cloud-sdk-gce
     # utils gui
       octave
       libreoffice
