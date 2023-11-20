@@ -3,6 +3,12 @@
 {
   boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.extraHosts =
+  ''
+    127.0.0.1 api.frisbo.internal
+    127.0.0.1 superadmin.frisbo.internal
+    127.0.0.1 beta.frisbo.internal
+  '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
 
@@ -71,7 +77,9 @@
     powertop
     xfce.ristretto
     vlc
+    gcr
   ];
+  programs.seahorse.enable = true;
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play

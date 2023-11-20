@@ -8,7 +8,7 @@
 			margin = "10 10 0 10";
 			modules-left = ["sway/window" "sway/mode"];
 			modules-center = ["sway/workspaces"];
-			modules-right = ["idle_inhibitor" "memory" "pulseaudio" "battery" "sway/language" "network" "tray" "clock" "custom/notification"];
+			modules-right = ["idle_inhibitor" "memory" "pulseaudio" "battery" "sway/language" "tray" "clock" "custom/notification"];
 			"custom/notification" = {
       	tooltip = false;
       	format = "";

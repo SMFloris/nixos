@@ -4,14 +4,17 @@
   imports = [
       ../sway/sway.nix
   ];
+  home.stateVersion = "23.05";
   fonts.fontconfig.enable = true; 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "slack"
       "postman"
       "mongodb-compass"
   ];
-
-  home.stateVersion = "23.05";
+  services.gnome-keyring = {
+    enable = true;
+    components = ["pkcs11" "secrets" "ssh"];
+  };
   home.packages = with pkgs; [
     # programming
       neovim cargo nodejs foot git gcc
@@ -20,6 +23,7 @@
     # clouds
       terraform kubectl mysql-workbench mongodb-compass openlens postman awscli2 google-cloud-sdk-gce
     # utils gui
+      meld
       octave
       libreoffice
     # comms
@@ -32,6 +36,7 @@
       xfce.thunar-volman
       sway-contrib.grimshot
       gnome.gnome-calculator
+      networkmanagerapplet
   ];
   home.file.".config/nvim" = {
 	  recursive = true;

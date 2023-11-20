@@ -91,6 +91,7 @@ in {
     extraConfig = ''
       #other
       exec swayidle -w timeout 300 "swaylock-fancy --daemonize" timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" before-sleep "swaylock-fancy --daemonize"
+      exec_always nm-applet --indicator
 
       input "type:keyboard" {
         xkb_layout us,ro
