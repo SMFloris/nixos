@@ -78,6 +78,7 @@
     xfce.ristretto
     vlc
     gcr
+    xdg-utils
   ];
   programs.seahorse.enable = true;
   programs.steam = {
