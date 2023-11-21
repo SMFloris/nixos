@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 
-{
+let
+  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+in {
   boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
   networking.extraHosts =
@@ -79,6 +81,7 @@
     vlc
     gcr
     xdg-utils
+    unstable.ollama
   ];
   programs.seahorse.enable = true;
   programs.steam = {
