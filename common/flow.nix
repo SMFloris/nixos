@@ -36,6 +36,7 @@
       xfce.thunar-volman
       sway-contrib.grimshot
       gnome.gnome-calculator
+      gnome.gnome-disk-utility
       networkmanagerapplet
   ];
   home.file.".config/nvim" = {
