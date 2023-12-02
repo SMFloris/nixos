@@ -1,8 +1,6 @@
 { config, pkgs, lib, ... }:
 
-let
-  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-in {
+{
   boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
   networking.extraHosts =
@@ -48,6 +46,7 @@ in {
   # hardware.pulseaudio.enable = true;
   security.rtkit.enable = true;
   services.udisks2.enable = true;
+  services.blueman.enable = true;
   services.pipewire = {
 	  enable = true;
 	  alsa.enable = true;
@@ -83,8 +82,9 @@ in {
     vlc
     gcr
     xdg-utils
+    e2fsprogs
     modem-manager-gui
-    unstable.ollama
+    ollama
   ];
   programs.seahorse.enable = true;
   programs.steam = {
@@ -115,6 +115,7 @@ in {
     };
     portal = {
       enable = true;
+      config.common.default = "*";
       extraPortals = with pkgs; [
         xdg-desktop-portal-wlr
         xdg-desktop-portal-gtk
@@ -133,7 +134,7 @@ in {
         "steam-original"
         "steam-run"
   ];
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })
     corefonts
     cantarell-fonts

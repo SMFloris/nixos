@@ -7,6 +7,7 @@
   home.stateVersion = "23.05";
   fonts.fontconfig.enable = true; 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "terraform"
       "slack"
       "postman"
       "mongodb-compass"
@@ -21,7 +22,7 @@
     # utils cli
       ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
     # clouds
-      terraform kubectl mysql-workbench mongodb-compass openlens postman awscli2 google-cloud-sdk-gce
+      terraform kubectl mysql-workbench mongodb-compass openlens awscli2 google-cloud-sdk-gce
     # utils gui
       system-config-printer
       meld

@@ -18,6 +18,12 @@
       fsType = "ext4";
     };
 
+  fileSystems."/nvme1n1" =
+  {
+    device = "/dev/disk/by-uuid/6041ee02-4d01-46c0-8cbe-151ceca1d57e";
+    fsType = "ext4";
+  };
+
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/9A36-2E2E";
       fsType = "vfat";
@@ -48,4 +54,6 @@
       libvdpau-va-gl
     ];
   };
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true;
 }

@@ -17,7 +17,7 @@ let
 in {
     enable = true;
     wrapperFeatures.gtk = true;
-    systemdIntegration = true;
+    systemd.enable = true;
     config = rec {
       modifier = "Mod4";
       terminal = "~/.config/openTerminal.sh";
