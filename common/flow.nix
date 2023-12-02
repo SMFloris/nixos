@@ -23,6 +23,7 @@
     # clouds
       terraform kubectl mysql-workbench mongodb-compass openlens postman awscli2 google-cloud-sdk-gce
     # utils gui
+      system-config-printer
       meld
       octave
       libreoffice
@@ -49,11 +50,12 @@
   home.file.".config/nvim/lua/user" = {
     recursive = true;
     source = builtins.fetchGit {
-		  url = "https://github.com/SMFloris/astronvim-config";
-		  # url = "/home/flow/Projects/astronvim-config";
+		  # url = "https://github.com/SMFloris/astronvim-config";
+		  url = "/home/flow/Projects/astronvim-config";
 		  ref = "try_orgmode";
 	  };
   };
+  home.file.".config/nvim/syntax/c3.vim".source = ./vim/syntax/c3.vim;
   # home.file.".config/alacritty/alacritty.yml".source = ./alacritty.yml;
   home.file.".config/foot/foot.ini".source = ./foot.ini;
 }

@@ -47,6 +47,5 @@
       vaapiVdpau
       libvdpau-va-gl
     ];
-
   };
 }

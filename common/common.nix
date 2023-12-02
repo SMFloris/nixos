@@ -35,6 +35,7 @@ in {
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
+  services.fwupd.enable = true;
   virtualisation = {
     docker = {
       enable = true;
@@ -82,6 +83,7 @@ in {
     vlc
     gcr
     xdg-utils
+    modem-manager-gui
     unstable.ollama
   ];
   programs.seahorse.enable = true;
@@ -126,6 +128,7 @@ in {
     builtins.elem (lib.getName pkg) [
         # Add additional package names here
         "corefonts"
+        "samsung-UnifiedLinuxDriver"
         "steam"
         "steam-original"
         "steam-run"
@@ -153,9 +156,27 @@ in {
   # };
 
   # List services that you want to enable:
+  services.printing.enable = true;
+  services.printing.drivers = [ 
+    pkgs.hplip 
+    pkgs.samsung-unified-linux-driver
+    pkgs.splix 
+  ];
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+    openFirewall = true;
+    publish = {
+      enable = true;
+      userServices = true;
+    };
+  };
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = true;
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

@@ -90,7 +90,7 @@ in {
     };
     extraConfig = ''
       #other
-      exec swayidle -w timeout 300 "swaylock-fancy --daemonize" timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" before-sleep "swaylock-fancy --daemonize"
+      exec swayidle -w timeout 300 "swaylock-fancy --daemonize" timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" before-sleep "swaylock-fancy --daemonize" timeout 600 "systemctl suspend"
       exec_always nm-applet --indicator
 
       input "type:keyboard" {

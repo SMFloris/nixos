@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import hashlib
 import sys
+import logging
+
+logging.basicConfig(filename="/tmp/fccunlocker.log", level=logging.INFO)
+logging.info("WORKS!");
 
 salt = {
         '8086:7560': b"\xbb\x23\xbe\x7f",
@@ -15,18 +19,25 @@ ctldevs = sys.argv[2:]
 # FIXME
 ctldev='wwan0at0'
 
+logging.info(devid);
+logging.info(dbusd);
+logging.info(ctldevs);
+logging.info(ctldev);
+logging.info("START");
+
 def read_to_cr(c):
     data = c.readline()
     nocr = data.strip(b'\r\n')
     if nocr == b'':
         return read_to_cr(c)
-    print(f'response from modem: {nocr.decode("utf-8")}')
+    logging.info(f'response from modem: {nocr.decode("utf-8")}')
     if nocr == b'ERROR':
+        logging.info("READ ERROR")
         sys.exit(1)
     return nocr
 
 def query_modem(c, query):
-    print(f'query modem: {query.decode("utf-8")}')
+    logging.info(f'query modem: {query.decode("utf-8")}')
     c.write(query)
     res = read_to_cr(c)
     if res != b'OK':
@@ -36,6 +47,7 @@ def query_modem(c, query):
 with open(f'/dev/{ctldev}', 'r+b', buffering=0) as c:
     locked = query_modem(c, b'at+gtfcclockstate\r')
     if locked == b'1':
+        logging.info(f'LOCKED FRSM')
         sys.exit(0)
 
     # > at+gtfcclockgen
@@ -64,6 +76,8 @@ with open(f'/dev/{ctldev}', 'r+b', buffering=0) as c:
     #< OK
     locked = query_modem(c, b'at+gtfcclockstate\r')
     if locked == b'1':
+        logging.info(f'LOCKED FRSM 2')
         sys.exit(0)
 
+logging.info("FINISH")
 sys.exit(1)

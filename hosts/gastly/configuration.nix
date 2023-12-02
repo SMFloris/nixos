@@ -23,7 +23,7 @@
   networking.networkmanager.enableFccUnlock = true;
 
   environment.etc."ModemManager/fcc-unlock.d/8086:7560" = {
-    mode = "0777";
+    mode = "0755";
     source = ./hosts/gastly/modem/8086-fcc_unlock.py;
   };
 
