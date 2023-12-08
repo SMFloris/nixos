@@ -57,6 +57,8 @@
   };
 
   services.tumbler.enable = true;
+  services.gvfs.enable = true; # Mount, trash, and other functionalities
+
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;

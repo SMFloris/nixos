@@ -24,6 +24,7 @@
     # clouds
       terraform kubectl mysql-workbench mongodb-compass openlens awscli2 google-cloud-sdk-gce
     # utils gui
+      insomnia
       system-config-printer
       meld
       octave
@@ -36,6 +37,7 @@
     # extra
       xfce.thunar
       xfce.thunar-volman
+      xfce.thunar-archive-plugin
       sway-contrib.grimshot
       gnome.gnome-calculator
       gnome.gnome-disk-utility
