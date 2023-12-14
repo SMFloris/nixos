@@ -53,8 +53,8 @@
   home.file.".config/nvim/lua/user" = {
     recursive = true;
     source = builtins.fetchGit {
-		  url = "https://github.com/SMFloris/astronvim-config";
-		  # url = "/home/flow/Projects/astronvim-config";
+		  # url = "https://github.com/SMFloris/astronvim-config";
+		  url = "/home/flow/Projects/astronvim-config";
 		  ref = "try_orgmode";
 	  };
   };

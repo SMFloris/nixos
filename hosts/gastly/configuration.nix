@@ -20,12 +20,12 @@
   networking.hostName = "gastly"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enableFccUnlock = true;
-
-  environment.etc."ModemManager/fcc-unlock.d/8086:7560" = {
-    mode = "0755";
-    source = ./hosts/gastly/modem/8086-fcc_unlock.py;
-  };
+  networking.networkmanager.fccUnlockScripts = [
+      {
+        id = "8086:7560";
+        path = "/etc/nixos/hosts/gastly/modem/8086-fcc_unlock.py";
+      }
+  ];
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="leds", KERNEL=="platform::micmute" ATTR{trigger}="audio-micmute"

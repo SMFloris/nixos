@@ -87,6 +87,7 @@
     e2fsprogs
     modem-manager-gui
     ollama
+    gamescope
   ];
   programs.seahorse.enable = true;
   programs.steam = {
@@ -127,6 +128,7 @@
       };
     };
   };
+  # steam
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
         # Add additional package names here
@@ -136,6 +138,22 @@
         "steam-original"
         "steam-run"
   ];
+  nixpkgs.config.packageOverrides = pkgs: {
+    steam = pkgs.steam.override {
+      extraPkgs = pkgs: with pkgs; [
+        xorg.libXcursor
+        xorg.libXi
+        xorg.libXinerama
+        xorg.libXScrnSaver
+        libpng
+        libpulseaudio
+        libvorbis
+        stdenv.cc.cc.lib
+        libkrb5
+        keyutils
+      ];
+    };
+  };
   fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })
     corefonts
