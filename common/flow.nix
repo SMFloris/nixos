@@ -24,6 +24,7 @@
     # clouds
       terraform kubectl mysql-workbench mongodb-compass openlens awscli2 google-cloud-sdk-gce
     # utils gui
+      wdisplays
       insomnia
       system-config-printer
       meld
