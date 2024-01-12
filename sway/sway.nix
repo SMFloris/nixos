@@ -4,6 +4,8 @@
   home.packages = with pkgs; [
     # sway
       swaylock-fancy swayidle wl-clipboard wl-clipboard-x11 swaynotificationcenter glib dracula-theme dracula-icon-theme wbg
+    # wayland
+      wayvnc
   ];
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file.".config/waybar/powermenu.sh".source = ./powermenu.sh;

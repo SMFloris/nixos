@@ -20,7 +20,7 @@
     # programming
       neovim cargo nodejs foot git gcc
     # utils cli
-      ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc wev
+      ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc 
     # clouds
       terraform kubectl mysql-workbench mongodb-compass openlens awscli2 google-cloud-sdk-gce
     # utils gui
@@ -34,6 +34,9 @@
     # sync
       maestral
       maestral-gui
+    # keyboard
+      ttyper
+      wev vial qmk
     # extra
       xfce.thunar
       xfce.thunar-volman
@@ -53,8 +56,8 @@
   home.file.".config/nvim/lua/user" = {
     recursive = true;
     source = builtins.fetchGit {
-		  # url = "https://github.com/SMFloris/astronvim-config";
-		  url = "/home/flow/Projects/astronvim-config";
+		  url = "https://github.com/SMFloris/astronvim-config";
+		  # url = "/home/flow/Projects/astronvim-config";
 		  ref = "try_orgmode";
 	  };
   };
