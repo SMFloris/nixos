@@ -1,5 +1,10 @@
 { pkgs, lib, ... }:
 
+let 
+   thunarWithPlugins = pkgs.xfce.thunar.override {
+          thunarPlugins = [pkgs.xfce.thunar-archive-plugin];
+  };
+in
 {
   imports = [
       ../sway/sway.nix
@@ -39,7 +44,7 @@
       ttyper
       wev vial qmk
     # extra
-      xfce.thunar
+      thunarWithPlugins
       xfce.thunar-volman
       xfce.thunar-archive-plugin
       sway-contrib.grimshot
