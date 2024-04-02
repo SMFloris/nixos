@@ -23,9 +23,20 @@
   networking.networkmanager.fccUnlockScripts = [
       {
         id = "8086:7560";
-        path = "/etc/nixos/hosts/gastly/modem/8086-fcc_unlock.py";
+        path = "/etc/nixos/hosts/gastly/modem/8086:7560";
+      }
+      {
+        id = "8086";
+        path = "/etc/nixos/hosts/gastly/modem/8086:7560";
       }
   ];
+
+  systemd.services.ModemManager = {
+    aliases = [ "dbus-org.freedesktop.ModemManager1.service" ];
+    wantedBy = [ "multi-user.target" "network.target" ];
+    enable = true;
+    path = [];
+  };
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="leds", KERNEL=="platform::micmute" ATTR{trigger}="audio-micmute"

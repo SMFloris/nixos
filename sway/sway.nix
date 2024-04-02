@@ -12,6 +12,15 @@
   home.file.".config/waybar/setBackground.sh".source = ./setBackground.sh;
   home.file.".config/swaync/style.css".source = ./swaync_style.css;
   home.file.".config/swaync/config.json".source = ./swaync_config.json;
+  xfconf= {
+    enable = true;
+    settings = {
+      # https://gitlab.xfce.org/xfce/thunar/-/blob/master/thunar/thunar-preferences.c
+      thunar = {
+        "misc-full-path-in-window-title" = true;
+      };
+    };
+  };
   dconf = {
       enable = true;
       settings = {

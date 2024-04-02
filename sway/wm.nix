@@ -121,6 +121,7 @@ in {
       bindsym Mod4+Print  exec "grimshot --notify copy area"
 
       bindsym Mod4+Tab workspace back_and_forth
+      bindsym Mod4+Shift+Tab focus next
       bindsym Mod4+grave workspace number 10
       bindsym Mod4+Shift+grave move container to workspace number 10
       bindsym Mod4+0 workspace number 10

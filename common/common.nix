@@ -18,6 +18,7 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
@@ -81,16 +82,15 @@
     firefox
     tree
     powertop
-    xfce.ristretto
     vlc
     gcr
     xdg-utils
+    coreutils
+    moreutils
     e2fsprogs
-    modem-manager-gui
-    ollama
-    gamescope
     unzip
   ];
+  programs.nix-ld.enable = true;
   programs.seahorse.enable = true;
   programs.steam = {
     enable = true;
@@ -99,6 +99,7 @@
   };
   programs.light.enable = true;
   programs.dconf.enable = true;
+  programs.xfconf.enable = true;
 
   security.polkit.enable = true;
   security.pam.services.swaylock = {
@@ -108,12 +109,12 @@
       mime = {
 	    enable = true;
       	addedAssociations = {
-	        "application/pdf" = "firefox.desktop";
+	        "application/pdf" = "org.gnome.Evince.desktop";
 	        "image/png" = "org.xfce.ristretto.desktop";
 	        "image/jpg" = "org.xfce.ristretto.desktop";
       };
       	defaultApplications = {
-	        "application/pdf" = "firefox.desktop";
+	        "application/pdf" = "org.gnome.Evince.desktop";
 	        "image/png" = "org.xfce.ristretto.desktop";
 	        "image/jpg" = "org.xfce.ristretto.desktop";
       };
@@ -199,6 +200,16 @@
   services.openssh = {
     enable = true;
     settings.PasswordAuthentication = true;
+  };
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+        user = "greeter";
+      };
+    };
   };
 
   # Open ports in the firewall.
