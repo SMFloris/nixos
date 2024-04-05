@@ -21,8 +21,8 @@ in
       "obsidian"
   ];
   nixpkgs.config.permittedInsecurePackages = [
-                "electron-25.9.0"
-              ];
+      "electron-25.9.0"
+  ];
   services.gnome-keyring = {
     enable = true;
     components = ["pkcs11" "secrets" "ssh"];
@@ -68,21 +68,12 @@ in
       (builtins.getFlake "github:outfoxxed/quickshell").packages.${builtins.currentSystem}.default
   ];
   home.file.".config/nvim" = {
-	  recursive = true;
-  	source = builtins.fetchGit {
-		  url = "https://github.com/AstroNvim/AstroNvim";
-		  rev = "8fe945f07aebf8dd2006e7cb3f89c200e0e4adef";
-	  };
-  };
-  home.file.".config/nvim/lua/user" = {
     recursive = true;
     source = builtins.fetchGit {
-		  url = "https://github.com/SMFloris/astronvim-config";
-		  # url = "/home/flow/Projects/astronvim-config";
-		  ref = "try_orgmode";
+		  # url = "https://github.com/SMFloris/astronvim-config";
+		  url = "/home/flow/Projects/astronvim-config";
+		  ref = "main";
 	  };
   };
-  home.file.".config/nvim/syntax/c3.vim".source = ./vim/syntax/c3.vim;
-  # home.file.".config/alacritty/alacritty.yml".source = ./alacritty.yml;
   home.file.".config/foot/foot.ini".source = ./foot.ini;
 }

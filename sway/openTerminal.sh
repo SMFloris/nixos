@@ -16,10 +16,15 @@ if [[ ${appId} == "Thunar" ]]; then
 fi
 
 if [[ ${title} =~ ^${host}.* ]]; then
-  wd=$(echo "$title" | cut -d':' -f2)
-  foot --working-directory ${wd/'~'/"$HOME"}
-  exit 0
-else
-  foot
-  exit 0
+  wd=$(echo "$title" | cut -d':' -f2 | xargs)
+  if [ -d "$wd" ]; then
+    foot --working-directory ${wd/'~'/"$HOME"}
+    exit 0
+  else
+    wd=$(basename "$wd")
+    foot --working-directory ${wd/'~'/"$HOME"}
+    exit 0
+  fi
 fi
+foot
+exit 0

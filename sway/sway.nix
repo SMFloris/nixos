@@ -8,6 +8,8 @@
       wayvnc
   ];
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
+  home.file.".config/organizeOutputs.sh".source = ./organizeOutputs.sh;
+  home.file.".config/switchWorkspace.sh".source = ./switchWorkspace.sh;
   home.file.".config/waybar/powermenu.sh".source = ./powermenu.sh;
   home.file.".config/waybar/setBackground.sh".source = ./setBackground.sh;
   home.file.".config/swaync/style.css".source = ./swaync_style.css;

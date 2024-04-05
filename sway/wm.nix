@@ -53,6 +53,13 @@ in {
       {
 	      command = "floating enable";
 	      criteria = {
+	        app_id = "soffice";
+	        title = "Text Import.*";
+	      };
+	    }
+      {
+	      command = "floating enable";
+	      criteria = {
 	        app_id = "org.gnome.Calculator";
 	      };
 	    }
@@ -122,13 +129,34 @@ in {
 
       bindsym Mod4+Tab workspace back_and_forth
       bindsym Mod4+Shift+Tab focus next
-      bindsym Mod4+grave workspace number 10
-      bindsym Mod4+Shift+grave move container to workspace number 10
-      bindsym Mod4+0 workspace number 10
-      bindsym Mod4+Shift+0 move container to workspace number 10
+      bindsym Mod4+grave workspace 10
+      bindsym Mod4+Shift+grave move workspace 10
       exec ${configure-gtk}/bin/configure-gtk
 
       exec_always /home/flow/.config/waybar/setBackground.sh
+      exec_always /home/flow/.config/waybar/organizeOutputs.sh
+
+      bindsym --no-warn Mod4+1 exec "/home/flow/.config/switchWorkspace.sh 1"
+      bindsym --no-warn Mod4+2 exec "/home/flow/.config/switchWorkspace.sh 2"
+      bindsym --no-warn Mod4+3 exec "/home/flow/.config/switchWorkspace.sh 3"
+      bindsym --no-warn Mod4+4 exec "/home/flow/.config/switchWorkspace.sh 4"
+      bindsym --no-warn Mod4+5 exec "/home/flow/.config/switchWorkspace.sh 5"
+      bindsym --no-warn Mod4+6 exec "/home/flow/.config/switchWorkspace.sh 6"
+      bindsym --no-warn Mod4+7 exec "/home/flow/.config/switchWorkspace.sh 7"
+      bindsym --no-warn Mod4+8 exec "/home/flow/.config/switchWorkspace.sh 8"
+      bindsym --no-warn Mod4+9 exec "/home/flow/.config/switchWorkspace.sh 9"
+      bindsym --no-warn Mod4+0 exec "/home/flow/.config/switchWorkspace.sh 10"
+
+      bindsym --no-warn Mod4+Shift+1 exec "/home/flow/.config/switchWorkspace.sh 1 move"
+      bindsym --no-warn Mod4+Shift+2 exec "/home/flow/.config/switchWorkspace.sh 2 move"
+      bindsym --no-warn Mod4+Shift+3 exec "/home/flow/.config/switchWorkspace.sh 3 move"
+      bindsym --no-warn Mod4+Shift+4 exec "/home/flow/.config/switchWorkspace.sh 4 move"
+      bindsym --no-warn Mod4+Shift+5 exec "/home/flow/.config/switchWorkspace.sh 5 move"
+      bindsym --no-warn Mod4+Shift+6 exec "/home/flow/.config/switchWorkspace.sh 6 move"
+      bindsym --no-warn Mod4+Shift+7 exec "/home/flow/.config/switchWorkspace.sh 7 move"
+      bindsym --no-warn Mod4+Shift+8 exec "/home/flow/.config/switchWorkspace.sh 8 move"
+      bindsym --no-warn Mod4+Shift+9 exec "/home/flow/.config/switchWorkspace.sh 9 move"
+      bindsym --no-warn Mod4+Shift+0 exec "/home/flow/.config/switchWorkspace.sh 10 move"
 
       # neovim orgmode
       exec foot --title NeoOrg --app-id NeoOrg --working-directory ~/Dropbox/NeoOrg -e nvim .
