@@ -19,19 +19,21 @@ in
       "postman"
       "mongodb-compass"
       "obsidian"
+      "spotify"
   ];
   nixpkgs.config.permittedInsecurePackages = [
-      "electron-25.9.0"
+     "electron-25.9.0"
   ];
   services.gnome-keyring = {
     enable = true;
     components = ["pkcs11" "secrets" "ssh"];
   };
+
   home.packages = with pkgs; [
     # programming
       neovim cargo nodejs foot git gcc ollama
     # utils cli
-      ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc 
+      fd ripgrep jq pciutils usbutils libmbim pavucontrol htop calcurse dbus neofetch tigervnc 
     # clouds
       terraform kubectl mysql-workbench mongodb-compass openlens awscli2 google-cloud-sdk-gce
     # utils gui
@@ -48,6 +50,8 @@ in
     # sync
       maestral
       maestral-gui
+    # fun
+      spotify
     # keyboard
       ttyper
       wev vial qmk
@@ -70,8 +74,8 @@ in
   home.file.".config/nvim" = {
     recursive = true;
     source = builtins.fetchGit {
-		  url = "https://github.com/SMFloris/astronvim-config";
-		  # url = "/home/flow/Projects/astronvim-config";
+		  # url = "https://github.com/SMFloris/astronvim-config";
+		  url = "/home/flow/Projects/astronvim-config";
 		  ref = "main";
 	  };
   };

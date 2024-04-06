@@ -91,7 +91,7 @@ window#waybar.empty #window {
   font-weight: bold;
   padding: 0 20px 0 10px;
   background-color: #282a36;
-  color: #ff79c6;
+  color: #ffffff;
   border-radius: 0 20px 20px 0;
 }
 
@@ -194,15 +194,67 @@ window#waybar.empty #window {
 }
 
 #idle_inhibitor {
-  padding: 0 15px 0 20px;
-  margin: 0 5;
+  padding: 0 5px 0 15px;
+  margin: 0 0 0 5px;
+  border-radius: 20px 0 0 20px;
   background-color: #282a36;
   color: #ffffff;
-  border-radius: 20px;
 }
 
 #idle_inhibitor.activated {
   color: #ff7955;
+}
+
+#custom-audio_idle_inhibitor {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 20px 0 20px;
+  background-color: #282a36;
+  color: #ffffff;
+  border-radius: 0 20px 20px 0;
+}
+
+#custom-audio_idle_inhibitor.output {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 0 0 5px;
+  background-color: #282a36;
+  color: #ffffff;
+  border-radius: 0 20px 20px 0;
+}
+
+#custom-audio_idle_inhibitor.none {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 0 0 5px;
+  background-color: #282a36;
+  color: #ffffff;
+  border-radius: 0 20px 20px 0;
+}
+
+@keyframes blink-recording {
+  from {
+    color: #f53c3c;
+  }
+  to {
+    color: #282a36;
+  }
+}
+
+#custom-audio_idle_inhibitor.input {
+  animation-name: blink-recording;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#custom-audio_idle_inhibitor.output-input {
+  animation-name: blink-recording;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 tooltip {

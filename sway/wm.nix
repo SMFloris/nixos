@@ -64,6 +64,12 @@ in {
 	      };
 	    }
       {
+	      command = "floating enable; resize set 800 600";
+	      criteria = {
+	        app_id = "wdisplays";
+	      };
+	    }
+      {
 	      command = "move scratchpad";
 	      criteria = {
 	        app_id = "NeoOrg";
@@ -97,7 +103,12 @@ in {
     };
     extraConfig = ''
       #other
-      exec swayidle -w timeout 300 "swaylock-fancy --daemonize" timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" before-sleep "swaylock-fancy --daemonize" timeout 600 "systemctl suspend"
+      set $playVolumeChangeSound cvlc --play-and-exit ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga
+      exec swayidle -w \
+        timeout 300 'swaylock-fancy' \
+        timeout 600 'swaymsg "output * dpms off"' \
+            resume 'swaymsg "output * dpms on"' \
+        before-sleep 'swaylock-fancy'
       exec_always nm-applet --indicator
 
       input "type:keyboard" {
@@ -117,8 +128,8 @@ in {
       bindsym XF86MonBrightnessUp exec light -A 10
 
       # volume
-      bindsym XF86AudioRaiseVolume exec 'wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+'
-      bindsym XF86AudioLowerVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-'
+      bindsym XF86AudioRaiseVolume exec 'wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+ && $playVolumeChangeSound'
+      bindsym XF86AudioLowerVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && $playVolumeChangeSound'
       bindsym XF86AudioMute exec 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'
 
       # Screenshot

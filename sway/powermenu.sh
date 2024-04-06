@@ -2,7 +2,7 @@
 
 entries="⇠\tLogout\n⏾\tSuspend\n󰜉\tReboot\n⏻\tShutdown"
 
-selected=$(echo -e $entries|wofi --width 300 --height 250 --dmenu --cache-file /dev/null | awk '{print tolower($2)}')
+selected=$(echo -e $entries|wofi --width 300 --height 200 -b -s ~/.config/wofi/powermenu.css -D dynamic_lines=true -D hide_search=true --dmenu --cache-file /dev/null | awk '{print tolower($2)}')
 
 case $selected in
   logout)

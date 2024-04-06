@@ -8,10 +8,10 @@
 			margin = "10 10 0 10";
 			modules-left = ["sway/window" "sway/mode"];
 			modules-center = ["sway/workspaces"];
-			modules-right = ["idle_inhibitor" "memory" "pulseaudio" "battery" "sway/language" "tray" "clock" "custom/notification"];
+			modules-right = ["idle_inhibitor" "custom/audio_idle_inhibitor" "memory" "pulseaudio" "battery" "sway/language" "tray" "clock" "custom/notification"];
 			"custom/notification" = {
       	tooltip = false;
-      	format = "";
+      	format = "󰐥";
       	format-icons = {
         	"notification" = "";
         	"none" = "";
@@ -101,11 +101,24 @@
 				path = "/";
 			};
 			idle_inhibitor = {
-				format = "{icon} ";
+				format = "{icon}";
 				tooltip = false;
 				format-icons = {
 					activated = "";
 					deactivated = "";
+				};
+			};
+			"custom/audio_idle_inhibitor" = {
+				format = "{icon}";
+				exec = "sway-audio-idle-inhibit --dry-print-both-waybar";
+				exec-if = "which sway-audio-idle-inhibit";
+				return-type = "json";
+				tooltip = false;
+				format-icons = {
+					input = "";
+					output-input = "";
+					output = " ";
+					none = " ";
 				};
 			};
 			cpu = {

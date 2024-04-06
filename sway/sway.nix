@@ -1,15 +1,23 @@
 { lib, pkgs, ...}:
 
-{
+let
+  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+in {
   home.packages = with pkgs; [
     # sway
-      swaylock-fancy swayidle wl-clipboard wl-clipboard-x11 swaynotificationcenter glib dracula-theme dracula-icon-theme wbg
+      sway-audio-idle-inhibit
+      swaylock-fancy swayidle 
+      wl-clipboard wl-clipboard-x11 
+      unstable.swaynotificationcenter 
+      glib dracula-theme dracula-icon-theme 
+      wbg
     # wayland
       wayvnc
   ];
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file.".config/organizeOutputs.sh".source = ./organizeOutputs.sh;
   home.file.".config/switchWorkspace.sh".source = ./switchWorkspace.sh;
+  home.file.".config/wofi/powermenu.css".source = ./wofi_menu.css;
   home.file.".config/waybar/powermenu.sh".source = ./powermenu.sh;
   home.file.".config/waybar/setBackground.sh".source = ./setBackground.sh;
   home.file.".config/swaync/style.css".source = ./swaync_style.css;
