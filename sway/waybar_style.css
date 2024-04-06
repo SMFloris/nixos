@@ -226,7 +226,16 @@ window#waybar.empty #window {
 #custom-audio_idle_inhibitor.none {
   font-size: 16px;
   font-weight: bold;
-  padding: 0 0 0 5px;
+  padding: 0 7px 0 5px;
+  background-color: #282a36;
+  color: #ffffff;
+  border-radius: 0 20px 20px 0;
+}
+
+#custom-audio_idle_inhibitor.output-input {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 7px 0 5px;
   background-color: #282a36;
   color: #ffffff;
   border-radius: 0 20px 20px 0;

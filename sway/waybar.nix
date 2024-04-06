@@ -8,7 +8,7 @@
 			margin = "10 10 0 10";
 			modules-left = ["sway/window" "sway/mode"];
 			modules-center = ["sway/workspaces"];
-			modules-right = ["idle_inhibitor" "custom/audio_idle_inhibitor" "memory" "pulseaudio" "battery" "sway/language" "tray" "clock" "custom/notification"];
+			modules-right = ["idle_inhibitor" "custom/audio_idle_inhibitor" "memory" "pulseaudio" "sway/language" "battery" "tray" "clock" "custom/notification"];
 			"custom/notification" = {
       	tooltip = false;
       	format = "󰐥";
@@ -101,7 +101,7 @@
 				path = "/";
 			};
 			idle_inhibitor = {
-				format = "{icon}";
+				format = " {icon}";
 				tooltip = false;
 				format-icons = {
 					activated = "";
