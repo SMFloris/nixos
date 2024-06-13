@@ -5,28 +5,30 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
-  boot.kernelParams = ["mem_sleep_default=deep" "amd-pstate=active" "amdgpu.dcdebugmask=0x10"]; 
+  boot.kernelParams = [ "mem_sleep_default=deep" "amd-pstate=active" "amdgpu.dcdebugmask=0x10" ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/32d335e1-2d46-4013-b514-f5bee5b8488f";
+    {
+      device = "/dev/disk/by-uuid/32d335e1-2d46-4013-b514-f5bee5b8488f";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/21F2-6A55";
+    {
+      device = "/dev/disk/by-uuid/21F2-6A55";
       fsType = "vfat";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/f667533d-db4d-4e80-a79b-e02189ca9e73"; }
-    ];
+    [{ device = "/dev/disk/by-uuid/f667533d-db4d-4e80-a79b-e02189ca9e73"; }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

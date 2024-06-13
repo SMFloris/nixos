@@ -6,7 +6,7 @@
 
 {
   imports =
-    [ 
+    [
       ./common/common.nix
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -21,26 +21,22 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.fccUnlockScripts = [
-      {
-        id = "8086:7560";
-        path = "/etc/nixos/hosts/gastly/modem/8086:7560";
-      }
-      {
-        id = "8086";
-        path = "/etc/nixos/hosts/gastly/modem/8086:7560";
-      }
+    {
+      id = "8086:7560";
+      path = "/etc/nixos/hosts/gastly/modem/8086:7560";
+    }
+    {
+      id = "8086";
+      path = "/etc/nixos/hosts/gastly/modem/8086:7560";
+    }
   ];
 
   systemd.services.ModemManager = {
     aliases = [ "dbus-org.freedesktop.ModemManager1.service" ];
     wantedBy = [ "multi-user.target" "network.target" ];
     enable = true;
-    path = [];
+    path = [ ];
   };
-
-  services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="leds", KERNEL=="platform::micmute" ATTR{trigger}="audio-micmute"
-  '';
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

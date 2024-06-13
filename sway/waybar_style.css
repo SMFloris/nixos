@@ -187,16 +187,16 @@ window#waybar.empty #window {
 
 #tray {
   padding: 0 5px 0 15px;
-  margin: 0 0 0 5px;
+  margin: 0;
   background-color: #282a36;
   color: #ffffff;
   border-radius: 20px 0 0 20px;
 }
 
 #idle_inhibitor {
-  padding: 0 5px 0 15px;
-  margin: 0 0 0 5px;
-  border-radius: 20px 0 0 20px;
+  padding: 0 27px 0 20px;
+  margin: 0 5px;
+  border-radius: 20px;
   background-color: #282a36;
   color: #ffffff;
 }
@@ -208,37 +208,33 @@ window#waybar.empty #window {
 #custom-audio_idle_inhibitor {
   font-size: 16px;
   font-weight: bold;
-  padding: 0 20px 0 20px;
-  background-color: #282a36;
+  padding: 0 10px;
+  margin: 0;
+  background-color: transparent;
   color: #ffffff;
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px 0 0 20px;
 }
 
 #custom-audio_idle_inhibitor.output {
   font-size: 16px;
   font-weight: bold;
-  padding: 0 0 0 5px;
-  background-color: #282a36;
   color: #ffffff;
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px;
 }
 
 #custom-audio_idle_inhibitor.none {
+  background-color: transparent;
   font-size: 16px;
   font-weight: bold;
-  padding: 0 7px 0 5px;
-  background-color: #282a36;
   color: #ffffff;
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px;
 }
 
 #custom-audio_idle_inhibitor.output-input {
   font-size: 16px;
   font-weight: bold;
-  padding: 0 7px 0 5px;
-  background-color: #282a36;
   color: #ffffff;
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px;
 }
 
 @keyframes blink-recording {
@@ -246,13 +242,13 @@ window#waybar.empty #window {
     color: #f53c3c;
   }
   to {
-    color: #282a36;
+    color: #ff7955;
   }
 }
 
 #custom-audio_idle_inhibitor.input {
   animation-name: blink-recording;
-  animation-duration: 1s;
+  animation-duration: 2s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-direction: alternate;
@@ -260,7 +256,7 @@ window#waybar.empty #window {
 
 #custom-audio_idle_inhibitor.output-input {
   animation-name: blink-recording;
-  animation-duration: 1s;
+  animation-duration: 2s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-direction: alternate;

@@ -2,13 +2,13 @@
 
 {
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.extraHosts =
-  ''
-    127.0.0.1 api.frisbo.internal
-    127.0.0.1 superadmin.frisbo.internal
-    127.0.0.1 beta.frisbo.internal
-  '';
+    ''
+      127.0.0.1 api.frisbo.internal
+      127.0.0.1 superadmin.frisbo.internal
+      127.0.0.1 beta.frisbo.internal
+    '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
 
@@ -49,16 +49,19 @@
   services.udisks2.enable = true;
   services.blueman.enable = true;
   services.pipewire = {
-	  enable = true;
-	  alsa.enable = true;
-	  alsa.support32Bit = true;
-	  pulse.enable = true;
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     # jack.enable = true;
   };
 
   services.tumbler.enable = true;
-  services.gvfs.enable = true; # Mount, trash, and other functionalities
+  services.gvfs = {
+    enable = true;
+    package = lib.mkForce pkgs.gnome3.gvfs;
+  };
   hardware.keyboard.qmk.enable = true;
 
 
@@ -68,7 +71,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.flow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" "kvm" "libvirt" ]; # Enable ‘sudo’ for the user.
   };
   home-manager.users.flow = import ./flow.nix;
   # List packages installed in system profile. To search, run:
@@ -89,6 +92,10 @@
     moreutils
     e2fsprogs
     unzip
+    virt-viewer
+    quickemu
+    cifs-utils
+    libsecret
   ];
   programs.nix-ld.enable = true;
   programs.seahorse.enable = true;
@@ -100,23 +107,25 @@
   programs.light.enable = true;
   programs.dconf.enable = true;
   programs.xfconf.enable = true;
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
 
   security.polkit.enable = true;
   security.pam.services.swaylock = {
     text = "auth include login";
   };
   xdg = {
-      mime = {
-	    enable = true;
-      	addedAssociations = {
-	        "application/pdf" = "org.gnome.Evince.desktop";
-	        "image/png" = "org.xfce.ristretto.desktop";
-	        "image/jpg" = "org.xfce.ristretto.desktop";
+    mime = {
+      enable = true;
+      addedAssociations = {
+        "application/pdf" = "org.gnome.Evince.desktop";
+        "image/png" = "org.xfce.ristretto.desktop";
+        "image/jpg" = "org.xfce.ristretto.desktop";
       };
-      	defaultApplications = {
-	        "application/pdf" = "org.gnome.Evince.desktop";
-	        "image/png" = "org.xfce.ristretto.desktop";
-	        "image/jpg" = "org.xfce.ristretto.desktop";
+      defaultApplications = {
+        "application/pdf" = "org.gnome.Evince.desktop";
+        "image/png" = "org.xfce.ristretto.desktop";
+        "image/jpg" = "org.xfce.ristretto.desktop";
       };
     };
     portal = {
@@ -127,20 +136,20 @@
         xdg-desktop-portal-gtk
       ];
       wlr = {
-      	enable = true;
+        enable = true;
       };
     };
   };
   # steam
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-        # Add additional package names here
-        "corefonts"
-        "samsung-UnifiedLinuxDriver"
-        "steam"
-        "steam-original"
-        "steam-run"
-  ];
+      # Add additional package names here
+      "corefonts"
+      "samsung-UnifiedLinuxDriver"
+      "steam"
+      "steam-original"
+      "steam-run"
+    ];
   nixpkgs.config.packageOverrides = pkgs: {
     steam = pkgs.steam.override {
       extraPkgs = pkgs: with pkgs; [
@@ -166,10 +175,10 @@
     gentium
   ];
   fonts.fontconfig.defaultFonts = {
-      serif = [ "Gentium Plus" ];
-      sansSerif = [ "Cantarell" ];
-      monospace = [ "Source Code Pro" ];
-      emoji = [ "Twitter Color Emoji" ];
+    serif = [ "Gentium Plus" ];
+    sansSerif = [ "Cantarell" ];
+    monospace = [ "Source Code Pro" ];
+    emoji = [ "Twitter Color Emoji" ];
   };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -181,16 +190,16 @@
 
   # List services that you want to enable:
   services.printing.enable = true;
-  services.printing.drivers = [ 
-    pkgs.hplip 
+  services.printing.drivers = [
+    pkgs.hplip
     pkgs.samsung-unified-linux-driver
-    pkgs.splix 
+    pkgs.splix
   ];
 
   # Enable the OpenSSH daemon.
   services.avahi = {
     enable = true;
-    nssmdns = true;
+    nssmdns4 = true;
     openFirewall = true;
     publish = {
       enable = true;
