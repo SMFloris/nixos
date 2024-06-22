@@ -54,6 +54,7 @@
   };
 
   services.tlp.enable = true;
+  hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true;
 }
