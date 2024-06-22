@@ -22,12 +22,12 @@ do
             echo "Channel is ok"
         else
             nix-channel --remove ${input}
-            nix-channel --add ${input} ${urls[$input]}
+            nix-channel --add ${urls[$input]} ${input}
             echo "Nix channel replaced with latest url"
         fi
     else
         echo "The channel's URL does not contain '$input'"
-        nix-channel --add ${input} ${urls[$input]}
+        nix-channel --add ${urls[$input]} ${input}
         echo "Added the correct url"
     fi
 done
