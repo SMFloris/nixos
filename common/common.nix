@@ -1,7 +1,14 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, fetchFromGitHub, fetchFromGitLab, ... }:
 
 {
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  imports = [
+    ./tuigreet.nix
+    ../i3/wm.nix
+  ];
+  environment.variables = {
+    PREFERRED_WM = "${config.host-info.preferred_wm}";
+  };
+  boot.kernelPackages = pkgs.linuxPackages_xanmod;
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.extraHosts =
     ''
@@ -73,7 +80,8 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" "kvm" "libvirt" ]; # Enable ‘sudo’ for the user.
   };
-  home-manager.users.flow = import ./flow.nix;
+  home-manager.users.flow = (import ./flow.nix {inherit config pkgs lib;});
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -96,7 +104,12 @@
     quickemu
     cifs-utils
     libsecret
-  ];
+    steamtinkerlaunch
+  ] ++ (if (config.host-info.gpu == "nvidia") then  [sx cudatoolkit nvtopPackages.nvidia] else []);
+
+  # enable CUDA when on nvidia hardware
+  nixpkgs.config.cudaSupport = config.host-info.gpu == "nvidia";
+
   programs.nix-ld.enable = true;
   programs.seahorse.enable = true;
   programs.steam = {
@@ -111,7 +124,7 @@
   programs.virt-manager.enable = true;
 
   security.polkit.enable = true;
-  security.pam.services.swaylock = {
+  security.pam.services.swaylock = lib.mkIf (config.host-info.preferred_wm == "sway") {
     text = "auth include login";
   };
   xdg = {
@@ -149,7 +162,38 @@
       "steam"
       "steam-original"
       "steam-run"
-    ];
+      "terraform"
+      "slack"
+      "mongodb-compass"
+      "spotify"
+      "blender"
+      # nvidia proprietary drivers + cuda
+      "nvidia-persistenced"
+      "nvidia-x11"
+      "nvidia-settings"
+      "cuda_sanitizer_api"
+      "cuda_profiler_api"
+      "cuda_nvtx"
+      "cuda_nvrtc"
+      "cuda_nvml_dev"
+      "cuda_cuxxfilt"
+      "cuda_cupti"
+      "cuda_nvprune"
+      "cuda_nvdisasm"
+      "cuda_gdb"
+      "cuda_cuobjdump"
+      "cuda_nvcc"
+      "cuda-merged"
+      "cuda_cccl"
+      "cuda_cudart"
+      "libnvjitlink"
+      "libcurand"
+      "libnpp"
+      "libcufft"
+      "libcublas"
+      "libcusparse"
+      "libcusolver"
+  ];
   nixpkgs.config.packageOverrides = pkgs: {
     steam = pkgs.steam.override {
       extraPkgs = pkgs: with pkgs; [
@@ -167,12 +211,13 @@
     };
   };
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })
+    (nerdfonts.override { fonts = [ "CascadiaCode" "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })
     corefonts
     cantarell-fonts
     twitter-color-emoji
     source-code-pro
     gentium
+    jigmo
   ];
   fonts.fontconfig.defaultFonts = {
     serif = [ "Gentium Plus" ];
@@ -211,14 +256,16 @@
     settings.PasswordAuthentication = true;
   };
 
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
-        user = "greeter";
+  # ollama
+  systemd.user.services.ollama = lib.mkIf (config.host-info.ai_enabled == true) {
+    description = "ollama";
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.ollama}/bin/ollama serve";
+        Restart = "on-failure";
+        RestartSec = 10;
+        TimeoutStopSec = 20;
       };
-    };
   };
 
   # Open ports in the firewall.

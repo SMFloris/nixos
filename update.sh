@@ -1,12 +1,13 @@
 #/usr/bin/env bash
 
 RELEASE=24.05
+HOME_MANAGER_RELEASE=24.05
 
 # List of inputs to search for in the channel's URL
 inputs=("home-manager" "nixos" "nixos-unstable")
 # Get the channel's URL
 declare -A urls
-urls["home-manager"]="https://github.com/nix-community/home-manager/archive/release-${RELEASE}.tar.gz"
+urls["home-manager"]="https://github.com/nix-community/home-manager/archive/release-${HOME_MANAGER_RELEASE}.tar.gz"
 urls["nixos"]="https://nixos.org/channels/nixos-${RELEASE}"
 urls["nixos-unstable"]="https://nixos.org/channels/nixos-unstable"
 # Iterate over the list of inputs

@@ -5,56 +5,96 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [ 
+      ./common/host-info.nix
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "ahci" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  config = {
+    boot.initrd.availableKernelModules = [ "nvme" "ahci" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
+    boot.kernelModules = [ "kvm-amd" ];
+    boot.kernelParams = [ "nvidia_drm.fbdev=1" ];
+    boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/06204b02-1dbf-403d-9fd2-e84b963da8b0";
+    fileSystems."/" =
+      { device = "/dev/disk/by-uuid/06204b02-1dbf-403d-9fd2-e84b963da8b0";
+        fsType = "ext4";
+      };
+
+    fileSystems."/nvme1n1" =
+    {
+      device = "/dev/disk/by-uuid/e210fe3a-e4ad-4875-9823-afd40a2fbd27";
       fsType = "ext4";
     };
 
-  fileSystems."/nvme1n1" =
-  {
-    device = "/dev/disk/by-uuid/6041ee02-4d01-46c0-8cbe-151ceca1d57e";
-    fsType = "ext4";
-  };
+    fileSystems."/boot" =
+      { device = "/dev/disk/by-uuid/9A36-2E2E";
+        fsType = "vfat";
+      };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/9A36-2E2E";
-      fsType = "vfat";
+    swapDevices =
+      [ { device = "/dev/disk/by-uuid/bd10b3b4-e6ac-4ba7-806d-e02b91efae0b"; }
+      ];
+
+    # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+    # (the default) this is the recommended approach. When using systemd-networkd it's
+    # still possible to use this option, but it's recommended to use it in conjunction
+    # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+    networking.useDHCP = lib.mkDefault true;
+    # networking.interfaces.enp39s0.useDHCP = lib.mkDefault true;
+    # networking.interfaces.wlp41s0.useDHCP = lib.mkDefault true;
+
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    hardware.opengl = {
+      enable = true;
+
+      driSupport = true;
+      driSupport32Bit = true;
+
+      extraPackages = with pkgs; [
+        vaapiVdpau
+        libvdpau-va-gl
+        nvidia-vaapi-driver
+      ];
+
+    };
+    hardware.enableRedistributableFirmware = true;
+    hardware.bluetooth.enable = true; # enables support for Bluetooth
+    hardware.bluetooth.powerOnBoot = true;
+
+    services.xserver.videoDrivers = ["nvidia"];
+    hardware.nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = true;
+      powerManagement.finegrained = false;
+      forceFullCompositionPipeline = false;
+      open = false;
+      nvidiaPersistenced = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+      #   version = "560.31.02";
+      #   sha256_aarch64 = lib.fakeSha256;
+      #   openSha256 = lib.fakeSha256;
+      #   sha256_64bit = "sha256-0cwgejoFsefl2M6jdWZC+CKc58CqOXDjSi4saVPNKY0=";
+      #   settingsSha256 = "sha256-A3SzGAW4vR2uxT1Cv+Pn+Sbm9lLF5a/DGzlnPhxVvmE=";
+      #   persistencedSha256 = lib.fakeSha256;
+      # };
+      # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+      #   version = "560.28.03";
+      #   sha256_aarch64 = lib.fakeSha256;
+      #   openSha256 = lib.fakeSha256;
+      #   sha256_64bit = "sha256-martv18vngYBJw1IFUCAaYr+uc65KtlHAMdLMdtQJ+Y=";
+      #   settingsSha256 = "sha256-b4nhUMCzZc3VANnNb0rmcEH6H7SK2D5eZIplgPV59c8=";
+      #   persistencedSha256 = lib.fakeSha256;
+      # };
     };
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/bd10b3b4-e6ac-4ba7-806d-e02b91efae0b"; }
-    ];
-
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp39s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp41s0.useDHCP = lib.mkDefault true;
-
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.opengl = {
-    enable = true;
-
-    driSupport = true;
-    driSupport32Bit = true;
-
-    extraPackages = with pkgs; [
-      vaapiVdpau
-      libvdpau-va-gl
-    ];
+    # set host info
+    host-info.gpu = "nvidia";
+    host-info.hostname = "onix";
+    host-info.preferred_wm = "i3";
+    host-info.ai_enabled = true;
   };
-  hardware.enableRedistributableFirmware = true;
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true;
 }

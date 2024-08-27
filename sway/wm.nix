@@ -172,5 +172,7 @@ in {
       # neovim orgmode
       exec foot --title NeoOrg --app-id NeoOrg --working-directory ~/Dropbox/NeoOrg -e nvim .
       exec maestral start
+
+      exec "/home/flow/.config/switchWorkspace.sh 1 move"
       '';
 }

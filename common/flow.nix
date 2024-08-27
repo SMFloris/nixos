@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   thunarWithPlugins = pkgs.xfce.thunar.override {
@@ -7,23 +7,16 @@ let
 in
 {
   imports = [
-    ../sway/sway.nix
+    (import ../sway/sway.nix {inherit config pkgs lib;})
+    (import ../i3/i3.nix {inherit config pkgs lib;})
+    (import ../i3/picom.nix {inherit config pkgs lib;})
+    (import ../i3/polybar.nix {inherit config pkgs lib;})
+    (import ../i3/rofi.nix {inherit config pkgs lib;})
     ../special/unfree.nix
     ../special/cybersecurity.nix
   ];
   home.stateVersion = "23.05";
   fonts.fontconfig.enable = true;
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "terraform"
-    "slack"
-    "postman"
-    "mongodb-compass"
-    "obsidian"
-    "spotify"
-  ];
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-  ];
   services.gnome-keyring = {
     enable = true;
     components = [ "pkcs11" "secrets" "ssh" ];
@@ -38,6 +31,7 @@ in
     git
     gcc
     ollama
+    c3c
     # utils cli
     fd
     ripgrep
@@ -58,7 +52,7 @@ in
     mongodb-compass
     openlens
     awscli2
-    google-cloud-sdk-gce
+    # google-cloud-sdk-gce
     # utils gui
     bruno
     evince
@@ -68,13 +62,13 @@ in
     meld
     octave
     libreoffice
-    obsidian
-    # comms
-    slack
+    blender
+    gimp
     # sync
     maestral
     maestral-gui
     # fun
+    gamescope
     spotify
     # keyboard
     ttyper
@@ -96,7 +90,7 @@ in
     hexchat
     gImageReader
     (builtins.getFlake "github:outfoxxed/quickshell").packages.${builtins.currentSystem}.default
-  ];
+  ] ++ (if (config.host-info.ai_enabled) then  [(pkgs.callPackage (import ./packages/fabric.nix) {})] else []);
   home.file.".config/nvim" = {
     recursive = true;
     source = builtins.fetchGit {
@@ -107,4 +101,6 @@ in
   };
   home.file.".config/foot/foot.ini".source = ./foot.ini;
   home.file.".bashrc".source = ./bashrc;
+  home.file."startWm.sh".source = ./startWm.sh;
+
 }

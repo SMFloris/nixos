@@ -3,7 +3,7 @@
 focusedOutput=$(swaymsg -t get_outputs -r | jq ".[] | select(.focused==true) | .name" | xargs)
 
 
-outputs=("eDP-1" "DP-2" "DP-1" "HDMI-A-1")
+outputs=("eDP-1" "DP-3" "DP-2" "DP-1" "HDMI-A-1")
 
 i=0
 for output in ${outputs[@]}
