@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   thunarWithPlugins = pkgs.xfce.thunar.override {
@@ -32,7 +32,7 @@ in
     gcc
     pulumi
     jetbrains.phpstorm
-    ollama
+    unstable.ollama
     c3c
     # utils cli
     fd
@@ -78,6 +78,7 @@ in
     vial
     qmk
     # extra
+    gnome.gnome-clocks
     gnome.file-roller
     thunarWithPlugins
     xfce.ristretto

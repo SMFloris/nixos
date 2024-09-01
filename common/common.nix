@@ -1,6 +1,8 @@
 { config, pkgs, lib, fetchFromGitHub, fetchFromGitLab, ... }:
 
-{
+let 
+  unstable = import <nixos-unstable> {};
+in {
   imports = [
     ./tuigreet.nix
     ../i3/wm.nix
@@ -46,6 +48,7 @@
     docker = {
       enable = true;
       enableOnBoot = false;
+      enableNvidia = config.host-info.gpu == "nvidia";
     };
   };
 
@@ -266,7 +269,7 @@
     description = "ollama";
     serviceConfig = {
         Type = "simple";
-        ExecStart = "${pkgs.ollama}/bin/ollama serve";
+        ExecStart = "${unstable.ollama}/bin/ollama serve";
         Restart = "on-failure";
         RestartSec = 10;
         TimeoutStopSec = 20;

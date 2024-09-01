@@ -16,6 +16,7 @@ let
   };
 in lib.mkIf (config.host-info.preferred_wm == "i3") {
   home.file.".xinitrc".source = ./xfiles/xinitrc;
+  home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file."ai_chat.sh".source = ./rofi/ai_chat.sh;
   dconf = {
       enable = true;
@@ -51,6 +52,24 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
       bars = [ ];
 
       window.border = 0;
+      window.commands = [
+        {
+          command = "floating enable";
+          criteria = { window_role = "alert"; };
+        }
+        {
+          command = "floating enable, resize set 1000 640";
+          criteria = { class = "AICHAT"; };
+        }
+        {
+          command = "floating enable, resize set height 480 480";
+          criteria = { class = "gnome-calculator"; };
+        }
+        {
+          command = "floating enable, resize set 640 640";
+          criteria = { class = "org.gnome.clocks"; };
+        }
+      ];
 
       gaps = {
         inner = 15;
@@ -65,7 +84,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         "XF86MonBrightnessUp" = "exec brightnessctl set 4%+";
         "Print" = "exec ${pkgs.maim}/bin/maim -s -u | xclip -selection clipboard -t image/png -i";
         "Shift+Print" = "exec ${pkgs.maim}/bin/maim -u ~/Pictures/\$(date +%Y-%m-%dT%H:%M:%S).png";
-        "${modifier}+Return" = "exec ${pkgs.alacritty}/bin/alacritty";
+        "${modifier}+Return" = "exec /home/flow/.config/openTerminal.sh";
         "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modi drun -show drun";
         "${modifier}+Shift+d" = "exec ${pkgs.rofi}/bin/rofi -show window";
         "${modifier}+Shift+x" = "exec systemctl suspend";

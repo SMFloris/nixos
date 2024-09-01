@@ -2,7 +2,7 @@
 # Terminal command variable
 # TERMINAL="kitty"
 # TERMINAL="konsole -e"
-TERMINAL="alacritty -e"
+TERMINAL="alacritty --class AICHAT -e"
 
 # Display Rofi menu and get user selection
 selection=$(echo "Chat to AI|Summarize clipboard|Extract Wisdom from clipboard" | rofi -sep '|' -dmenu -p "Select AI Commands")
