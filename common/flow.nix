@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 
 let
   thunarWithPlugins = pkgs.xfce.thunar.override {
@@ -13,23 +13,10 @@ in
     (import ../i3/picom.nix {inherit config pkgs lib;})
     (import ../i3/polybar.nix {inherit config pkgs lib;})
     (import ../i3/rofi.nix {inherit config pkgs lib;})
-    ../special/unfree.nix
     ../special/cybersecurity.nix
   ];
   home.stateVersion = "23.05";
   fonts.fontconfig.enable = true;
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "terraform"
-    "slack"
-    "postman"
-    "mongodb-compass"
-    "obsidian"
-    "spotify"
-    "phpstorm"
-  ];
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-  ];
   services.gnome-keyring = {
     enable = true;
     components = [ "pkcs11" "secrets" "ssh" ];

@@ -13,7 +13,6 @@ in
       radare2
       ghidra
       heaptrack
-      obsidian
    ];
 }
 

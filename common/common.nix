@@ -167,6 +167,7 @@
       "mongodb-compass"
       "spotify"
       "blender"
+      "phpstorm"
       # nvidia proprietary drivers + cuda
       "nvidia-persistenced"
       "nvidia-x11"
