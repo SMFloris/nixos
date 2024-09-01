@@ -1,9 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 
 let
   thunarWithPlugins = pkgs.xfce.thunar.override {
     thunarPlugins = [ pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin ];
   };
+  unstable-pkgs = import <nixos-unstable> {};
 in
 {
   imports = [
@@ -17,6 +18,18 @@ in
   ];
   home.stateVersion = "23.05";
   fonts.fontconfig.enable = true;
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "terraform"
+    "slack"
+    "postman"
+    "mongodb-compass"
+    "obsidian"
+    "spotify"
+    "phpstorm"
+  ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+  ];
   services.gnome-keyring = {
     enable = true;
     components = [ "pkcs11" "secrets" "ssh" ];
@@ -30,6 +43,8 @@ in
     foot
     git
     gcc
+    pulumi
+    jetbrains.phpstorm
     ollama
     c3c
     # utils cli
@@ -52,7 +67,7 @@ in
     mongodb-compass
     openlens
     awscli2
-    # google-cloud-sdk-gce
+    google-cloud-sdk-gce
     # utils gui
     bruno
     evince

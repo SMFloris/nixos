@@ -234,9 +234,13 @@
   # };
 
   # List services that you want to enable:
+  hardware.sane.enable = true;
+  services.ipp-usb.enable = true;
   services.printing.enable = true;
   services.printing.drivers = [
+    pkgs.gutenprint
     pkgs.hplip
+    pkgs.brlaser
     pkgs.samsung-unified-linux-driver
     pkgs.splix
   ];
