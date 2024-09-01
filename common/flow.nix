@@ -24,7 +24,7 @@ in
 
   home.packages = with pkgs; [
     # programming
-    neovim
+    unstable-pkgs.neovim
     cargo
     nodejs
     foot
@@ -32,7 +32,7 @@ in
     gcc
     pulumi
     jetbrains.phpstorm
-    unstable.ollama
+    unstable-pkgs.ollama
     c3c
     # utils cli
     fd
@@ -97,8 +97,8 @@ in
   home.file.".config/nvim" = {
     recursive = true;
     source = builtins.fetchGit {
-      url = "https://github.com/SMFloris/nvim-config";
-      # url = "/home/flow/Projects/new-nvim-config";
+      # url = "https://github.com/SMFloris/nvim-config";
+      url = "/home/flow/Projects/personal/nvim-config";
       ref = "master";
     };
   };
