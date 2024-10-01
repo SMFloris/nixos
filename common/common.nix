@@ -50,7 +50,7 @@ in {
     docker = {
       enable = true;
       enableOnBoot = false;
-      enableNvidia = true;
+      enableNvidia = config.host-info.gpu == "nvidia";
     };
     incus.enable = true;
   };
