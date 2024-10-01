@@ -1,7 +1,7 @@
 { config, pkgs, lib, fetchFromGitHub, fetchFromGitLab, ... }:
 
 let 
-  unstable = import <nixos-unstable> {};
+  unstable = import <nixos-unstable> {config.allowUnfree = true;};
 in {
   imports = [
     ./tuigreet.nix
@@ -48,8 +48,9 @@ in {
     docker = {
       enable = true;
       enableOnBoot = false;
-      enableNvidia = config.host-info.gpu == "nvidia";
+      enableNvidia = true;
     };
+    incus.enable = true;
   };
 
   # Enable sound.
@@ -81,7 +82,7 @@ in {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.flow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" "kvm" "libvirt" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" "video" "docker" "incus-admin" "libvirtd" "kvm" "libvirt" ]; # Enable ‘sudo’ for the user.
   };
   home-manager.users.flow = (import ./flow.nix {inherit config pkgs lib;});
 
@@ -94,6 +95,7 @@ in {
     libva-utils
     wget
     firefox
+    chromium
     tree
     powertop
     vlc
@@ -178,6 +180,7 @@ in {
       "cuda_sanitizer_api"
       "cuda_profiler_api"
       "cuda_nvtx"
+      "cudnn"
       "cuda_nvrtc"
       "cuda_nvml_dev"
       "cuda_cuxxfilt"
@@ -269,7 +272,7 @@ in {
     description = "ollama";
     serviceConfig = {
         Type = "simple";
-        ExecStart = "${unstable.ollama}/bin/ollama serve";
+        ExecStart = if (config.host-info.gpu == "nvidia") then "${unstable.ollama-cuda}/bin/ollama serve" else "${unstable.ollama}/bin/ollama serve";
         Restart = "on-failure";
         RestartSec = 10;
         TimeoutStopSec = 20;

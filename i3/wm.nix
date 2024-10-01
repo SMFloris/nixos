@@ -8,7 +8,7 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
     xclip
     maim
     glow
-    deadd-notification-center
+    libnotify
   ];
 
   services.xserver = {

@@ -4,7 +4,7 @@ let
   thunarWithPlugins = pkgs.xfce.thunar.override {
     thunarPlugins = [ pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin ];
   };
-  unstable-pkgs = import <nixos-unstable> {};
+  unstable-pkgs = import <nixos-unstable> {config.allowUnfree=true;};
 in
 {
   imports = [
@@ -32,7 +32,6 @@ in
     gcc
     pulumi
     jetbrains.phpstorm
-    unstable-pkgs.ollama
     c3c
     # utils cli
     fd
@@ -47,6 +46,7 @@ in
     dbus
     neofetch
     tigervnc
+    easyocr
     # clouds
     terraform
     kubectl
@@ -93,7 +93,9 @@ in
     hexchat
     gImageReader
     (builtins.getFlake "github:outfoxxed/quickshell").packages.${builtins.currentSystem}.default
-  ] ++ (if (config.host-info.ai_enabled) then  [(pkgs.callPackage (import ./packages/fabric.nix) {})] else []);
+  ] ++ (if (config.host-info.ai_enabled) then  [(pkgs.callPackage (import ./packages/fabric.nix) {})] else [])
+  ++ (if (config.host-info.gpu == "nvidia") then  [unstable-pkgs.ollama-cuda] else []);
+
   home.file.".config/nvim" = {
     recursive = true;
     source = builtins.fetchGit {

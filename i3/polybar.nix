@@ -224,6 +224,8 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         # ;label-muted-font = 4
         label-muted-foreground = "${fg-3}";
         label-muted-background = "${bg-1}";
+
+        click-left = "pavucontrol";
       };
       
       "module/filesystem" = {

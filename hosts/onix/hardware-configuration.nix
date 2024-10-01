@@ -60,6 +60,7 @@
 
     };
     hardware.enableRedistributableFirmware = true;
+    hardware.nvidia-container-toolkit.enable = true;
     hardware.bluetooth.enable = true; # enables support for Bluetooth
     hardware.bluetooth.powerOnBoot = true;
 

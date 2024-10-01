@@ -16,8 +16,15 @@ let
   };
 in lib.mkIf (config.host-info.preferred_wm == "i3") {
   home.file.".xinitrc".source = ./xfiles/xinitrc;
+  home.file.".config/dunst/dunstrc.d/00-theme.conf".source = ./dunstrc;
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file."ai_chat.sh".source = ./rofi/ai_chat.sh;
+  home.file."ocr_screenshot.sh".source = ./ocr_screenshot.sh;
+  
+  services.dunst = {
+    enable = true;
+  };
+
   dconf = {
       enable = true;
       settings = {
@@ -83,6 +90,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         "XF86MonBrightnessDown" = "exec brightnessctl set 4%-";
         "XF86MonBrightnessUp" = "exec brightnessctl set 4%+";
         "Print" = "exec ${pkgs.maim}/bin/maim -s -u | xclip -selection clipboard -t image/png -i";
+        "${modifier}+Print" = "exec '/home/flow/ocr_screenshot.sh'";
         "Shift+Print" = "exec ${pkgs.maim}/bin/maim -u ~/Pictures/\$(date +%Y-%m-%dT%H:%M:%S).png";
         "${modifier}+Return" = "exec /home/flow/.config/openTerminal.sh";
         "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modi drun -show drun";
@@ -99,7 +107,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
       startup = [
         {
           command = "set \$playVolumeChangeSound cvlc --play-and-exit ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
-          always = false;
+          always = true;
           notification = false;
         }
         {
