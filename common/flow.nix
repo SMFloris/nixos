@@ -99,8 +99,8 @@ in
   home.file.".config/nvim" = {
     recursive = true;
     source = builtins.fetchGit {
-      # url = "https://github.com/SMFloris/nvim-config";
-      url = "/home/flow/Projects/personal/nvim-config";
+      url = "https://github.com/SMFloris/nvim-config";
+      # url = "/home/flow/Projects/personal/nvim-config";
       ref = "master";
     };
   };

@@ -110,7 +110,8 @@ in {
     cifs-utils
     libsecret
     steamtinkerlaunch
-  ] ++ (if (config.host-info.gpu == "nvidia") then  [sx cudatoolkit nvtopPackages.nvidia] else []);
+  ] ++ (if (config.host-info.gpu == "nvidia") then  [cudatoolkit nvtopPackages.nvidia] else [])
+  ++ (if (config.host-info.preferred_wm == "i3") then [sx] else []);
 
   # enable CUDA when on nvidia hardware
   nixpkgs.config.cudaSupport = config.host-info.gpu == "nvidia";
