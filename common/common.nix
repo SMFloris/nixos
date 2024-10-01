@@ -7,6 +7,7 @@ in {
     ./tuigreet.nix
     ../i3/wm.nix
   ];
+  services.usbmuxd.enable = true;
   environment.variables = {
     PREFERRED_WM = "${config.host-info.preferred_wm}";
   };
@@ -17,6 +18,7 @@ in {
       127.0.0.1 api.frisbo.internal
       127.0.0.1 superadmin.frisbo.internal
       127.0.0.1 beta.frisbo.internal
+      127.0.0.1 dashboard.frisbo.internal
     '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
@@ -89,6 +91,9 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # idk
+    ios-webkit-debug-proxy
+    # others
     util-linux
     python3
     vim

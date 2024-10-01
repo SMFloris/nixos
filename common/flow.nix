@@ -57,6 +57,7 @@ in
     google-cloud-sdk-gce
     # utils gui
     bruno
+    mattermost-desktop
     evince
     wdisplays
     insomnia
