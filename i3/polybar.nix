@@ -90,10 +90,59 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
           
           modules-left = "spacer left xworkspaces slash space slash space xwindow space right";
           modules-center = "left space date space right";
-          modules-right = "left space cpu slash space slash memory slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space ollama space right spacer";
+          modules-right = "left space cpu slash space slash memory slash space slash battery temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space ollama space right spacer";
           # modules-left = "left date right spacer left xwindow right"
           # modules-center = "left xworkspaces right"
           # modules-right = "left pulseaudio spacerbg cpu spacerbg memory right spacer left systray right"
+      };
+
+      "module/battery" = {
+        type = "internal/battery";
+        full-at = 90;
+        low-at = 10;
+        battery = "BAT0";
+        adapter = "AC";
+        poll-interval = 5;
+        time-format = "%H:%M";
+        format-background = "${bg-1}";
+        format-charging = "<animation-charging> <label-charging>";
+        format-charging-background = "${bg-1}";
+        format-discharging = "<ramp-capacity> <label-discharging>";
+        format-discharging-background = "${bg-1}";
+        format-low = "<animation-low> <label-low>";
+        format-low-background = "${bg-1}";
+        format-low-foreground = "${red-1}";
+
+        label-charging = "%percentage%%";
+        label-discharging = "%percentage%%";
+        label-full = "%percentage%%";
+        label-low = "%percentage%%";
+
+        ramp-capacity-0 = " ";
+        ramp-capacity-1 = " ";
+        ramp-capacity-2 = " ";
+        ramp-capacity-3 = " ";
+        ramp-capacity-4 = " ";
+
+        bar-capacity-width = "10 ";
+
+        animation-charging-0 = " ";
+        animation-charging-1 = " ";
+        animation-charging-2 = " ";
+        animation-charging-3 = " ";
+        animation-charging-4 = " ";
+        animation-charging-framerate = "750 ";
+
+        animation-discharging-0 = " ";
+        animation-discharging-1 = " ";
+        animation-discharging-2 = " ";
+        animation-discharging-3 = " ";
+        animation-discharging-4 = " ";
+        animation-discharging-framerate = "500 ";
+
+        animation-low-0 = "! ";
+        animation-low-1 = " ";
+        animation-low-framerate = "200 ";
       };
 
       "module/spacer" = {
@@ -156,7 +205,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         format = "<label>";
         format-background = "${bg-1}";
         format-foreground = "${fg-2}";
-        label = "%title:0:120:...%";
+        label = "%title:0:60:...%";
         label-empty = "flow@onix";
       };
 

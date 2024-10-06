@@ -13,6 +13,9 @@
       <home-manager/nixos>
     ];
 
+  environment.variables = {
+    WINIT_X11_SCALE_FACTOR = "1.2";
+  };
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

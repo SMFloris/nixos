@@ -108,6 +108,7 @@ in
     };
   };
   home.file.".config/foot/foot.ini".source = ./foot.ini;
+  home.file.".config/alacritty/alacritty.toml".source = ./alacritty.toml;
   home.file.".bashrc".source = ./bashrc;
   home.file."startWm.sh".source = ./startWm.sh;
 

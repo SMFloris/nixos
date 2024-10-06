@@ -113,6 +113,11 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
 
       startup = [
         {
+          command = "default_border none";
+          always = true;
+          notification = false;
+        }
+        {
           command = "set \$playVolumeChangeSound cvlc --play-and-exit ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
           always = true;
           notification = false;

@@ -5,6 +5,7 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
 
   environment.systemPackages = with pkgs; [
     alacritty
+    foot
     xclip
     maim
     glow
