@@ -17,13 +17,14 @@ let
 in lib.mkIf (config.host-info.preferred_wm == "i3") {
   home.file.".xinitrc".source = ./xfiles/xinitrc;
   home.file.".config/dunst/dunstrc.d/00-theme.conf".source = ./dunstrc;
+  home.file.".themes/floris/xfce4-notify-4.0/gtk.css".source = ./xfce4-notifyd/gtk.css;
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file."ai_chat.sh".source = ./rofi/ai_chat.sh;
   home.file."ocr_screenshot.sh".source = ./ocr_screenshot.sh;
   
-  services.dunst = {
-    enable = true;
-  };
+  # services.dunst = {
+  #   enable = true;
+  # };
 
   dconf = {
       enable = true;
@@ -100,6 +101,12 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         "${modifier}+grave" = "workspace 10";
         "${modifier}+~" = "move workspace 10";
         "${modifier}+f" = "fullscreen toggle";
+        "${modifier}+h" = "focus left";
+        "${modifier}+j" = "focus down";
+        "${modifier}+k" = "focus up";
+        "${modifier}+l" = "focus right";
+        "${modifier}+v" = "split vertical";
+        "${modifier}+m" = "split horizontal";
         "${modifier}+Shift+f" = "focus mode_toggle";
         "${modifier}+space" = "exec '/home/flow/ai_chat.sh'";
       };

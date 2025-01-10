@@ -9,7 +9,23 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
     maim
     glow
     libnotify
+    dunst
+    xfce.xfce4-notifyd
   ];
+
+  systemd.user.services.xfce4-notifyd = {
+    description = "xfce4 notifyd";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.xfce.xfce4-notifyd}/lib/xfce4/notifyd/xfce4-notifyd";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+  };
 
   services.xserver = {
     enable = true;

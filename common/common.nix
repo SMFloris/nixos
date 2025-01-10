@@ -20,6 +20,8 @@ in {
       127.0.0.1 beta.frisbo.internal
       127.0.0.1 dashboard.frisbo.internal
     '';
+  networking.nameservers = [ "100.100.100.100" "8.8.8.8" "1.1.1.1" ];
+  networking.search = [ "tail9b2923.ts.net" ];
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
 
@@ -38,6 +40,7 @@ in {
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
+  services.tailscale.enable = true;
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
@@ -53,11 +56,28 @@ in {
       enableNvidia = config.host-info.gpu == "nvidia";
     };
     incus.enable = true;
+
+    oci-containers = {
+      backend = "docker";
+      containers = {
+        jupyter = {
+          image = "quay.io/jupyter/base-notebook";
+          cmd = ["start-notebook.py" "--NotebookApp.token='mumstheword'"];
+          volumes = [
+            "jupyter-data:/home/jovyan/work"
+          ];
+          ports = [
+            "8889:8888"
+          ];
+        };
+      };
+    };
   };
 
   # Enable sound.
   # sound.enable = true;
   # hardware.pulseaudio.enable = true;
+  services.gnome.gnome-keyring.enable = true;
   security.rtkit.enable = true;
   services.udisks2.enable = true;
   services.blueman.enable = true;
@@ -73,7 +93,7 @@ in {
   services.tumbler.enable = true;
   services.gvfs = {
     enable = true;
-    package = lib.mkForce pkgs.gnome3.gvfs;
+    package = lib.mkForce pkgs.gnome.gvfs;
   };
   hardware.keyboard.qmk.enable = true;
 
@@ -115,8 +135,11 @@ in {
     cifs-utils
     libsecret
     steamtinkerlaunch
+    appimage-run
+    seabird
   ] ++ (if (config.host-info.gpu == "nvidia") then  [cudatoolkit nvtopPackages.nvidia] else [])
-  ++ (if (config.host-info.preferred_wm == "i3") then [sx] else []);
+    ++ (if (config.host-info.ai_enabled) then  [pkgs.aider-chat] else [])
+    ++ (if (config.host-info.preferred_wm == "i3") then [sx] else []);
 
   # enable CUDA when on nvidia hardware
   nixpkgs.config.cudaSupport = config.host-info.gpu == "nvidia";
@@ -173,6 +196,7 @@ in {
       "steam"
       "steam-original"
       "steam-run"
+      "steam-unwrapped"
       "terraform"
       "slack"
       "mongodb-compass"
@@ -271,6 +295,7 @@ in {
   services.openssh = {
     enable = true;
     settings.PasswordAuthentication = true;
+    settings.X11Forwarding = true;
   };
 
   # ollama

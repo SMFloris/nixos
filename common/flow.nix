@@ -17,20 +17,23 @@ in
   ];
   home.stateVersion = "23.05";
   fonts.fontconfig.enable = true;
-  services.gnome-keyring = {
-    enable = true;
-    components = [ "pkcs11" "secrets" "ssh" ];
-  };
+  # services.gnome-keyring = {
+  #   enable = true;
+  #   components = [ "pkcs11" "secrets" "ssh" ];
+  # };
 
   home.packages = with pkgs; [
     # programming
+    k9s
+    tmux
+    gcr
     unstable-pkgs.neovim
     cargo
     nodejs
     foot
     git
     gcc
-    pulumi
+    # pulumi
     jetbrains.phpstorm
     c3c
     # utils cli
@@ -52,7 +55,7 @@ in
     kubectl
     mysql-workbench
     mongodb-compass
-    openlens
+    appimage-run
     awscli2
     google-cloud-sdk-gce
     # utils gui
@@ -79,22 +82,21 @@ in
     vial
     qmk
     # extra
-    gnome.gnome-clocks
-    gnome.file-roller
+    pkgs.gnome-clocks
+    file-roller
     thunarWithPlugins
     xfce.ristretto
     xfce.thunar-volman
     xfce.thunar-archive-plugin
     sway-contrib.grimshot
-    gnome.gnome-calculator
-    gnome.gnome-disk-utility
-    gnome.simple-scan
+    gnome-calculator
+    gnome-disk-utility
+    simple-scan
     networkmanagerapplet
-    transmission-gtk
+    transmission_4-gtk
     hexchat
     gImageReader
-    (builtins.getFlake "github:outfoxxed/quickshell").packages.${builtins.currentSystem}.default
-  ] ++ (if (config.host-info.ai_enabled) then  [(pkgs.callPackage (import ./packages/fabric.nix) {})] else [])
+  ] ++ (if (config.host-info.ai_enabled) then  [] else [])
   ++ (if (config.host-info.gpu == "nvidia") then  [unstable-pkgs.ollama-cuda] else []);
 
   home.file.".config/nvim" = {

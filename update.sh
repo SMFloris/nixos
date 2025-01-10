@@ -1,7 +1,7 @@
 #/usr/bin/env bash
 
-RELEASE=24.05
-HOME_MANAGER_RELEASE=24.05
+RELEASE=24.11
+HOME_MANAGER_RELEASE=24.11
 
 # List of inputs to search for in the channel's URL
 inputs=("home-manager" "nixos" "nixos-unstable")
