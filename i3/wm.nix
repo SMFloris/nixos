@@ -7,6 +7,7 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
     alacritty
     foot
     xclip
+    simplescreenrecorder
     maim
     glow
     libnotify

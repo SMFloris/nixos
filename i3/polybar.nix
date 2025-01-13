@@ -90,7 +90,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
           
           modules-left = "spacer left xworkspaces slash space slash space xwindow space right";
           modules-center = "left space date space right";
-          modules-right = "left space cpu slash space slash memory slash space slash battery temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space ollama space right spacer";
+          modules-right = "left space cpu slash space slash memory slash space slash battery slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space ollama space right spacer";
           # modules-left = "left date right spacer left xwindow right"
           # modules-center = "left xworkspaces right"
           # modules-right = "left pulseaudio spacerbg cpu spacerbg memory right spacer left systray right"
@@ -105,13 +105,17 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         poll-interval = 5;
         time-format = "%H:%M";
         format-background = "${bg-1}";
+        label-underline = "${fg-1}";
         format-charging = "<animation-charging> <label-charging>";
         format-charging-background = "${bg-1}";
+        format-charging-underline = "${fg-1}";
         format-discharging = "<ramp-capacity> <label-discharging>";
+        format-discharging-underline = "${fg-1}";
         format-discharging-background = "${bg-1}";
         format-low = "<animation-low> <label-low>";
         format-low-background = "${bg-1}";
         format-low-foreground = "${red-1}";
+        format-low-underline = "${red-1}";
 
         label-charging = "%percentage%%";
         label-discharging = "%percentage%%";
