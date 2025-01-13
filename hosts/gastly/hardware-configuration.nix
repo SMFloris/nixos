@@ -13,6 +13,7 @@
   config = {
     host-info.gpu = "amd";
     host-info.hostname = "gastly";
+    host-info.preferred_wm = "i3";
 
     boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "sd_mod" ];
     boot.initrd.kernelModules = [ "amdgpu" ];

@@ -94,13 +94,13 @@ in
     vial
     qmk
     # extra
-    pkgs.gnome-clocks
     file-roller
     thunarWithPlugins
     xfce.ristretto
     xfce.thunar-volman
     xfce.thunar-archive-plugin
     sway-contrib.grimshot
+    gnome-clocks
     gnome-calculator
     gnome-disk-utility
     simple-scan
