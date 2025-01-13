@@ -108,8 +108,8 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         "${modifier}+Tab" = "workspace back_and_forth";
         "${modifier}+grave" = "workspace 10";
         "${modifier}+~" = "move workspace 10";
-        "${modifier}+m" = "move workspace to output right";
-        "${modifier}+n" = "move workspace to output left";
+        "${modifier}+Shift+m" = "move workspace to output right";
+        "${modifier}+Shift+n" = "move workspace to output left";
         "${modifier}+f" = "fullscreen toggle";
         "${modifier}+h" = "focus left";
         "${modifier}+j" = "focus down";
