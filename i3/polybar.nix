@@ -366,7 +366,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         interval = 1;
         date = "%b %e, %H:%M";
         # date-alt = "%Y-%m-%d %H:%M:%S";
-        label = "%{A1:${pkgs.gnome.gnome-clocks}/bin/gnome-clocks:}%date%%{A}";
+        label = "%{A1:${pkgs.gnome-clocks}/bin/gnome-clocks:}%date%%{A}";
         label-foreground = "${fg-3}";
         label-background = "${bg-1}";
       };

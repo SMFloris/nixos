@@ -11,7 +11,7 @@ in {
   environment.variables = {
     PREFERRED_WM = "${config.host-info.preferred_wm}";
   };
-  boot.kernelPackages = pkgs.linuxPackages_xanmod;
+  nix.useSandbox = true;
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.extraHosts =
     ''
@@ -113,6 +113,8 @@ in {
   environment.systemPackages = with pkgs; [
     virtualgl
     ios-webkit-debug-proxy
+    # k8s
+    kind
     # others
     util-linux
     python3

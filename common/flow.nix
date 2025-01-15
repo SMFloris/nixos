@@ -13,54 +13,6 @@ let
       sha256 =  "sha256-2OxUHnmFtT/TunfO+fOBOrkaHKlnqpO1wJWs79wkvAY=";
     };
   });
-  my-c3-lsp = pkgs.stdenv.mkDerivation {
-    name = "c3-lsp";
-    sourceRoot = "c3-lsp";
-    srcs = [
-      (pkgs.fetchFromGitHub {
-        name = "c3-lsp";
-        owner = "pherrymason";
-        repo = "c3-lsp";
-        rev = "refs/tags/v0.3.2";
-        sha256 =  "sha256-HD3NE2L1ge0pf8vtrKkYh4GIZg6lSPTZGFQ+LPbDup4=";
-      })
-      (pkgs.fetchFromGitHub {
-        name = "c3c";
-        owner = "c3lang";
-        repo = "c3c";
-        rev = "refs/tags/v0.6.4";
-        sha256 =  "sha256-nSsNLde9jK+GgSp6DXXmD31+un7peK6t/vnzM7hZDFg=";
-       })
-      (pkgs.fetchFromGitHub {
-        name = "tree-sitter-c3";
-        owner = "c3lang";
-        repo = "tree-sitter-c3";
-        rev = "ef09c89e498b70e4dfbf81d00e8f4086fa8d1c0a";
-        sha256 = "sha256-55sX+yMEa0PAUZ2Vym8rbOCE7KyJowv7amiUm0xA6Lg=";
-        # sha256 =  "sha256-nSsNLde9jK+GgSp6DXXmD31+un7peK6t/vnzM7hZDFg=";
-        # sha256 =  "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-       })
-    ];
-    buildInputs = [
-      pkgs.nodejs
-      pkgs.tree-sitter
-      pkgs.go
-    ];
-    preBuild = ''
-      mkdir -p assets
-      cp -r ../c3c ./assets/
-      cp -r ../tree-sitter-c3 ./assets/
-      substituteInPlace Makefile --replace git echo
-      substituteInPlace Makefile --replace "tree-sitter generate" echo
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/bin
-      GOPATH=/tmp GOCACHE=/tmp/go-cache GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -C server/cmd/lsp -o $out/bin/c3lsp
-      runHook postInstall
-    '';
-  };
   unstable-pkgs = import <nixos-unstable> {config.allowUnfree=true;};
 in
 {
@@ -72,7 +24,7 @@ in
     (import ../i3/rofi.nix {inherit config pkgs lib;})
     ../special/cybersecurity.nix
   ];
-  home.stateVersion = "23.05";
+  home.stateVersion = "24.11";
   fonts.fontconfig.enable = true;
   # services.gnome-keyring = {
   #   enable = true;
@@ -91,10 +43,10 @@ in
     git
     gcc
     # pulumi
-    jetbrains.phpstorm
+    # jetbrains.phpstorm
     fzf
     my-c3c
-    my-c3-lsp
+    c3-lsp
     godot_4
     # utils cli
     fd

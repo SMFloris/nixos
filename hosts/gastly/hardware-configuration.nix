@@ -19,6 +19,7 @@
     boot.kernelModules = [ "kvm-amd" ];
     boot.extraModulePackages = [ ];
     boot.kernelParams = [ "mem_sleep_default=deep" "amd-pstate=active" "amdgpu.dcdebugmask=0x10" ];
+    boot.kernelPackages = pkgs.linuxPackages_latest;
 
     fileSystems."/" =
       {
