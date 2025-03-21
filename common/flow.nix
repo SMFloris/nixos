@@ -31,6 +31,10 @@ in
   #   components = [ "pkcs11" "secrets" "ssh" ];
   # };
 
+  xdg = {
+    enable = true;
+  };
+
   home.packages = with pkgs; [
     # programming
     k9s
@@ -44,6 +48,7 @@ in
     gcc
     # pulumi
     # jetbrains.phpstorm
+    jetbrains.idea-community
     fzf
     my-c3c
     c3-lsp
@@ -51,7 +56,9 @@ in
     # utils cli
     fd
     ripgrep
+    bc
     jq
+    yq-go
     pciutils
     usbutils
     libmbim
@@ -65,6 +72,8 @@ in
     # clouds
     terraform
     kubectl
+    kustomize
+    doctl
     mysql-workbench
     mongodb-compass
     appimage-run

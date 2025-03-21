@@ -117,8 +117,9 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    virtualgl
-    ios-webkit-debug-proxy
+    # networking
+    dig
+    bc
     # k8s
     kind
     kubernetes-helm
@@ -132,8 +133,10 @@ in {
     vim
     libva-utils
     wget
+    # browsers
     firefox
     chromium
+    # utils
     tree
     powertop
     vlc
