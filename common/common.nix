@@ -17,11 +17,18 @@ in {
     ''
       127.0.0.1 api.frisbo.internal
       127.0.0.1 superadmin.frisbo.internal
+      127.0.0.1 status.frisbo.internal
       127.0.0.1 beta.frisbo.internal
       127.0.0.1 dashboard.frisbo.internal
+      127.0.0.1 rmq.frisbo.internal
+      172.19.0.4 api.frisbo.internal
+      172.19.0.4 superadmin.frisbo.internal
+      172.19.0.4 status.frisbo.internal
+      172.19.0.4 beta.frisbo.internal
+      172.19.0.4 dashboard.frisbo.internal
+      172.19.0.4 rmq.frisbo.internal
+      172.19.0.4 prom.frisbo.internal
     '';
-  networking.nameservers = [ "100.100.100.100" "8.8.8.8" "1.1.1.1" ];
-  networking.search = [ "tail9b2923.ts.net" ];
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
 
@@ -53,7 +60,6 @@ in {
     docker = {
       enable = true;
       enableOnBoot = false;
-      enableNvidia = config.host-info.gpu == "nvidia";
     };
     incus.enable = true;
 
@@ -115,9 +121,14 @@ in {
     ios-webkit-debug-proxy
     # k8s
     kind
+    kubernetes-helm
     # others
+    tmux
+    lsof
+    pstree
     util-linux
     python3
+    python3Packages.pip
     vim
     libva-utils
     wget
@@ -136,7 +147,6 @@ in {
     quickemu
     cifs-utils
     libsecret
-    steamtinkerlaunch
     appimage-run
     seabird
   ] ++ (if (config.host-info.gpu == "nvidia") then  [cudatoolkit nvtopPackages.nvidia] else [])
@@ -148,8 +158,10 @@ in {
 
   programs.nix-ld.enable = true;
   programs.seahorse.enable = true;
+  programs.gamemode.enable = true;
   programs.steam = {
     enable = true;
+    protontricks.enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
