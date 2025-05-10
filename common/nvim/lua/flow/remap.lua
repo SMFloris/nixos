@@ -1,30 +1,45 @@
+local wk = require("which-key")
+
+-- groups
+wk.add({ "<leader>c", color = "green", icon = "", group = "Quickfix" }) -- clipboard/list
+wk.add({ "<leader>d", color = "red", icon = "", group = "Debugger" })
+wk.add({ "<leader>b", color = "blue", icon = "", group = "Buffer" })
+wk.add({ "<leader>m", color = "yellow", icon = "", group = "Marks" })
+wk.add({ "<leader>x", color = "orange", icon = "", group = "Trouble" })
+wk.add({ "<leader>f", color = "cyan", icon = "󰍉", group = "Picker/Finder" })
+wk.add({ "<leader>g", color = "purple", icon = "", group = "Git" })
+wk.add({ "<leader>l", color = "azure", icon = "", group = "Lsp" })
+
+-- comment
+wk.add({ "<leader>/", hidden = true })
+vim.keymap.set("n", "<leader>/", "gcc", { desc = "󰆉 Toggle Line Comment" })
+vim.keymap.set("v", "<leader>/", "gc", { desc = "󰆉 Toggle Block Comment" })
+
+-- move line up/down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
-vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- greatest remap ever
-vim.keymap.set("x", "<leader>p", [["_dP]])
-
--- next greatest remap ever : asbjornHaland
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
-vim.keymap.set("n", "<leader>Y", [["+Y]])
-
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
-
+-- greatest remap ever - paste without overwriting buffer
+vim.keymap.set("x", "p", [["_dP]])
 vim.keymap.set("n", "Q", "<nop>")
-vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { desc = " Format with LSP" })
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>cq", function()
+    local is_open = vim.fn.getqflist({ winid = 0 }).winid ~= 0
+    if is_open then
+        vim.cmd("cclose")
+    else
+        vim.cmd("copen")
+    end
+end, { desc = " Toggle Quickfix List" })
+vim.keymap.set("n", "<leader>cc", "<cmd>cnext<CR>zz", { desc = " Quickfix Next" })
+vim.keymap.set("n", "<leader>cp", "<cmd>cprev<CR>zz", { desc = " Quickfix Previous" })
 
 vim.api.nvim_create_augroup("custom_buffer", { clear = true })
 

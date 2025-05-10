@@ -140,33 +140,31 @@ return {
                 "<leader>xx",
                 mode = "n",
                 "<cmd>Trouble diagnostics toggle<cr>",
-                desc = "TroubleToggle"
+                desc = " Trouble Toggle"
             },
             {
                 "<leader>xd",
                 mode = "n",
-                "<cmd>TroubleToggle document_diagnostics<cr>",
-                desc =
-                "Trouble document_diagnostics"
+                "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+                desc = " Trouble Document Diagnostics"
             },
             {
                 "<leader>xl",
                 mode = "n",
                 "<cmd>Trouble loclist toggle<cr>",
-                desc = "Trouble loclist"
+                desc = " Trouble Loclist"
             },
             {
                 "<leader>xq",
                 mode = "n",
                 "<cmd>Trouble quickfix toggle<cr>",
-                desc = "Trouble quickfix"
+                desc = " Trouble Quickfix"
             },
             {
                 "<leader>xR",
                 mode = "n",
                 "<cmd>Trouble lsp_references toggle<cr>",
-                desc =
-                "Trouble lsp_references"
+                desc = "󰌹 Trouble LSP References"
             },
         }
     }

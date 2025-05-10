@@ -114,23 +114,23 @@ return {
         },
         -- NOTE: Keymaps
         keys = {
-            { "<leader>gg", function() require("snacks").lazygit() end,                                  desc = "Lazygit" },
-            { "<leader>gl", function() require("snacks").lazygit.log() end,                              desc = "Lazygit Logs" },
-            { "<leader>rN", function() require("snacks").rename.rename_file() end,                       desc = "Fast Rename Current File" },
-            { "<leader>dB", function() require("snacks").bufdelete() end,                                desc = "Delete or Close Buffer  (Confirm)" },
+            { "<leader><space>", function() require("snacks").picker.smart() end, desc = "󰍉 Smart Find Files" },
+            { "<leader>rN", function() require("snacks").rename.rename_file() end, desc = " Fast Rename Current File" },
+            { "<leader>bq", function() require("snacks").bufdelete() end, desc = "󰅖 Delete or Close Buffer (Confirm)" },
 
             -- Snacks Picker
-            { "<leader>ff", function() require("snacks").picker.files() end,                             desc = "Find Files (Snacks Picker)" },
-            { "<leader>fw", function() require("snacks").picker.grep() end,                              desc = "Grep word" },
-            { "<leader>fc", function() require("snacks").picker.grep_word() end,                         desc = "Search Visual selection or Word",  mode = { "n", "x" } },
-            { "<leader>fk", function() require("snacks").picker.keymaps({ layout = "ivy" }) end,         desc = "Search Keymaps (Snacks Picker)" },
+            { "<leader>ff", function() require("snacks").picker.files() end, desc = "󰈞 Find Files (Snacks Picker)" },
+            { "<leader>fw", function() require("snacks").picker.grep() end, desc = "󰱼 Grep Word" },
+            { "<leader>fc", function() require("snacks").picker.grep_word() end, desc = "󰈬 Search Visual Selection or Word", mode = { "n", "x" } },
+            { "<leader>fk", function() require("snacks").picker.keymaps({ layout = "ivy" }) end, desc = " Search Keymaps (Snacks Picker)" },
 
             -- Git Stuff
-            { "<leader>gb", function() require("snacks").picker.git_branches({ layout = "select" }) end, desc = "Pick and Switch Git Branches" },
+            { "<leader>gg", function() require("snacks").lazygit() end, desc = " Lazygit" },
+            { "<leader>gb", function() require("snacks").git.blame_line() end, desc = " Git Blame" },
+            { "<leader>gl", function() require("snacks").lazygit.log() end, desc = "󰦻 Lazygit Logs" },
 
             -- Other Utils
-            { "<leader>th", function() require("snacks").picker.colorschemes({ layout = "ivy" }) end,    desc = "Pick Color Schemes" },
-            { "<leader>fh", function() require("snacks").picker.help() end,                              desc = "Help Pages" },
+            { "<leader>fh", function() require("snacks").picker.help() end, desc = "󰋖 Help Pages" },
         }
     },
     -- NOTE: todo comments w/ snacks
@@ -139,8 +139,7 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         optional = true,
         keys = {
-            { "<leader>pt", function() require("snacks").picker.todo_comments() end,                                          desc = "Todo" },
-            { "<leader>pT", function() require("snacks").picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
+            { "<leader>ft", function() require("snacks").picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
         },
     },
     {
@@ -161,10 +160,11 @@ return {
                     },
                 },
             })
-            vim.keymap.set("n", "<leader>mm", recall.goto_next, { noremap = true, silent = true })
-            vim.keymap.set("n", "<leader>mn", recall.goto_prev, { noremap = true, silent = true })
-            vim.keymap.set("n", "<leader>ma", recall.toggle, { noremap = true, silent = true })
-            vim.keymap.set("n", "<leader>ml", require("recall.snacks").pick, { noremap = true, silent = true })
+            vim.keymap.set("n", "<leader>mm", recall.goto_next, { noremap = true, silent = true, desc = " Next Mark" })
+            vim.keymap.set("n", "<leader>mn", recall.goto_prev, { noremap = true, silent = true, desc = " Prev Mark" })
+            vim.keymap.set("n", "<leader>ma", recall.toggle, { noremap = true, silent = true, desc = " Toggle Mark" })
+            vim.keymap.set("n", "<leader>ml", require("recall.snacks").pick,
+                { noremap = true, silent = true, desc = " Mark List" })
         end,
     }
 }
