@@ -1,9 +1,43 @@
 { config, pkgs, lib, ... }:
 
 let
+  treesitterWithGrammars = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
+    p.bash
+    p.comment
+    p.css
+    p.dockerfile
+    p.fish
+    p.gitattributes
+    p.gitignore
+    p.go
+    p.gomod
+    p.gowork
+    p.hcl
+    p.javascript
+    p.jq
+    p.json5
+    p.json
+    p.lua
+    p.make
+    p.markdown
+    p.nix
+    p.python
+    p.rust
+    p.toml
+    p.typescript
+    p.vue
+    p.yaml
+  ]));
+
+  treesitter-parsers = pkgs.symlinkJoin {
+    name = "treesitter-parsers";
+    paths = treesitterWithGrammars.dependencies;
+  };
+
   thunarWithPlugins = pkgs.xfce.thunar.override {
     thunarPlugins = [ pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin ];
   };
+
   my-c3c = pkgs.c3c.overrideAttrs (prev: final: {
     version = "0.6.5";
     src = pkgs.fetchFromGitHub {
@@ -26,21 +60,24 @@ in
   ];
   home.stateVersion = "24.11";
   fonts.fontconfig.enable = true;
-  # services.gnome-keyring = {
-  #   enable = true;
-  #   components = [ "pkcs11" "secrets" "ssh" ];
-  # };
 
   xdg = {
     enable = true;
   };
 
   home.packages = with pkgs; [
+    # neovim
+    ripgrep
+    fd
+    lua-language-server
+    rust-analyzer-unwrapped
+    lazygit
+    black
+    nodejs_22
     # programming
     k9s
     tmux
     gcr
-    unstable-pkgs.neovim
     cargo
     nodejs
     foot
@@ -54,8 +91,6 @@ in
     c3-lsp
     godot_4
     # utils cli
-    fd
-    ripgrep
     bc
     jq
     yq-go
@@ -89,6 +124,7 @@ in
     meld
     octave
     libreoffice
+    # media
     blender
     gimp
     # sync
@@ -120,13 +156,33 @@ in
   ] ++ (if (config.host-info.ai_enabled) then  [] else [])
   ++ (if (config.host-info.gpu == "nvidia") then  [unstable-pkgs.ollama-cuda] else []);
 
-  home.file.".config/nvim" = {
+  programs.neovim = {
+    enable = true;
+    package = unstable-pkgs.neovim-unwrapped;
+    vimAlias = true;
+    withNodeJs = true;
+
+    plugins = [
+      treesitterWithGrammars
+    ];
+  };
+
+  home.file."./.config/nvim/" = {
+    source = ./nvim;
     recursive = true;
-    source = builtins.fetchGit {
-      url = "https://github.com/SMFloris/nvim-config";
-      # url = "/home/flow/Projects/new-nvim-config";
-      ref = "master";
-    };
+  };
+
+  home.file."./.config/nvim/lua/flow/init.lua".text = ''
+    require("flow.set")
+    require("flow.remap")
+    vim.opt.runtimepath:append("${treesitter-parsers}")
+  '';
+
+  # Treesitter is configured as a locally developed module in lazy.nvim
+  # we hardcode a symlink here so that we can refer to it in our lazy config
+  home.file."./.local/share/nvim/nix/nvim-treesitter/" = {
+    recursive = true;
+    source = treesitterWithGrammars;
   };
   home.file.".config/foot/foot.ini".source = ./foot.ini;
   home.file.".config/alacritty/alacritty.toml".source = ./alacritty.toml;

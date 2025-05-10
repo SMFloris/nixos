@@ -61,7 +61,10 @@ in {
       enable = true;
       enableOnBoot = false;
     };
-    incus.enable = true;
+    vswitch = {
+      enable = true;
+      resetOnStart = true;
+    };
 
     oci-containers = {
       backend = "docker";
