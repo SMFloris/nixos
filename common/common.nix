@@ -155,8 +155,9 @@ in {
     libsecret
     appimage-run
     seabird
+    # ai
+    unstable.aider-chat
   ] ++ (if (config.host-info.gpu == "nvidia") then  [cudatoolkit nvtopPackages.nvidia] else [])
-    ++ (if (config.host-info.ai_enabled) then  [pkgs.aider-chat] else [])
     ++ (if (config.host-info.preferred_wm == "i3") then [sx] else []);
 
   # enable CUDA when on nvidia hardware
