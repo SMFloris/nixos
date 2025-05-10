@@ -10,6 +10,8 @@ in {
   services.usbmuxd.enable = true;
   environment.variables = {
     PREFERRED_WM = "${config.host-info.preferred_wm}";
+    OLLAMA_API_BASE = "http://100.112.153.1:11434";
+    AIDER_MODEL = "ollama_chat/qwen3:30b-a3b";
   };
   nix.useSandbox = true;
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
@@ -325,6 +327,10 @@ in {
     serviceConfig = {
         Type = "simple";
         ExecStart = if (config.host-info.gpu == "nvidia") then "${unstable.ollama-cuda}/bin/ollama serve" else "${unstable.ollama}/bin/ollama serve";
+        Environment = [
+            "OLLAMA_HOST=0.0.0.0:11434"
+            "OLLAMA_CONTEXT_LENGTH=40960"
+        ];
         Restart = "on-failure";
         RestartSec = 10;
         TimeoutStopSec = 20;

@@ -15,7 +15,7 @@
     boot.kernelModules = [ "kvm-amd" ];
     boot.kernelParams = [ "nvidia_drm.fbdev=1" ];
     boot.extraModulePackages = [ ];
-    boot.kernelPackages = pkgs.linuxPackages_xanmod;
+    # boot.kernelPackages = pkgs.linuxPackages_xanmod;
 
     fileSystems."/" =
       { device = "/dev/disk/by-uuid/06204b02-1dbf-403d-9fd2-e84b963da8b0";

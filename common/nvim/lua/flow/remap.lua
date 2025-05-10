@@ -1,14 +1,15 @@
 local wk = require("which-key")
 
 -- groups
-wk.add({ "<leader>c", color = "green", icon = "", group = "Quickfix" }) -- clipboard/list
-wk.add({ "<leader>d", color = "red", icon = "", group = "Debugger" })
-wk.add({ "<leader>b", color = "blue", icon = "", group = "Buffer" })
-wk.add({ "<leader>m", color = "yellow", icon = "", group = "Marks" })
-wk.add({ "<leader>x", color = "orange", icon = "", group = "Trouble" })
-wk.add({ "<leader>f", color = "cyan", icon = "󰍉", group = "Picker/Finder" })
-wk.add({ "<leader>g", color = "purple", icon = "", group = "Git" })
-wk.add({ "<leader>l", color = "azure", icon = "", group = "Lsp" })
+wk.add({ "<leader>a", icon = { icon = "", color = "green" }, group = "AI" })
+wk.add({ "<leader>c", icon = { color = "green", icon = "" }, group = "Quickfix" })
+wk.add({ "<leader>d", icon = { color = "red", icon = "" }, group = "Debugger" })
+wk.add({ "<leader>b", icon = { color = "blue", icon = "" }, group = "Buffer" })
+wk.add({ "<leader>m", icon = { color = "yellow", icon = "" }, group = "Marks" })
+wk.add({ "<leader>x", icon = { color = "orange", icon = "" }, group = "Trouble" })
+wk.add({ "<leader>f", icon = { color = "cyan", icon = "󰍉" }, group = "Picker/Finder" })
+wk.add({ "<leader>g", icon = { color = "purple", icon = "" }, group = "Git" })
+wk.add({ "<leader>l", icon = { color = "azure", icon = "" }, group = "Lsp" })
 
 -- comment
 wk.add({ "<leader>/", hidden = true })
