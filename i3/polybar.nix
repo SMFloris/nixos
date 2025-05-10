@@ -45,6 +45,13 @@ let
   orange-1 = "#e7c188";
   orange-2 = "#e3b878";
   orange-3 = "#e0af67";
+
+  hostname = config.system.hostname;
+  hwmonPaths = {                                                     
+    "gastly" = "/sys/devices/virtual/thermal/thermal_zone0/hwmon4/temp1_input";                
+    "onix" = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon2/temp1_input";                  
+    # Add more hostnames as needed                                   
+  };                                                                 
 in lib.mkIf (config.host-info.preferred_wm == "i3") {
   services.polybar = {
     enable = true;
