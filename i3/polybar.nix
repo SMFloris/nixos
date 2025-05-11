@@ -46,9 +46,9 @@ let
   orange-2 = "#e3b878";
   orange-3 = "#e0af67";
 
-  hostname = config.system.hostname;
+  hostname = config.host-info.hostname;
   hwmonPaths = {                                                     
-    "gastly" = "/sys/devices/virtual/thermal/thermal_zone0/hwmon4/temp1_input";                
+    "gastly" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp1_input";                
     "onix" = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon2/temp1_input";                  
     # Add more hostnames as needed                                   
   };                                                                 
@@ -320,7 +320,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
         type = "internal/temperature";
         interval = 1;
         thermal-zone = 0;
-        hwmon-path = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon2/temp1_input";
+        hwmon-path = "${lib.getAttr hostname hwmonPaths}";
         warn-temperature = 65;
         units = true;
       

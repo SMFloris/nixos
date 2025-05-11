@@ -11,7 +11,7 @@ in {
   environment.variables = {
     PREFERRED_WM = "${config.host-info.preferred_wm}";
     OLLAMA_API_BASE = "http://100.112.153.1:11434";
-    AIDER_MODEL = "ollama_chat/qwen3:30b-a3b";
+    AIDER_MODEL = "ollama/qwen3:30b-a3b";
   };
   nix.useSandbox = true;
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.

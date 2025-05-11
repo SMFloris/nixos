@@ -76,6 +76,7 @@ in
     nodejs_22
     # programming
     k9s
+    go
     tmux
     gcr
     cargo
@@ -166,6 +167,8 @@ in
       treesitterWithGrammars
     ];
   };
+
+  home.file."./.aider.model.settings.yml".source = ./aider.model.settings.yml;
 
   home.file."./.config/nvim/" = {
     source = ./nvim;
