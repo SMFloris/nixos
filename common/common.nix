@@ -1,8 +1,9 @@
 { config, pkgs, lib, fetchFromGitHub, fetchFromGitLab, ... }:
 
-let 
+let
   unstable = import <nixos-unstable> {config.allowUnfree = true;};
 in {
+  nixpkgs.overlays = [ (import ./overlays/c3-lsp.nix) (import ./overlays/c3c.nix) ];
   imports = [
     ./tuigreet.nix
     ../i3/wm.nix
@@ -30,6 +31,7 @@ in {
       172.19.0.4 dashboard.frisbo.internal
       172.19.0.4 rmq.frisbo.internal
       172.19.0.4 prom.frisbo.internal
+      100.127.121.86 ai.me
     '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
@@ -62,6 +64,7 @@ in {
     docker = {
       enable = true;
       enableOnBoot = false;
+      extraOptions = "--insecure-registry registry.stoica-marcu.ro";
     };
     vswitch = {
       enable = true;

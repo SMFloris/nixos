@@ -15,6 +15,7 @@ let
     p.hcl
     p.javascript
     p.jq
+    p.php
     p.json5
     p.json
     p.lua
@@ -38,15 +39,6 @@ let
     thunarPlugins = [ pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin ];
   };
 
-  my-c3c = pkgs.c3c.overrideAttrs (prev: final: {
-    version = "0.6.5";
-    src = pkgs.fetchFromGitHub {
-      owner = "c3lang";
-      repo = "c3c";
-      rev = "refs/tags/v0.6.5";
-      sha256 =  "sha256-2OxUHnmFtT/TunfO+fOBOrkaHKlnqpO1wJWs79wkvAY=";
-    };
-  });
   unstable-pkgs = import <nixos-unstable> {config.allowUnfree=true;};
 in
 {
@@ -77,6 +69,7 @@ in
     # programming
     k9s
     go
+    php
     tmux
     gcr
     cargo
@@ -88,7 +81,7 @@ in
     # jetbrains.phpstorm
     jetbrains.idea-community
     fzf
-    my-c3c
+    c3c
     c3-lsp
     godot_4
     # utils cli

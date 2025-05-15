@@ -1,6 +1,6 @@
 return {
     {
-        'williamboman/mason.nvim',
+        'mason-org/mason.nvim',
         config = function()
             require("mason").setup()
         end
@@ -385,7 +385,8 @@ return {
         'neovim/nvim-lspconfig',
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
-            { 'williamboman/mason-lspconfig.nvim' },
+            { "nvim-lua/plenary.nvim" },
+            { 'mason-org/mason-lspconfig.nvim' },
             { 'nvim-treesitter/nvim-treesitter' },
         },
         config = function()
@@ -452,6 +453,12 @@ return {
                 single_file_support = true,
             })
 
+            vim.lsp.config('c3_lsp', {
+                cmd = { 'c3-lsp' },
+                root_markers = { 'project.json', 'manifest.json', '.git' },
+                filetypes = { 'c3', 'c3i' },
+            })
+
             vim.diagnostic.config({
                 virtual_text = true,
                 signs = true,
@@ -462,13 +469,14 @@ return {
             })
 
             require('mason-lspconfig').setup({
-                ensure_installed = { 'lua_ls', 'gopls', 'terraformls' },
+                ensure_installed = { 'lua_ls', 'gopls', 'terraformls', 'phpactor', 'nil_ls', 'pylsp', 'c3_lsp' },
                 handlers = {
                     function(server_name)
                         lspconfig[server_name].setup({})
                     end,
 
                     gopls = lsp.noop,
+                    c3_lsp = lsp.noop,
                     rust_analyzer = lsp.noop,
 
                     yamlls = function()
