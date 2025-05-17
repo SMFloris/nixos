@@ -24,14 +24,8 @@ in {
       127.0.0.1 beta.frisbo.internal
       127.0.0.1 dashboard.frisbo.internal
       127.0.0.1 rmq.frisbo.internal
-      172.19.0.4 api.frisbo.internal
-      172.19.0.4 superadmin.frisbo.internal
-      172.19.0.4 status.frisbo.internal
-      172.19.0.4 beta.frisbo.internal
-      172.19.0.4 dashboard.frisbo.internal
-      172.19.0.4 rmq.frisbo.internal
-      172.19.0.4 prom.frisbo.internal
       100.127.121.86 ai.me
+      100.126.121.86 registry.stoica-marcu.ro
     '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
@@ -64,7 +58,9 @@ in {
     docker = {
       enable = true;
       enableOnBoot = false;
-      extraOptions = "--insecure-registry registry.stoica-marcu.ro";
+      daemon.settings = {
+        insecure-registries = [ "registry.stoica-marcu.ro" ];
+      };
     };
     vswitch = {
       enable = true;
@@ -125,6 +121,8 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # zot
+    (pkgs.callPackage (import ./packages/zil.nix) {})
     # networking
     dig
     bc
