@@ -167,6 +167,7 @@ in {
   nixpkgs.config.cudaSupport = config.host-info.gpu == "nvidia";
 
   programs.nix-ld.enable = true;
+  programs.mosh.enable = true;
   programs.seahorse.enable = true;
   programs.gamemode.enable = true;
   programs.steam = {
