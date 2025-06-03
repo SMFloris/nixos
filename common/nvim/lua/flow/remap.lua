@@ -11,10 +11,29 @@ wk.add({ "<leader>f", icon = { color = "cyan", icon = "󰍉" }, group = "Picker/
 wk.add({ "<leader>g", icon = { color = "purple", icon = "" }, group = "Git" })
 wk.add({ "<leader>l", icon = { color = "azure", icon = "" }, group = "Lsp" })
 
+-- auto format
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    callback = function()
+        if vim.b.format_on_save == nil then
+            vim.b.format_on_save = true
+        end
+    end,
+})
+
+vim.keymap.set("n", "<leader>F", function()
+    vim.b.format_on_save = not vim.b.format_on_save
+    print("Format on save: " .. tostring(vim.b.format_on_save))
+end, { desc = "Toggle format on save" })
+
 -- comment
 wk.add({ "<leader>/", hidden = true })
 vim.keymap.set("n", "<leader>/", "gcc", { desc = "󰆉 Toggle Line Comment" })
 vim.keymap.set("v", "<leader>/", "gc", { desc = "󰆉 Toggle Block Comment" })
+
+-- indent/deintent
+vim.keymap.set("n", ">>", ">>", { noremap = true, silent = true })
+vim.keymap.set("n", "<<", "<<", { noremap = true, silent = true })
 
 -- move line up/down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")

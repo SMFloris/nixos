@@ -405,11 +405,12 @@ return {
             vim.api.nvim_create_autocmd("BufWritePre", {
                 pattern = "*",
                 callback = function()
-                    vim.lsp.buf.format({ timeout_ms = 200 })
+                    if vim.b.format_on_save ~= false then
+                        vim.lsp.buf.format({ timeout_ms = 200 })
+                    end
                 end,
                 group = format_sync_grp,
             })
-
             local Snacks = require("snacks")
             local lsp_attach = function(client, bufnr)
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition,

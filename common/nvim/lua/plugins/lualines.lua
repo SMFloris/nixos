@@ -1,3 +1,11 @@
+local function format_status()
+    if vim.b.format_on_save == false then
+        return "󰛳 fmt:off"
+    else
+        return "󰛳 fmt:on"
+    end
+end
+
 return {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -17,6 +25,7 @@ return {
                         cond = require("noice").api.statusline.mode.has,
                         color = { fg = "#ff9e64" },
                     },
+                    format_status
                 },
                 lualine_y = { "progress" },
                 lualine_z = { "location" },

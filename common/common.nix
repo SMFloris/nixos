@@ -55,6 +55,10 @@ in {
   # services.printing.enable = true;
   services.fwupd.enable = true;
   virtualisation = {
+      podman = {
+        enable = true;
+        dockerCompat = false;
+      };
     docker = {
       enable = true;
       enableOnBoot = false;
@@ -130,6 +134,7 @@ in {
     kind
     kubernetes-helm
     # others
+    natscli
     tmux
     lsof
     pstree
