@@ -128,10 +128,10 @@ in {
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.flow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" "incus-admin" "libvirtd" "kvm" "libvirt" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" "video" "docker" "incus-admin" "libvirtd" "kvm" "libvirt" ]; # Enable 'sudo' for the user.
   };
   home-manager.extraSpecialArgs = { inherit (config) host-info; inherit (config) home-manager; };
   home-manager.users.flow = import ./flow.nix;
@@ -351,20 +351,19 @@ in {
     settings.X11Forwarding = true;
   };
 
-  # ollama
-  systemd.user.services.ollama = lib.mkIf (config.host-info.ai_enabled == true) {
-    description = "ollama";
+  # llama.cpp via Docker with model preload
+  # The model must be downloaded manually or through a different mechanism before starting the service.
+  # To download the model, run:
+  #   ${pkgs.curl}/bin/curl -L -o /home/flow/models/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf https://huggingface.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/resolve/main/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf?download=true
+  systemd.user.services.llama-cpp = lib.mkIf (config.host-info.ai_enabled == true && config.host-info.gpu == "nvidia") {
+    description = "llama.cpp server via Docker";
     serviceConfig = {
-        Type = "simple";
-        ExecStart = if (config.host-info.gpu == "nvidia") then "${unstable.ollama-cuda}/bin/ollama serve" else "${unstable.ollama}/bin/ollama serve";
-        Environment = [
-            "OLLAMA_HOST=0.0.0.0:11434"
-            "OLLAMA_CONTEXT_LENGTH=40960"
-        ];
-        Restart = "on-failure";
-        RestartSec = 10;
-        TimeoutStopSec = 20;
-      };
+      Type = "simple";
+      ExecStart = "${pkgs.docker} run --rm --shm-size 16g --device=nvidia.com/gpu=all -v /home/flow/models:/root/.cache/llama.cpp -p 8080:8080 docker.io/local/llama.cpp:server-cuda --hf-repo unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF   --hf-file Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf --temp 0.7 --min-p 0.0 --top-p 0.80 --top-k 20 --repeat-penalty 1.05 --jinja  --host 0.0.0.0 --port 8080 -c 32684 -ngl 99";
+      Restart = "on-failure";
+      RestartSec = 10;
+      TimeoutStopSec = 20;
+    };
   };
 
   # Open ports in the firewall.
