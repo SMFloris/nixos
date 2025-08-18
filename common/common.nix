@@ -3,13 +3,23 @@
 let
   unstable = import <nixos-unstable> {config.allowUnfree = true;};
 in {
-  nixpkgs.overlays = [ (import ./overlays/c3-lsp.nix) (import ./overlays/c3c.nix) ];
+  nixpkgs.overlays = let
+    # Change this to a rev sha to pin
+    moz-rev = "master";
+    moz-url = builtins.fetchTarball { url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";};
+    nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
+  in [ 
+    (import ./overlays/c3-lsp.nix) 
+    (import ./overlays/c3c.nix) 
+    nightlyOverlay
+  ];
   imports = [
     ./tuigreet.nix
     ../i3/wm.nix
   ];
   services.usbmuxd.enable = true;
   environment.variables = {
+    NPM_CONFIG_PREFIX = "$HOME/.npm-global";
     PREFERRED_WM = "${config.host-info.preferred_wm}";
     OLLAMA_API_BASE = "http://100.112.153.1:11434";
     AIDER_MODEL = "ollama/qwen3:30b-a3b";
@@ -25,7 +35,10 @@ in {
       127.0.0.1 dashboard.frisbo.internal
       127.0.0.1 rmq.frisbo.internal
       100.127.121.86 ai.me
-      100.126.121.86 registry.stoica-marcu.ro
+      100.127.121.86 registry.stoica-marcu.ro
+      127.0.0.1 auth.ocrasig.local
+      127.0.0.1 app.ocrasig.local
+      127.0.0.1 traefik.ocrasig.local
     '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
@@ -120,14 +133,19 @@ in {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "docker" "incus-admin" "libvirtd" "kvm" "libvirt" ]; # Enable ‘sudo’ for the user.
   };
-  home-manager.users.flow = (import ./flow.nix {inherit config pkgs lib;});
+  home-manager.extraSpecialArgs = { inherit (config) host-info; inherit (config) home-manager; };
+  home-manager.users.flow = import ./flow.nix;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # nodejs
+    nodejs
+    corepack
     # zot
     (pkgs.callPackage (import ./packages/zil.nix) {})
     # networking
+    lxde.lxrandr
     dig
     bc
     # k8s
@@ -185,6 +203,7 @@ in {
   programs.dconf.enable = true;
   programs.xfconf.enable = true;
   virtualisation.libvirtd.enable = true;
+  virtualisation.waydroid.enable = true;
   programs.virt-manager.enable = true;
 
   security.polkit.enable = true;
@@ -222,7 +241,6 @@ in {
     builtins.elem (lib.getName pkg) [
       # Add additional package names here
       "corefonts"
-      "samsung-UnifiedLinuxDriver"
       "steam"
       "steam-original"
       "steam-run"
@@ -278,9 +296,15 @@ in {
     };
   };
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "CascadiaCode" "FiraCode" "DroidSansMono" "IosevkaTerm" "Meslo" ]; })
+    nerd-fonts.fira-code
+    nerd-fonts.inconsolata
+    nerd-fonts.caskaydia-cove
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.iosevka-term
+    nerd-fonts.meslo-lg
     corefonts
     cantarell-fonts
+    ubuntu-sans
     twitter-color-emoji
     source-code-pro
     gentium
@@ -288,8 +312,8 @@ in {
   ];
   fonts.fontconfig.defaultFonts = {
     serif = [ "Gentium Plus" ];
-    sansSerif = [ "Cantarell" ];
-    monospace = [ "Source Code Pro" ];
+    sansSerif = [ "Droid Sans Mono" ];
+    monospace = [ "Inconsolata Nerd Font Mono" ];
     emoji = [ "Twitter Color Emoji" ];
   };
   # Some programs need SUID wrappers, can be configured further or are
@@ -308,7 +332,6 @@ in {
     pkgs.gutenprint
     pkgs.hplip
     pkgs.brlaser
-    pkgs.samsung-unified-linux-driver
     pkgs.splix
   ];
 

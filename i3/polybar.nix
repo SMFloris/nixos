@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixosConfig, ... }:
 
 # Created By @icanwalkonwater
 # Edited and ported to Nix by Th0rgal
@@ -46,13 +46,13 @@ let
   orange-2 = "#e3b878";
   orange-3 = "#e0af67";
 
-  hostname = config.host-info.hostname;
+  hostname = nixosConfig.host-info.hostname;
   hwmonPaths = {                                                     
-    "gastly" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp1_input";                
+    "gastly" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";                
     "onix" = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon2/temp1_input";                  
     # Add more hostnames as needed                                   
   };                                                                 
-in lib.mkIf (config.host-info.preferred_wm == "i3") {
+in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
   services.polybar = {
     enable = true;
 

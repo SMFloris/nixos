@@ -1,0 +1,87 @@
+{
+  "keybinds": {
+    "leader": "ctrl+x",
+    "app_help": "<leader>h",
+    "app_exit": "ctrl+c,<leader>q",
+    "editor_open": "<leader>e",
+    "theme_list": "<leader>t",
+    "project_init": "<leader>i",
+    "tool_details": "<leader>d",
+    "thinking_blocks": "<leader>b",
+    "session_export": "<leader>x",
+    "session_new": "<leader>n",
+    "session_list": "<leader>l",
+    "session_share": "<leader>s",
+    "session_unshare": "none",
+    "session_interrupt": "esc",
+    "session_compact": "<leader>c",
+    "session_child_cycle": "none",
+    "session_child_cycle_reverse": "none",
+    "messages_page_up": "pgup",
+    "messages_page_down": "pgdown",
+    "messages_half_page_up": "ctrl+alt+u",
+    "messages_half_page_down": "ctrl+alt+d",
+    "messages_first": "ctrl+g",
+    "messages_last": "ctrl+alt+g",
+    "messages_copy": "<leader>y",
+    "messages_undo": "<leader>u",
+    "messages_redo": "<leader>r",
+    "model_list": "<leader>m",
+    "model_cycle_recent": "f2",
+    "model_cycle_recent_reverse": "shift+f2",
+    "agent_list": "<leader>a",
+    "agent_cycle": "tab",
+    "agent_cycle_reverse": "shift+tab",
+    "input_clear": "ctrl+c",
+    "input_paste": "ctrl+v",
+    "input_submit": "enter",
+    "input_newline": "shift+enter,ctrl+j"
+  },
+  "agent": {
+    "plan": {
+      "model": "ollama/qwen3:30b-a3b-2507-q4_K_M",
+      "mode": "primary",
+    },
+    "build": {
+      "model": "ollama/qwen3:30b-a3b-thinking-2507-q4_K_M",
+      "disable": true,
+      "mode": "primary",
+      "prompt": "{file:./prompts/qwen.txt}",
+      "reasoning": true
+    },
+    "complex": {
+      "mode": "primary",
+      "model": "llamacpp/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf",
+      "tools": {
+        "write": true,
+        "edit": false,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "morphedit": true,
+        "webfetch": true
+      }
+    },
+    "simple": {
+      "model": "ollama/granite3-dense:8b",
+    }
+  },
+  "provider": {
+    "llamacpp": {
+      "npm": "@ai-sdk/openai-compatible",
+      "models": {
+          "unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf": {
+              "name": "Qwen3-Coder (unsloth-Q4)"
+          },
+      },
+      "options": {
+        "baseURL": "http://100.112.153.1:8080/v1",
+        "apiKey": "sk-local"
+      }
+    },
+  },
+  "$schema": "https://opencode.ai/config.json"
+}
+

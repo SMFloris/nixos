@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, host-info, ... }:
 
 let
   treesitterWithGrammars = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
@@ -43,11 +43,11 @@ let
 in
 {
   imports = [
-    (import ../sway/sway.nix {inherit config pkgs lib;})
-    (import ../i3/i3.nix {inherit config pkgs lib;})
-    (import ../i3/picom.nix {inherit config pkgs lib;})
-    (import ../i3/polybar.nix {inherit config pkgs lib;})
-    (import ../i3/rofi.nix {inherit config pkgs lib;})
+    ../sway/sway.nix
+    ../i3/i3.nix
+    ../i3/picom.nix
+    ../i3/polybar.nix
+    ../i3/rofi.nix
     ../special/cybersecurity.nix
   ];
   home.stateVersion = "24.11";
@@ -57,6 +57,12 @@ in
     enable = true;
   };
 
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ 
+    "terraform" 
+    "mongodb-compass"
+    "spotify" 
+  ];
+
   home.packages = with pkgs; [
     # neovim
     ripgrep
@@ -65,15 +71,14 @@ in
     rust-analyzer-unwrapped
     lazygit
     black
-    nodejs_22
     # programming
     k9s
     go
     php
+    phpPackages.composer
     tmux
     gcr
     cargo
-    nodejs
     foot
     git
     gcc
@@ -91,6 +96,7 @@ in
     pciutils
     usbutils
     libmbim
+    gnome-sound-recorder
     pavucontrol
     btop
     calcurse
@@ -147,8 +153,8 @@ in
     transmission_4-gtk
     hexchat
     gImageReader
-  ] ++ (if (config.host-info.ai_enabled) then  [] else [])
-  ++ (if (config.host-info.gpu == "nvidia") then  [unstable-pkgs.ollama-cuda] else []);
+  ] ++ (if (host-info.ai_enabled) then  [] else [])
+  ++ (if (host-info.gpu == "nvidia") then  [unstable-pkgs.ollama-cuda] else []);
 
   programs.neovim = {
     enable = true;
@@ -162,7 +168,15 @@ in
   };
 
   home.file."./.aider.model.settings.yml".source = ./aider.model.settings.yml;
+  home.activation.opencodeSeed = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      if [ ! -e "$HOME/.config/opencode/opencode.json" ]; then
+        install -Dm0644 ${./opencode.json} "$HOME/.config/opencode/opencode.json"
+      fi
+      install -Dm0644 ${./prompts/qwen.txt} "$HOME/.config/opencode/prompts/qwen.txt"
+      install -Dm0644 ${./prompts/qwen-coder.txt} "$HOME/.config/opencode/prompts/qwen-coder.txt"
+  '';
 
+  home.file.".config/opencode/dev/bin/opencoder-dev".source = ./dev-coder.sh;
   home.file."./.config/nvim/" = {
     source = ./nvim;
     recursive = true;

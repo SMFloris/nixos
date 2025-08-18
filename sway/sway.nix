@@ -1,8 +1,8 @@
-{ config, pkgs, lib, ...}:
+{ config, pkgs, lib, nixosConfig, ...}:
 
 let
   unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-in lib.mkIf (config.host-info.preferred_wm == "sway") {
+in lib.mkIf (nixosConfig.host-info.preferred_wm == "sway") {
   home.packages = with pkgs; [
     # sway
       sway-audio-idle-inhibit

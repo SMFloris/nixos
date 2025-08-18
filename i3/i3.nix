@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, host-info, ... }:
 
 let
   configure-gtk = pkgs.writeTextFile {
@@ -14,7 +14,7 @@ let
       gsettings set $gnome_schema gtk-theme 'Dracula'
     '';
   };
-in lib.mkIf (config.host-info.preferred_wm == "i3") {
+in lib.mkIf (host-info.preferred_wm == "i3") {
   home.file.".xinitrc".source = ./xfiles/xinitrc;
   home.file.".config/dunst/dunstrc.d/00-theme.conf".source = ./dunstrc;
   home.file.".themes/floris/xfce4-notify-4.0/gtk.css".source = ./xfce4-notifyd/gtk.css;
@@ -93,11 +93,11 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
       };
 
       keybindings = lib.mkOptionDefault {
-        "XF86AudioRaiseVolume" = "exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && \$playVolumeChangeSound'";
-        "XF86AudioLowerVolume" = "exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && \$playVolumeChangeSound'";
-        "XF86AudioMute" = "exec 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'";
-        "XF86MonBrightnessDown" = "exec brightnessctl set 4%-";
-        "XF86MonBrightnessUp" = "exec brightnessctl set 4%+";
+        "XF86AudioRaiseVolume" = "exec --no-startup-id ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+        "XF86AudioLowerVolume" = "exec --no-startup-id ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        "XF86AudioMute" = "exec --no-startup-id ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 4%-";
+        "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 4%+";
         "Print" = "exec ${pkgs.maim}/bin/maim -s -u | xclip -selection clipboard -t image/png -i";
         "${modifier}+Print" = "exec '/home/flow/ocr_screenshot.sh'";
         "Shift+Print" = "exec ${pkgs.maim}/bin/maim -u ~/Pictures/\$(date +%Y-%m-%dT%H:%M:%S).png";

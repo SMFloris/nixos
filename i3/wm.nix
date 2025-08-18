@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixosConfig, ... }:
 
 lib.mkIf (config.host-info.preferred_wm == "i3") {
   environment.pathsToLink = [ "/libexec" ];

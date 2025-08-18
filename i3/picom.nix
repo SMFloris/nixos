@@ -1,7 +1,7 @@
 # credits: @LightDiscord who helped me to update to picom
-{ config, pkgs, lib, ... }:
+{ host-info, lib, ... }:
 
-lib.mkIf (config.host-info.preferred_wm == "i3") {
+lib.mkIf (host-info.preferred_wm == "i3") {
   services.picom = {
     enable = false;
     # experimentalBackends = true;
