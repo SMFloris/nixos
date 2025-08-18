@@ -60,13 +60,16 @@ cursor = "CellForeground"
 text = "CellBackground"
 
 [font.normal]
-family = "MesloLGM Nerd Font"
+family = "Inconsolata Nerd Font Mono"
 style = "Regular"
 
 [window]
 padding = { x = 5, y = 2 }
 dynamic_padding = false
 opacity = 0.9
+
+[selection]
+save_to_clipboard = true
 
 [[hints.enabled]]
 command = "xdg-open" # On Linux/BSD
@@ -76,3 +79,6 @@ persist = false
 mouse.enabled = true
 binding = {key = "O", mods = "Control|Shift"}
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[keyboard] 
+bindings = [ { key = "Return", mods = "Shift", chars = "\n" } ]
