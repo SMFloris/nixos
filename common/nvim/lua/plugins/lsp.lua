@@ -391,15 +391,6 @@ return {
         },
         config = function()
             local lsp = require('lsp-zero')
-            local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-            parser_config.nu = {
-                install_info = {
-                    url = "https://github.com/nushell/tree-sitter-nu",
-                    files = { "src/parser.c" },
-                    branch = "main",
-                },
-                filetype = "nu",
-            }
 
             local format_sync_grp = vim.api.nvim_create_augroup("Format", {})
             vim.api.nvim_create_autocmd("BufWritePre", {
@@ -445,21 +436,6 @@ return {
                 set_lsp_keymaps = { preserve_mappings = false }
             })
 
-            local lspconfig = require("lspconfig")
-
-            lspconfig.nushell.setup({
-                command = { "nu", "--lsp" },
-                filetypes = { "nu" },
-                root_dir = require("lspconfig.util").find_git_ancestor,
-                single_file_support = true,
-            })
-
-            vim.lsp.config('c3_lsp', {
-                cmd = { 'c3-lsp' },
-                root_markers = { 'project.json', 'manifest.json', '.git' },
-                filetypes = { 'c3', 'c3i' },
-            })
-
             vim.diagnostic.config({
                 virtual_text = true,
                 signs = true,
@@ -469,46 +445,54 @@ return {
                 float = true,
             })
 
+            -- vim.lsp.config('clangd', {
+            --     cmd = {
+            --         "clangd",
+            --         "--query-driver=/nix/store/*clang-wrapper-*/bin/clang"
+            --     },
+            -- });
+            vim.lsp.enable('clangd')
+
             require('mason-lspconfig').setup({
-                ensure_installed = { 'lua_ls', 'gopls', 'terraformls', 'phpactor', 'nil_ls', 'pylsp', 'c3_lsp' },
+                PATH = "append",
+                ensure_installed = { 'lua_ls', 'gopls', 'terraformls', 'phpactor', 'nil_ls', 'pylsp' },
                 handlers = {
                     function(server_name)
-                        lspconfig[server_name].setup({})
+                        vim.lsp.config[server_name].setup({})
                     end,
 
-                    gopls = lsp.noop,
-                    c3_lsp = lsp.noop,
-                    rust_analyzer = lsp.noop,
+                    gopls = function() end,
+                    c3_lsp = function() end,
+                    rust_analyzer = function() end,
 
                     yamlls = function()
-                        require('lspconfig').yamlls.setup({
+                        vim.lsp.config.yamlls.setup({
                             settings = {
                                 yaml = {
-                                    format = {
-                                        enable = true,
-                                    }
+                                    format = { enable = true },
                                 },
                             },
                         })
                     end,
 
                     lua_ls = function()
-                        lspconfig.lua_ls.setup({
+                        vim.lsp.config.lua_ls.setup({
                             on_init = function(client)
-                                lsp.nvim_lua_settings(client, {})
+                                require("lsp").nvim_lua_settings(client, {})
                             end
                         })
                     end,
+
                     nil_ls = function()
-                        local nil_ls_opts = {
-                            settings = {}
-                        }
-                        nil_ls_opts.settings['nil'] = {
-                            formatting = {
-                                command = { "nixpkgs-fmt" }
+                        vim.lsp.config.nil_ls.setup({
+                            settings = {
+                                ['nil'] = {
+                                    formatting = {
+                                        command = { "nixpkgs-fmt" }
+                                    }
+                                }
                             }
-                        }
-                        lspconfig.nil_ls.setup(nil_ls_opts)
+                        })
                     end,
                 }
             })

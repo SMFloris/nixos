@@ -3,15 +3,9 @@
 let
   unstable = import <nixos-unstable> {config.allowUnfree = true;};
 in {
-  nixpkgs.overlays = let
-    # Change this to a rev sha to pin
-    moz-rev = "master";
-    moz-url = builtins.fetchTarball { url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";};
-    nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
-  in [ 
-    (import ./overlays/c3-lsp.nix) 
-    (import ./overlays/c3c.nix) 
-    nightlyOverlay
+  nixpkgs.overlays = [
+    # not compatible with latest c3
+    (import ./overlays/c3c.nix)
   ];
   imports = [
     ./tuigreet.nix
@@ -26,6 +20,7 @@ in {
   };
   nix.useSandbox = true;
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking.networkmanager.unmanaged = [ "interface-name:ve-*" ];
   networking.extraHosts =
     ''
       127.0.0.1 api.frisbo.internal
@@ -73,6 +68,7 @@ in {
         dockerCompat = false;
       };
     docker = {
+        package = unstable.docker;
       enable = true;
       enableOnBoot = false;
       daemon.settings = {
@@ -153,6 +149,7 @@ in {
     kubernetes-helm
     # others
     natscli
+    clang-tools
     tmux
     lsof
     pstree
@@ -162,12 +159,18 @@ in {
     vim
     libva-utils
     wget
+    remmina
+    marktext
+    dvdplusrwtools
+    cdrtools
+    openjdk17
     # browsers
     firefox
     chromium
     # utils
     tree
     powertop
+    stremio
     vlc
     gcr
     xdg-utils
@@ -189,6 +192,7 @@ in {
   # enable CUDA when on nvidia hardware
   nixpkgs.config.cudaSupport = config.host-info.gpu == "nvidia";
 
+  programs.extra-container.enable = true;
   programs.nix-ld.enable = true;
   programs.mosh.enable = true;
   programs.seahorse.enable = true;
@@ -203,7 +207,6 @@ in {
   programs.dconf.enable = true;
   programs.xfconf.enable = true;
   virtualisation.libvirtd.enable = true;
-  virtualisation.waydroid.enable = true;
   programs.virt-manager.enable = true;
 
   security.polkit.enable = true;
@@ -239,6 +242,10 @@ in {
   # steam
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
+      "stremio-shell"
+      "stremio-server"
+      "android-studio"
+      "android-studio-stable"
       # Add additional package names here
       "corefonts"
       "steam"
@@ -326,6 +333,10 @@ in {
 
   # List services that you want to enable:
   hardware.sane.enable = true;
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+  };
   services.ipp-usb.enable = true;
   services.printing.enable = true;
   services.printing.drivers = [
@@ -371,4 +382,7 @@ in {
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
+  networking.nat.enable = true;
+  networking.nat.internalInterfaces = [ "ve-+" ];
+  networking.nat.externalInterface = "wlp1s0";
 }

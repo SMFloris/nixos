@@ -34,6 +34,7 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
     displayManager.startx.enable = true;
     windowManager.i3.enable = true;
   };
+  services.autorandr.enable = true;
   services.displayManager = {
     defaultSession = "none+i3";
   };

@@ -97,7 +97,7 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
           
           modules-left = "spacer left xworkspaces slash space slash space xwindow space right";
           modules-center = "left space date space right";
-          modules-right = "left space cpu slash space slash memory slash space slash battery slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space llamacpp space right spacer";
+          modules-right = "left space cpu slash space slash memory slash space slash battery slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space ollama space right spacer";
           # modules-left = "left date right spacer left xwindow right"
           # modules-center = "left xworkspaces right"
           # modules-right = "left pulseaudio spacerbg cpu spacerbg memory right spacer left systray right"
@@ -378,10 +378,10 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
         label-background = "${bg-1}";
       };
 
-      "module/llamacpp" = {
+      "module/ollama" = {
         type = "custom/script";
 
-        exec = "if [[ $(/run/current-system/systemd/bin/systemctl --user is-active llamacpp.service) == \"active\" ]]; then echo ''; else echo ' ' && exit 1; fi";
+        exec = "if [[ $(/run/current-system/systemd/bin/systemctl --user is-active ollama.service) == \"active\" ]]; then echo ''; else echo ' ' && exit 1; fi";
 
         interval = 1;
 
@@ -397,8 +397,8 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
         label-fail-background = "${bg-1}";
         label-fail-foreground = "${red-2}";
 
-        click-right = "/run/current-system/systemd/bin/systemctl --user stop llamacpp.service";
-        click-left = "/run/current-system/systemd/bin/systemctl --user start llamacpp.service";
+        click-right = "/run/current-system/systemd/bin/systemctl --user stop ollama.service";
+        click-left = "/run/current-system/systemd/bin/systemctl --user start ollama.service";
       };
     };
   };

@@ -1,6 +1,6 @@
 self: super: {
   c3c = super.c3c.overrideAttrs (oldAttrs: {
-    version = "0.7.1";
+    version = "0.7.5";
     checkPhase = ''
         runHook preCheck
         ( cd ../resources/testproject; ../../build/c3c build --trust=full )
@@ -10,8 +10,8 @@ self: super: {
     src = super.fetchFromGitHub {
       owner = "c3lang";
       repo = "c3c";
-      rev = "refs/tags/v0.7.1";
-      sha256 =  "sha256-2nTFQNoSAdD12BiwWMtrD9SeelTUOM3DYUdjBSjWnVU=";
+      rev = "refs/tags/v0.7.5";
+      sha256 =  "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
     };
   });
 }

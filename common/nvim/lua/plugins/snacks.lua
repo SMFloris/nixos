@@ -114,11 +114,23 @@ return {
         },
         -- NOTE: Keymaps
         keys = {
-            { "<leader><space>", function() require("snacks").picker.smart() end, desc = "󰍉 Smart Find Files" },
+            {
+                "<leader><space>",
+                function()
+                    local picker = require("snacks").picker
+                    if picker and picker.has_resume() then
+                        picker.resume()
+                    else
+                        picker.smart()
+                    end
+                end,
+                desc = "󰍉 Smart Find",
+            },
             { "<leader>rN", function() require("snacks").rename.rename_file() end, desc = " Fast Rename Current File" },
             { "<leader>bq", function() require("snacks").bufdelete() end, desc = "󰅖 Delete or Close Buffer (Confirm)" },
 
             -- Snacks Picker
+            { "<leader>fb", function() require("snacks").picker.buffers() end, desc = "󰈞 Find buffers (Snacks Picker)" },
             { "<leader>ff", function() require("snacks").picker.files() end, desc = "󰈞 Find Files (Snacks Picker)" },
             { "<leader>fw", function() require("snacks").picker.grep() end, desc = "󰱼 Grep Word" },
             { "<leader>fc", function() require("snacks").picker.grep_word() end, desc = "󰈬 Search Visual Selection or Word", mode = { "n", "x" } },
@@ -150,11 +162,12 @@ return {
 
             recall.setup({
                 sign = "",
-                sign_highlight = "@label",
+                sign_highlight = "@comment.note",
 
                 snacks = {
                     mappings = {
                         unmark_selected_entry = {
+                            normal = "dd",
                             insert = "<C-d>",
                         },
                     },
@@ -163,7 +176,8 @@ return {
             vim.keymap.set("n", "<leader>mm", recall.goto_next, { noremap = true, silent = true, desc = " Next Mark" })
             vim.keymap.set("n", "<leader>mn", recall.goto_prev, { noremap = true, silent = true, desc = " Prev Mark" })
             vim.keymap.set("n", "<leader>ma", recall.toggle, { noremap = true, silent = true, desc = " Toggle Mark" })
-            vim.keymap.set("n", "<leader>ml", require("recall.snacks").pick,
+            vim.keymap.set("n", "<leader>mc", recall.clear, { noremap = true, silent = true, desc = " Toggle Mark" })
+            vim.keymap.set("n", "<leader>fm", require("recall.snacks").pick,
                 { noremap = true, silent = true, desc = " Mark List" })
         end,
     }

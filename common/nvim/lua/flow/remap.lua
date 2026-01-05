@@ -34,15 +34,25 @@ vim.keymap.set("v", "<leader>/", "gc", { desc = "󰆉 Toggle Block Comment" })
 -- indent/deintent
 vim.keymap.set("n", ">>", ">>", { noremap = true, silent = true })
 vim.keymap.set("n", "<<", "<<", { noremap = true, silent = true })
+vim.keymap.set("v", ">", ">gv", { desc = "Indent and stay in visual" })
+vim.keymap.set("v", "<", "<gv", { desc = "Deindent and stay in visual" })
+
+-- comment
+vim.keymap.set("n", "<leader>/", "gcc", { remap = true, desc = "󰆉 Toggle Line Comment" })
+vim.keymap.set("v", "<leader>/", "gc", { remap = true, desc = "󰆉 Toggle Block Comment" })
 
 -- move line up/down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+-- center on next/prev
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set("n", "G", "Gzz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "*", "*zzzv")
+vim.keymap.set("n", "#", "#zzzv")
 
 -- greatest remap ever - paste without overwriting buffer
 vim.keymap.set("x", "p", [["_dP]])
@@ -100,5 +110,54 @@ vim.api.nvim_create_autocmd('User', {
         map_split(buf_id, '<C-s>', 'belowright horizontal')
         map_split(buf_id, '<C-v>', 'belowright vertical')
         map_split(buf_id, '<C-t>', 'tab')
+    end,
+})
+
+vim.api.nvim_create_user_command("Phpstan", function(opts)
+    local phpstan_cmd = "vendor/bin/phpstan"
+    local target = (opts.args ~= "" and opts.args) or vim.fn.expand("%")
+    local cmd = { phpstan_cmd, "analyse", "--memory-limit=4G", "--no-progress", "--error-format=raw", target }
+
+    -- spinner
+    local frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+    local idx = 1
+    local timer = vim.loop.new_timer()
+    local function echo(msg, hl) vim.api.nvim_echo({ { msg, hl or "None" } }, false, {}) end
+    timer:start(0, 80, vim.schedule_wrap(function()
+        echo(("PhpStan %s running…"):format(frames[idx]), "WarningMsg")
+        idx = (idx % #frames) + 1
+    end))
+
+    vim.fn.jobstart(cmd, {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+            if not data or (#data == 1 and data[1] == "") then return end
+            vim.fn.setqflist({}, ' ', { lines = data })
+        end,
+        on_exit = function(_, code)
+            timer:stop(); timer:close()
+            echo(code == 0 and "PhpStan ✓ done" or ("PhpStan ✗ exited (" .. code .. ")"),
+                code == 0 and "MoreMsg" or "ErrorMsg")
+            vim.cmd("copen")
+        end,
+    })
+end, { nargs = "?" })
+
+vim.filetype.add({
+    extension = {
+        c3  = "c3",
+        c3i = "c3",
+    },
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'c3' },
+    callback = function()
+        -- syntax highlighting, provided by Neovim
+        vim.treesitter.start()
+        -- folds, provided by Neovim
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        -- indentation, provided by nvim-treesitter
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end,
 })

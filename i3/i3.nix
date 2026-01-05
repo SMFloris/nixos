@@ -99,8 +99,7 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
         "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 4%-";
         "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 4%+";
         "Print" = "exec ${pkgs.maim}/bin/maim -s -u | xclip -selection clipboard -t image/png -i";
-        "${modifier}+Print" = "exec '/home/flow/ocr_screenshot.sh'";
-        "Shift+Print" = "exec ${pkgs.maim}/bin/maim -u ~/Pictures/\$(date +%Y-%m-%dT%H:%M:%S).png";
+        "${modifier}+Print" = "exec ${pkgs.maim}/bin/maim -u ~/Pictures/\$(date +%Y-%m-%dT%H:%M:%S).png";
         "${modifier}+Return" = "exec /home/flow/.config/openTerminal.sh";
         "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modi drun -show drun";
         "${modifier}+Shift+d" = "exec ${pkgs.rofi}/bin/rofi -show window";
@@ -117,6 +116,7 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
         "${modifier}+l" = "focus right";
         "${modifier}+v" = "split vertical";
         "${modifier}+m" = "split horizontal";
+        "${modifier}+s" = "sticky toggle";
         "${modifier}+Shift+f" = "focus mode_toggle";
         "${modifier}+space" = "exec '/home/flow/ai_chat.sh'";
       };
