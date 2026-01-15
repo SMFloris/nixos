@@ -49,6 +49,7 @@ let
   hostname = nixosConfig.host-info.hostname;
   hwmonPaths = {                                                     
     "gastly" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";                
+    "gengar" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";                
     "onix" = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon2/temp1_input";                  
     # Add more hostnames as needed                                   
   };                                                                 
@@ -97,7 +98,7 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
           
           modules-left = "spacer left xworkspaces slash space slash space xwindow space right";
           modules-center = "left space date space right";
-          modules-right = "left space cpu slash space slash memory slash space slash battery slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space llamacpp space right spacer";
+          modules-right = "left space cpu slash space slash memory slash space slash battery slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space menu space right spacer";
           # modules-left = "left date right spacer left xwindow right"
           # modules-center = "left xworkspaces right"
           # modules-right = "left pulseaudio spacerbg cpu spacerbg memory right spacer left systray right"
@@ -123,6 +124,10 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
         format-low-background = "${bg-1}";
         format-low-foreground = "${red-1}";
         format-low-underline = "${red-1}";
+
+        format-full = "<label-full>";
+        format-full-background = "${bg-1}";
+        format-full-underline = "${fg-1}";
 
         label-charging = "%percentage%%";
         label-discharging = "%percentage%%";
@@ -378,27 +383,17 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
         label-background = "${bg-1}";
       };
 
-      "module/llamacpp" = {
-        type = "custom/script";
+      "module/menu" = {
+        type = "custom/text";
 
-        exec = "if [[ $(/run/current-system/systemd/bin/systemctl --user is-active llamacpp.service) == \"active\" ]]; then echo ''; else echo ' ' && exit 1; fi";
-
-        interval = 1;
+        content = "≡";
 
         format = "<label>";
-        format-fail = "<label-fail>";
         format-background = "${bg-1}";
 
-        label = "%output% ";
+        label = "%{A1:${pkgs.rofi}/bin/rofi -modes power:/home/flow/.config/rofi/power.sh -show power :}≡%{A}";
         label-background = "${bg-1}";
-        label-foreground = "${green-1}";
-
-        label-fail = "%output% ";
-        label-fail-background = "${bg-1}";
-        label-fail-foreground = "${red-2}";
-
-        click-right = "/run/current-system/systemd/bin/systemctl --user stop llamacpp.service";
-        click-left = "/run/current-system/systemd/bin/systemctl --user start llamacpp.service";
+        label-foreground = "${fg-1}";
       };
     };
   };

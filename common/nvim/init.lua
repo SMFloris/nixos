@@ -1,4 +1,17 @@
 -- Bootstrap lazy.nvim
+
+local profile = vim.fn.expand("~/.nix-profile-neovim")
+local state   = vim.fn.expand("~/.local/state/neovim-profile")
+
+vim.env.PATH = table.concat({
+  state .. "/cargo/bin",
+  state .. "/npm/bin",
+  state .. "/composer/vendor/bin",
+  vim.fn.expand("~/.dotnet/tools"),
+  profile .. "/bin",
+  vim.env.PATH,
+}, ":")
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -30,3 +43,11 @@ vim.cmd("colorscheme tokyonight")
 vim.cmd('hi IlluminatedWordText guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordRead guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordWrite guibg=none gui=underline')
+
+-- Force line numbers on all windows after Vim fully starts
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.wo.number = true
+    vim.wo.relativenumber = true
+  end,
+})

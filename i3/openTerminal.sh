@@ -21,7 +21,7 @@ if [[ ${title} =~ ^${host}.* ]]; then
   wd=$(echo "$title" | cut -d':' -f2 | xargs)
   wd=${wd/'~'/"$HOME"}
   if [ -d "$wd" ]; then
-    alacritty --working-directory  ${wd}
+    alacritty --working-directory ${wd}
     exit 0
   else
     wd=$(basename "$wd")

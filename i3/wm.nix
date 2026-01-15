@@ -13,7 +13,28 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
     libnotify
     dunst
     xfce.xfce4-notifyd
+    ulauncher
   ];
+
+  
+   systemd.user.services.ulauncher = {
+      description = "ulauncher";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      requires = [ "dbus.service" ];
+      after = [ "graphical-session.target" "dbus.service" ];
+       serviceConfig = {
+         Type = "simple";
+         ExecStart = pkgs.writeShellScript "ulauncher-env-wrapper.sh" ''
+           export PATH="''${XDG_BIN_HOME}:$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin"
+           export GDK_BACKEND=x11
+           exec ${pkgs.ulauncher}/bin/ulauncher --hide-window --no-window-shadow
+         '';
+         Restart = "on-failure";
+         RestartSec = 1;
+         TimeoutStopSec = 10;
+       };
+   };
 
   systemd.user.services.xfce4-notifyd = {
     description = "xfce4 notifyd";
@@ -51,5 +72,5 @@ lib.mkIf (config.host-info.preferred_wm == "i3") {
         RestartSec = 1;
         TimeoutStopSec = 10;
       };
-  };
+   };
 }

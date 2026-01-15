@@ -1,7 +1,19 @@
-{ config, pkgs, lib, fetchFromGitHub, fetchFromGitLab, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   unstable = import <nixos-unstable> {config.allowUnfree = true;};
+  firefoxWithEnv = pkgs.symlinkJoin {
+    name = "firefox";
+    paths = [pkgs.firefox];
+    buildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      wrapProgram $out/bin/firefox \
+        --set MOZ_USE_XINPUT2 1
+    '';
+  };
 in {
   nixpkgs.overlays = [
     # not compatible with latest c3
@@ -18,23 +30,24 @@ in {
     OLLAMA_API_BASE = "http://100.112.153.1:11434";
     AIDER_MODEL = "ollama/qwen3:30b-a3b";
   };
-  nix.useSandbox = true;
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-  networking.networkmanager.unmanaged = [ "interface-name:ve-*" ];
-  networking.extraHosts =
-    ''
-      127.0.0.1 api.frisbo.internal
-      127.0.0.1 superadmin.frisbo.internal
-      127.0.0.1 status.frisbo.internal
-      127.0.0.1 beta.frisbo.internal
-      127.0.0.1 dashboard.frisbo.internal
-      127.0.0.1 rmq.frisbo.internal
-      100.127.121.86 ai.me
-      100.127.121.86 registry.stoica-marcu.ro
-      127.0.0.1 auth.ocrasig.local
-      127.0.0.1 app.ocrasig.local
-      127.0.0.1 traefik.ocrasig.local
-    '';
+  networking.networkmanager.unmanaged = ["interface-name:ve-*"];
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-openvpn
+  ];
+  networking.extraHosts = ''
+    127.0.0.1 api.frisbo.internal
+    127.0.0.1 superadmin.frisbo.internal
+    127.0.0.1 status.frisbo.internal
+    127.0.0.1 beta.frisbo.internal
+    127.0.0.1 dashboard.frisbo.internal
+    127.0.0.1 rmq.frisbo.internal
+    100.127.121.86 ai.me
+    100.127.121.86 registry.stoica-marcu.ro
+    127.0.0.1 auth.ocrasig.local
+    127.0.0.1 app.ocrasig.local
+    127.0.0.1 traefik.ocrasig.local
+  '';
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
 
@@ -44,7 +57,8 @@ in {
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.sandbox = true;
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
@@ -60,19 +74,18 @@ in {
   # services.xserver.xkbOptions = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
   services.fwupd.enable = true;
   virtualisation = {
-      podman = {
-        enable = true;
-        dockerCompat = false;
-      };
+    podman = {
+      enable = true;
+      dockerCompat = false;
+    };
     docker = {
-        package = unstable.docker;
+      package = unstable.docker;
       enable = true;
       enableOnBoot = false;
       daemon.settings = {
-        insecure-registries = [ "registry.stoica-marcu.ro" ];
+        insecure-registries = ["registry.stoica-marcu.ro"];
       };
     };
     vswitch = {
@@ -120,74 +133,86 @@ in {
   };
   hardware.keyboard.qmk.enable = true;
 
-
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.flow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" "incus-admin" "libvirtd" "kvm" "libvirt" ]; # Enable 'sudo' for the user.
+    extraGroups = ["wheel" "networkmanager" "video" "docker" "incus-admin" "libvirtd" "kvm" "libvirt"]; # Enable 'sudo' for the user.
   };
-  home-manager.extraSpecialArgs = { inherit (config) host-info; inherit (config) home-manager; };
+  home-manager.extraSpecialArgs = {
+    inherit (config) host-info;
+    inherit (config) home-manager;
+  };
   home-manager.users.flow = import ./flow.nix;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    # nodejs
-    nodejs
-    corepack
-    # zot
-    (pkgs.callPackage (import ./packages/zil.nix) {})
-    # networking
-    lxde.lxrandr
-    dig
-    bc
-    # k8s
-    kind
-    kubernetes-helm
-    # others
-    natscli
-    clang-tools
-    tmux
-    lsof
-    pstree
-    util-linux
-    python3
-    python3Packages.pip
-    vim
-    libva-utils
-    wget
-    remmina
-    marktext
-    dvdplusrwtools
-    cdrtools
-    openjdk17
-    # browsers
-    firefox
-    chromium
-    # utils
-    tree
-    powertop
-    stremio
-    vlc
-    gcr
-    xdg-utils
-    coreutils
-    moreutils
-    e2fsprogs
-    unzip
-    virt-viewer
-    quickemu
-    cifs-utils
-    libsecret
-    appimage-run
-    seabird
-    # ai
-    unstable.aider-chat
-  ] ++ (if (config.host-info.gpu == "nvidia") then  [cudatoolkit nvtopPackages.nvidia] else [])
-    ++ (if (config.host-info.preferred_wm == "i3") then [sx] else []);
+  environment.systemPackages = with pkgs;
+    [
+      teams-for-linux
+      # nodejs
+      nodejs
+      corepack
+      # zot
+      (pkgs.callPackage (import ./packages/zil.nix) {})
+      # networking
+      lxrandr
+      dig
+      bc
+      # k8s
+      kind
+      kubernetes-helm
+      # others
+      natscli
+      clang-tools
+      tmux
+      lsof
+      pstree
+      util-linux
+      python3
+      python3Packages.pip
+      vim
+      libva-utils
+      wget
+      remmina
+      marktext
+      dvdplusrwtools
+      cdrtools
+      openjdk17
+      # browsers
+      firefoxWithEnv
+      # chromium
+      # utils
+      tree
+      powertop
+      # stremio
+      vlc
+      gcr
+      xdg-utils
+      coreutils
+      moreutils
+      e2fsprogs
+      unzip
+      virt-viewer
+      quickemu
+      cifs-utils
+      libsecret
+      appimage-run
+      seabird
+      nixos-container
+    ]
+    ++ (
+      if (config.host-info.gpu == "nvidia")
+      then [cudatoolkit nvtopPackages.nvidia]
+      else []
+    )
+    ++ (
+      if (config.host-info.preferred_wm == "i3")
+      then [sx]
+      else []
+    );
 
   # enable CUDA when on nvidia hardware
   nixpkgs.config.cudaSupport = config.host-info.gpu == "nvidia";
@@ -242,6 +267,7 @@ in {
   # steam
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
+      "teams-for-linux"
       "stremio-shell"
       "stremio-server"
       "android-studio"
@@ -285,21 +311,22 @@ in {
       "libcublas"
       "libcusparse"
       "libcusolver"
-  ];
+    ];
   nixpkgs.config.packageOverrides = pkgs: {
     steam = pkgs.steam.override {
-      extraPkgs = pkgs: with pkgs; [
-        xorg.libXcursor
-        xorg.libXi
-        xorg.libXinerama
-        xorg.libXScrnSaver
-        libpng
-        libpulseaudio
-        libvorbis
-        stdenv.cc.cc.lib
-        libkrb5
-        keyutils
-      ];
+      extraPkgs = pkgs:
+        with pkgs; [
+          xorg.libXcursor
+          xorg.libXi
+          xorg.libXinerama
+          xorg.libXScrnSaver
+          libpng
+          libpulseaudio
+          libvorbis
+          stdenv.cc.cc.lib
+          libkrb5
+          keyutils
+        ];
     };
   };
   fonts.packages = with pkgs; [
@@ -318,10 +345,10 @@ in {
     jigmo
   ];
   fonts.fontconfig.defaultFonts = {
-    serif = [ "Gentium Plus" ];
-    sansSerif = [ "Droid Sans Mono" ];
-    monospace = [ "Inconsolata Nerd Font Mono" ];
-    emoji = [ "Twitter Color Emoji" ];
+    serif = ["Gentium Plus"];
+    sansSerif = ["Droid Sans Mono"];
+    monospace = ["Inconsolata Nerd Font Mono"];
+    emoji = ["Twitter Color Emoji"];
   };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -338,6 +365,7 @@ in {
     lfs.enable = true;
   };
   services.ipp-usb.enable = true;
+
   services.printing.enable = true;
   services.printing.drivers = [
     pkgs.gutenprint
@@ -383,6 +411,8 @@ in {
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
   networking.nat.enable = true;
-  networking.nat.internalInterfaces = [ "ve-+" ];
+  networking.nat.internalInterfaces = ["ve-+"];
   networking.nat.externalInterface = "wlp1s0";
+
+  boot.enableContainers = true;
 }

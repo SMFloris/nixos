@@ -41,10 +41,10 @@ return {
                     go_out_plus = "h",
                 },
             })
-            vim.keymap.set("n", "<leader>e", "<cmd>lua MiniFiles.open()<CR>", { desc = "Toggle mini file explorer" }) -- toggle file explorer
             vim.keymap.set("n", "-", function()
-                MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
-                MiniFiles.reveal_cwd()
+                local path = vim.api.nvim_buf_get_name(0)
+                local parent = vim.fn.fnamemodify(path, ":h")
+                MiniFiles.open(parent, false)
             end, { desc = "Toggle into currently opened file" })
         end,
     },

@@ -20,6 +20,10 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
   home.file.".themes/floris/xfce4-notify-4.0/gtk.css".source = ./xfce4-notifyd/gtk.css;
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file."ai_chat.sh".source = ./rofi/ai_chat.sh;
+  home.file.".config/rofi/power.sh" = {
+    source = ./rofi/power.sh;
+    executable = true;
+  };
   home.file."ocr_screenshot.sh".source = ./ocr_screenshot.sh;
   
   # services.dunst = {
@@ -51,8 +55,9 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
       gtk4.extraConfig = {
         gtk-application-prefer-dark-theme = true;
       };
-    };
-  xsession.windowManager.i3 = {
+   };
+
+   xsession.windowManager.i3 = {
     enable = true;
 
     config = rec {
@@ -101,7 +106,7 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
         "Print" = "exec ${pkgs.maim}/bin/maim -s -u | xclip -selection clipboard -t image/png -i";
         "${modifier}+Print" = "exec ${pkgs.maim}/bin/maim -u ~/Pictures/\$(date +%Y-%m-%dT%H:%M:%S).png";
         "${modifier}+Return" = "exec /home/flow/.config/openTerminal.sh";
-        "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modi drun -show drun";
+        "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modes combi#edit:/home/flow/.config/rofi/edit.sh -combi-hide-mode-prefix -combi-modes drun#window -show combi";
         "${modifier}+Shift+d" = "exec ${pkgs.rofi}/bin/rofi -show window";
         "${modifier}+Shift+x" = "exec systemctl suspend";
         "${modifier}+Tab" = "workspace back_and_forth";

@@ -3,6 +3,7 @@ local wk = require("which-key")
 -- groups
 wk.add({ "<leader>a", icon = { icon = "", color = "green" }, group = "AI" })
 wk.add({ "<leader>c", icon = { color = "green", icon = "" }, group = "Quickfix" })
+wk.add({ "<leader>y", icon = { color = "yellow", icon = "" }, group = "Yank" })
 wk.add({ "<leader>d", icon = { color = "red", icon = "" }, group = "Debugger" })
 wk.add({ "<leader>b", icon = { color = "blue", icon = "" }, group = "Buffer" })
 wk.add({ "<leader>m", icon = { color = "yellow", icon = "" }, group = "Marks" })
@@ -10,6 +11,7 @@ wk.add({ "<leader>x", icon = { color = "orange", icon = "" }, group = "Troubl
 wk.add({ "<leader>f", icon = { color = "cyan", icon = "󰍉" }, group = "Picker/Finder" })
 wk.add({ "<leader>g", icon = { color = "purple", icon = "" }, group = "Git" })
 wk.add({ "<leader>l", icon = { color = "azure", icon = "" }, group = "Lsp" })
+wk.add({ "<leader>s", icon = { color = "green", icon = "" }, group = "Session" })
 
 -- auto format
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -59,6 +61,11 @@ vim.keymap.set("x", "p", [["_dP]])
 vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { desc = " Format with LSP" })
+vim.keymap.set("i", "<C-Space>", function() require('cmp').complete() end, { desc = "Manual Completion" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Go to References" })
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Go to Implementation" })
+vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "Rename Symbol" })
 
 vim.keymap.set("n", "<leader>cq", function()
     local is_open = vim.fn.getqflist({ winid = 0 }).winid ~= 0
@@ -70,6 +77,16 @@ vim.keymap.set("n", "<leader>cq", function()
 end, { desc = " Toggle Quickfix List" })
 vim.keymap.set("n", "<leader>cc", "<cmd>cnext<CR>zz", { desc = " Quickfix Next" })
 vim.keymap.set("n", "<leader>cp", "<cmd>cprev<CR>zz", { desc = " Quickfix Previous" })
+vim.keymap.set("n", "<leader>yp", function()
+    local path = vim.fn.expand('%')
+    vim.fn.setreg('+', path)
+    print("Copied relative path: " .. path)
+end, { desc = "Copy Relative Path" })
+vim.keymap.set("n", "<leader>yP", function()
+    local path = vim.fn.expand('%:p')
+    vim.fn.setreg('+', path)
+    print("Copied full path: " .. path)
+end, { desc = "Copy Full Path" })
 
 vim.api.nvim_create_augroup("custom_buffer", { clear = true })
 
@@ -143,6 +160,21 @@ vim.api.nvim_create_user_command("Phpstan", function(opts)
     })
 end, { nargs = "?" })
 
+-- Recall marks management
+vim.api.nvim_create_augroup("recall_marks", { clear = true })
+vim.api.nvim_create_autocmd("DirChanged", {
+    group = "recall_marks",
+    callback = function()
+        require("recall").load()
+    end,
+})
+vim.api.nvim_create_autocmd("VimLeave", {
+    group = "recall_marks",
+    callback = function()
+        require("recall").save()
+    end,
+})
+
 vim.filetype.add({
     extension = {
         c3  = "c3",
@@ -161,3 +193,8 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end,
 })
+
+-- bufsurf mappings
+vim.keymap.set("n", "<leader>bo", "<cmd>BufSurfBack<CR>", { desc = "BufSurf Backward" })
+vim.keymap.set("n", "<leader>bi", "<cmd>BufSurfForward<CR>", { desc = "BufSurf Forward" })
+vim.keymap.set("n", "<leader>bb", ":b#<CR>", { desc = "Previous Buffer" })

@@ -4,8 +4,8 @@
 vim.cmd("let g:netrw_banner = 0 ")
 
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
-vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.wo.number = true
+vim.wo.relativenumber = true
 
 vim.opt.selection = "inclusive"
 vim.opt.tabstop = 4
