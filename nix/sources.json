@@ -1,0 +1,38 @@
+{
+    "home-manager": {
+        "branch": "release-25.11",
+        "description": "Home Manager",
+        "homepage": "",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "080657a04188aca25f8a6c70a0fb2ea7e37f1865",
+        "sha256": "0cj29gac5xywcw5g746skb3hqnavwyvjv8kahbhp7n3jjimckvj8",
+        "type": "tarball",
+        "url": "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<branch>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "nixos-25.11",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fabb8c9deee281e50b1065002c9828f2cf7b2239",
+        "sha256": "15gvdgdqsxjjihq1r66qz1q97mlcaq1jbpkhbx287r5py2vy38b1",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/nixos-25.11.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<branch>.tar.gz"
+    },
+    "nixpkgs-unstable": {
+        "branch": "nixos-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "80bdc1e5ce51f56b19791b52b2901187931f5353",
+        "sha256": "0dynsry50zjkxsrfb80n2sh8kngi1b0arvr9sampw1ln078qkb20",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<branch>.tar.gz"
+    }
+}

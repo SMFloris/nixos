@@ -62,7 +62,7 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
       pulseSupport = true;
     };
 
-    script = "polybar -q -r bar &";
+    script = "polybar -r bar &";
 
     config = {
       "settings" = {
@@ -290,7 +290,7 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
         label-muted-foreground = "${fg-3}";
         label-muted-background = "${bg-1}";
 
-        click-left = "pavucontrol";
+        click-right = "exec ${pkgs.pavucontrol}/bin/pavucontrol &";
       };
       
       "module/filesystem" = {
@@ -385,15 +385,8 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
 
       "module/menu" = {
         type = "custom/text";
-
-        content = "≡";
-
-        format = "<label>";
-        format-background = "${bg-1}";
-
-        label = "%{A1:${pkgs.rofi}/bin/rofi -modes power:/home/flow/.config/rofi/power.sh -show power :}≡%{A}";
-        label-background = "${bg-1}";
-        label-foreground = "${fg-1}";
+        content = "%{B${bg-1}}≡ %{B-}";
+        click-left = "${pkgs.rofi}/bin/rofi -modes power:/home/flow/.config/rofi/power.sh -show power";
       };
     };
   };

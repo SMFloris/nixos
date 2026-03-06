@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/run/current-system/sw/bin/bash
 
 echo "Called with: '$1'" >> /tmp/power.log
 

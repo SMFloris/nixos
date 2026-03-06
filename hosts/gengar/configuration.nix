@@ -4,14 +4,47 @@
 
 { config, pkgs, lib, ... }:
 
+let
+  sources = import ./nix/sources.nix;
+  nixpkgs = sources.sources_.nixpkgs;
+  nixpkgs-unstable = sources.sources_.nixpkgs-unstable;
+  home-manager = sources.sources_.home-manager;
+
+  fccUnlockScript = pkgs.writeScript "fcc-unlock.sh" ''
+     #!/run/current-system/sw/bin/bash
+     dbus_path=$1
+     shift
+     ports=("$@")
+     for port in "''${ports[@]}"; do
+       if [[ $port =~ mbim ]]; then
+         device="/dev/$port"
+         mbimcli -p -d "$device" -v --quectel-set-radio-state=on
+         break
+       fi
+     done
+   '';
+in
+
 {
+
+  nix.nixPath = [
+    "nixpkgs=${nixpkgs}"
+    "nixos-unstable=${nixpkgs-unstable}"
+    "home-manager=${home-manager}"
+    "nixos-config=/etc/nixos/configuration.nix"
+  ];
+
   imports =
     [
       ./common/common.nix
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      <home-manager/nixos>
+      "${home-manager}/nixos"
     ];
+
+  _module.args.nixpkgs-unstable = import nixpkgs-unstable {
+    config.allowUnfree = true;
+  };
 
   environment.variables = {
     WINIT_X11_SCALE_FACTOR = "1.2";
@@ -27,11 +60,11 @@
     aliases = [ "dbus-org.freedesktop.ModemManager1.service" ];
     wantedBy = [ "multi-user.target" "network.target" ];
     enable = true;
-    path = [ ];
+    path = [ pkgs.libqmi ];
   };
 
-  networking.networkmanager.fccUnlockScripts = [
-    {id = "1EAC:1007"; path = "${pkgs.lenovo-wwan-unlock}/bin/fcc_unlock.sh";}
+  networking.modemmanager.fccUnlockScripts = [
+    {id = "1eac:1007"; path = "${fccUnlockScript}";}
   ];
 
   # Copy the NixOS configuration file and link it from the resulting system

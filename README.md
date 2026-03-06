@@ -1,71 +1,80 @@
 # NixOS Configuration
 
-This repository contains the NixOS configuration for my systems, including system-level settings, home-manager configurations, 
-and customizations for development and productivity tools.
+This repository contains the NixOS configuration for my systems, using a multi-host setup with pinned dependencies via [niv](https://github.com/nmattia/niv).
 
-## 📝 Overview
+## Structure
 
-This configuration defines a NixOS system with the following key features:
+- `configuration.nix` & `hardware-configuration.nix` - Symlinks to current host config
+- `nix/` - Pinned dependencies (nixpkgs, nixpkgs-unstable, home-manager)
+- `common/` - Shared system and home-manager configurations
+- `hosts/` - Host-specific configurations (gengar, gastly, onix)
+- `rebuild.sh` - Helper script for rebuilding
+- `update.sh` - Helper script for updating pinned dependencies
 
-- **System Setup**: Uses `systemd-boot` as the bootloader and includes hardware configuration.
-- **Home Manager**: Manages user-specific configurations (e.g., Neovim, fonts, shell).
-- **Window Manager**: Supports both Sway (Wayland) and i3 (X11) window managers.
-- **Custom Packages**: Includes a wide range of development tools, utilities, and GUI applications.
-- **Neovim Integration**: Configures Neovim with treesitter, LSP, and custom keybindings.
-- **GPU Support**: Configurable for both AMD and NVIDIA GPUs.
-- **AI Features**: Optional AI integration via `ollama-cuda` for NVIDIA GPUs.
+## Quick Start
 
-## 🧱 Key Components
+```bash
+# Rebuild the system
+./rebuild.sh switch
 
-### 1. **System Configuration**
+# Update all pinned dependencies
+./update.sh
 
-### 2. **Hosts**
-- **`onix`**: Primary development machine with Wayland (Sway) support.
-- **`gastly`**: Secondary machine optimized for X11 (i3) with specific hardware configurations.
-- Uses `nixos-unstable` for access to the latest packages.
-- Includes hardware-specific configuration via `hardware-configuration.nix`.
-- Sets the hostname to `onix`.
+# Update a specific dependency
+./update.sh nixpkgs-unstable
+```
 
-### 2. **Home Manager**
-- Manages user-specific settings and packages.
-- Includes custom Neovim configuration and treesitter setup.
-- Sets up fonts and terminal configurations.
+## Managing Hosts
 
-### 3. **Window Manager**
-- Supports both Sway and i3 window managers.
-- Includes configurations for `picom`, `rofi`, `polybar`, and `thunar`.
+To switch to a different host configuration:
 
-### 4. **Development Tools**
-- Programming languages: Go, Rust, Python, JavaScript, TypeScript, etc.
-- Editors: Neovim with LSP and treesitter.
-- CLI tools: `ripgrep`, `fd`, `lazygit`, `k9s`, `tmux`, `nodejs`, `rust-analyzer`, etc.
-- GUI tools: `libreoffice`, `blender`, `gimp`, `spotify`, `evince`, `meld`, `octave`, etc.
+```bash
+./symlink.sh <hostname>
+./rebuild.sh switch
+```
 
-### 5. **Custom Packages**
-- Includes custom builds for `c3c`, `c3-lsp`, and `godot-4`.
-- Uses unstable versions of some tools (e.g., `ollama-cuda` for NVIDIA GPUs).
+Available hosts: `gengar`, `gastly`, `onix`
 
-## 📦 Installed Software
+## Pinned Dependencies
 
-### 📦 CLI Tools
-- `ripgrep`, `fd`, `lazygit`, `k9s`, `tmux`, `git`, `nodejs`, `rust-analyzer`, `black`, `jq`, `yq`, `fzf`, `neofetch`, `tmux`, `cargo`, `nodejs_22`, etc.
+Dependencies are pinned in `nix/sources.json` using niv:
 
-### 📦 GUI Applications
-- `libreoffice`, `blender`, `gimp`, `spotify`, `evince`, `meld`, `octave`, `bruno`, `insomnia`, `gnome-disk-utility`, `system-config-printer`, etc.
+- **nixpkgs** - NixOS 25.11 stable
+- **nixpkgs-unstable** - Latest unstable
+- **home-manager** - release-25.11
 
-### 📦 Development
-- Go, Rust, Python, Node.js, Terraform, Kubernetes tools, Docker, `c3c`, `c3-lsp`, `godot-4`, etc.
+## Available Scripts
 
-### 📦 Utilities
-- `btop`, `calcurse`, `pavucontrol`, `tigervnc`, `easyocr`, `maestral`, `gamescope`, `networkmanagerapplet`, `transmission_4-gtk`, etc.
+### rebuild.sh
 
-## 🧩 Configuration Details
+```bash
+./rebuild.sh [action]
 
-- **Neovim**: Uses `nvim-treesitter` with many language parsers and custom keybindings.
-- **Fonts**: Enabled `fontconfig` for better font rendering.
-- **Terminal**: Uses `foot` as the default terminal emulator.
-- **Shell**: Custom `.bashrc` and startup script `startWm.sh`.
-- **Window Manager**: Supports both Sway (Wayland) and i3 (X11) window managers.
-- **GPU**: Configurable for AMD or NVIDIA GPUs, with optional AI features via `ollama-cuda`.
+Actions:
+  switch     # Build and activate (default)
+  build      # Build only
+  test       # Build and activate, don't add to boot
+  dry-build  # Test without building
+```
 
-This setup is tailored for a developer environment with a focus on productivity, customization, and access to the latest tools.
+### update.sh
+
+```bash
+./update.sh [source]
+
+Sources:
+  nixpkgs          # Update stable nixpkgs
+  nixpkgs-unstable # Update unstable nixpkgs
+  home-manager     # Update home-manager
+  all              # Update all (default)
+```
+
+### symlink.sh
+
+```bash
+./symlink.sh <hostname>
+
+# Creates symlinks:
+#   configuration.nix -> hosts/<hostname>/configuration.nix
+#   hardware-configuration.nix -> hosts/<hostname>/hardware-configuration.nix
+```

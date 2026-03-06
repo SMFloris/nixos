@@ -43,57 +43,45 @@ return {
             })
             vim.keymap.set("n", "-", function()
                 local path = vim.api.nvim_buf_get_name(0)
-                local parent = vim.fn.fnamemodify(path, ":h")
-                MiniFiles.open(parent, false)
-            end, { desc = "Toggle into currently opened file" })
+                local cwd = vim.fn.getcwd()
+                local file_dir = vim.fn.fnamemodify(path, ":h")
+                
+                -- Find anchor: go up to 4 dirs from file_dir, but stay within cwd
+                local anchor = file_dir
+                for i = 1, 4 do
+                    local parent = vim.fn.fnamemodify(anchor, ":h")
+                    if parent:sub(1, #cwd) == cwd and parent ~= anchor then
+                        anchor = parent
+                    else
+                        break
+                    end
+                end
+                
+                -- Open at anchor, then set branch to show from anchor to file_dir
+                MiniFiles.open(anchor, false)
+                
+                -- Build branch from anchor to file_dir
+                local branch = { anchor }
+                local current = anchor
+                while current ~= file_dir do
+                    -- Get the relative path from current to file_dir
+                    local rel = file_dir:sub(#current + 2)  -- +2 to skip the "/"
+                    -- Get first path component
+                    local next_comp = rel:match("^([^/]+)")
+                    if next_comp then
+                        current = current .. "/" .. next_comp
+                        table.insert(branch, current)
+                    else
+                        break
+                    end
+                end
+                
+                -- Set branch with focus on file_dir (last element)
+                vim.schedule(function()
+                    MiniFiles.set_branch(branch, { depth_focus = #branch })
+                end)
+            end, { desc = "Toggle into currently opened file (showing up to 4 parent dirs)" })
         end,
-    },
-    -- Surround
-    {
-        "echasnovski/mini.surround",
-        event = { "BufReadPre", "BufNewFile" },
-        opts = {
-            -- Add custom surroundings to be used on top of builtin ones. For more
-            -- information with examples, see `:h MiniSurround.config`.
-            custom_surroundings = nil,
-
-            -- Duration (in ms) of highlight when calling `MiniSurround.highlight()`
-            highlight_duration = 300,
-
-            -- Module mappings. Use `''` (empty string) to disable one.
-            -- INFO:
-            -- saiw surround with no whitespace
-            -- saw surround with whitespace
-            mappings = {
-                add = 'sa',            -- Add surrounding in Normal and Visual modes
-                delete = 'ds',         -- Delete surrounding
-                find = 'sf',           -- Find surrounding (to the right)
-                find_left = 'sF',      -- Find surrounding (to the left)
-                highlight = 'sh',      -- Highlight surrounding
-                replace = 'sr',        -- Replace surrounding
-                update_n_lines = 'sn', -- Update `n_lines`
-
-                suffix_last = 'l',     -- Suffix to search with "prev" method
-                suffix_next = 'n',     -- Suffix to search with "next" method
-            },
-
-            -- Number of lines within which surrounding is searched
-            n_lines = 20,
-
-            -- Whether to respect selection type:
-            -- - Place surroundings on separate lines in linewise mode.
-            -- - Place surroundings on each line in blockwise mode.
-            respect_selection_type = false,
-
-            -- How to search for surrounding (first inside current line, then inside
-            -- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
-            -- 'cover_or_nearest', 'next', 'prev', 'nearest'. For more details,
-            -- see `:h MiniSurround.config`.
-            search_method = 'cover',
-
-            -- Whether to disable showing non-error feedback
-            silent = false,
-        },
     },
     -- Get rid of whitespace
     {
@@ -114,18 +102,6 @@ return {
                     require("mini.trailspace").unhighlight()
                 end,
             })
-        end,
-    },
-    -- Split & join
-    {
-        "echasnovski/mini.splitjoin",
-        config = function()
-            local miniSplitJoin = require("mini.splitjoin")
-            miniSplitJoin.setup({
-                mappings = { toggle = "" }, -- Disable default mapping
-            })
-            vim.keymap.set({ "n", "x" }, "sj", function() miniSplitJoin.join() end, { desc = "Join arguments" })
-            vim.keymap.set({ "n", "x" }, "sk", function() miniSplitJoin.split() end, { desc = "Split arguments" })
         end,
     },
 }

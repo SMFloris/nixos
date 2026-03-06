@@ -4,14 +4,33 @@
 
 { config, pkgs, lib, ... }:
 
+let
+  sources = import ./nix/sources.nix;
+  nixpkgs = sources.sources_.nixpkgs;
+  nixpkgs-unstable = sources.sources_.nixpkgs-unstable;
+  home-manager = sources.sources_.home-manager;
+in
+
 {
+
+  nix.nixPath = [
+    "nixpkgs=${nixpkgs}"
+    "nixos-unstable=${nixpkgs-unstable}"
+    "home-manager=${home-manager}"
+    "nixos-config=/etc/nixos/configuration.nix"
+  ];
+
   imports =
     [
-      ./common/common.nix
+      ../../common/common.nix
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      <home-manager/nixos>
+      "${home-manager}/nixos"
     ];
+
+  _module.args.nixpkgs-unstable = import nixpkgs-unstable {
+    config.allowUnfree = true;
+  };
 
   environment.variables = {
     WINIT_X11_SCALE_FACTOR = "1.2";
@@ -55,4 +74,3 @@
   system.stateVersion = "23.05"; # Did you read the comment?
 
 }
-

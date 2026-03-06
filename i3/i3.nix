@@ -9,7 +9,7 @@ let
       schema = pkgs.gsettings-desktop-schemas;
       datadir = "${schema}/share/gsettings-schemas/${schema.name}";
     in ''
-      export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
+      export XDG_DATA_DIRS=${datadir}:/var/lib/flatpak/exports/share:/home/flow/.local/share/flatpak/exports/share:$XDG_DATA_DIRS
       gnome_schema=org.gnome.desktop.interface
       gsettings set $gnome_schema gtk-theme 'Dracula'
     '';
@@ -17,18 +17,20 @@ let
 in lib.mkIf (host-info.preferred_wm == "i3") {
   home.file.".xinitrc".source = ./xfiles/xinitrc;
   home.file.".config/dunst/dunstrc.d/00-theme.conf".source = ./dunstrc;
-  home.file.".themes/floris/xfce4-notify-4.0/gtk.css".source = ./xfce4-notifyd/gtk.css;
+  home.file.".themes/floris/xfce-notify-4.0/gtk.css".source = ./xfce4-notifyd/gtk.css;
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
+  home.file.".config/autorandr/postswitch".source = ./onMonitorHotplug.sh;
   home.file."ai_chat.sh".source = ./rofi/ai_chat.sh;
   home.file.".config/rofi/power.sh" = {
     source = ./rofi/power.sh;
     executable = true;
   };
   home.file."ocr_screenshot.sh".source = ./ocr_screenshot.sh;
-  
-  # services.dunst = {
-  #   enable = true;
-  # };
+
+  services.udiskie = {
+    enable = true;
+    tray = "always";
+  };
 
   dconf = {
       enable = true;
@@ -90,11 +92,19 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
           command = "floating enable, resize set 640 640";
           criteria = { class = "org.gnome.clocks"; };
         }
+        {
+          command = "move down 23px";
+          criteria = { class = "Xfce4-notifyd"; };
+        }
+
       ];
 
       gaps = {
         inner = 10;
-        outer = 5;
+        top = 0;
+        left = 5;
+        right = 5;
+        bottom = 5;
       };
 
       keybindings = lib.mkOptionDefault {

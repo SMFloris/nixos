@@ -2,9 +2,10 @@
   config,
   pkgs,
   lib,
+  nixpkgs-unstable,
   ...
 }: let
-  unstable = import <nixos-unstable> {config.allowUnfree = true;};
+  unstable = nixpkgs-unstable;
   firefoxWithEnv = pkgs.symlinkJoin {
     name = "firefox";
     paths = [pkgs.firefox];
@@ -38,6 +39,11 @@ in {
   networking.extraHosts = ''
     127.0.0.1 api.frisbo.internal
     127.0.0.1 superadmin.frisbo.internal
+    127.0.0.1 api-merchant.frisbo.internal
+    127.0.0.1 merchant.frisbo.internal
+    127.0.0.1 api-admin.frisbo.internal
+    127.0.0.1 admin.frisbo.internal
+    127.0.0.1 task.frisbo.internal
     127.0.0.1 status.frisbo.internal
     127.0.0.1 beta.frisbo.internal
     127.0.0.1 dashboard.frisbo.internal
@@ -144,6 +150,7 @@ in {
   home-manager.extraSpecialArgs = {
     inherit (config) host-info;
     inherit (config) home-manager;
+    inherit nixpkgs-unstable;
   };
   home-manager.users.flow = import ./flow.nix;
 
@@ -151,14 +158,15 @@ in {
   # $ nix search wget
   environment.systemPackages = with pkgs;
     [
+      # niv for dependency management
+      niv
       teams-for-linux
       # nodejs
       nodejs
       corepack
       # zot
-      (pkgs.callPackage (import ./packages/zil.nix) {})
+      (unstable.callPackage ./packages/sqlit.nix {} )
       # networking
-      lxrandr
       dig
       bc
       # k8s
@@ -364,6 +372,7 @@ in {
     enable = true;
     lfs.enable = true;
   };
+  services.flatpak.enable = true;
   services.ipp-usb.enable = true;
 
   services.printing.enable = true;

@@ -34,8 +34,6 @@ vim.keymap.set("n", "<leader>/", "gcc", { desc = "󰆉 Toggle Line Comment" })
 vim.keymap.set("v", "<leader>/", "gc", { desc = "󰆉 Toggle Block Comment" })
 
 -- indent/deintent
-vim.keymap.set("n", ">>", ">>", { noremap = true, silent = true })
-vim.keymap.set("n", "<<", "<<", { noremap = true, silent = true })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent and stay in visual" })
 vim.keymap.set("v", "<", "<gv", { desc = "Deindent and stay in visual" })
 
@@ -62,10 +60,6 @@ vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { desc = " Format with LSP" })
 vim.keymap.set("i", "<C-Space>", function() require('cmp').complete() end, { desc = "Manual Completion" })
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
-vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Go to References" })
-vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Go to Implementation" })
-vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "Rename Symbol" })
 
 vim.keymap.set("n", "<leader>cq", function()
     local is_open = vim.fn.getqflist({ winid = 0 }).winid ~= 0

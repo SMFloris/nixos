@@ -39,7 +39,7 @@ return {
                 },
                 formatters = {
                     file = {
-                        filename_first = false,
+                        filename_first = true,
                         filename_only = false,
                         icon_width = 2,
                     },
@@ -55,10 +55,10 @@ return {
                         preview = false,
                         layout = {
                             backdrop = false,
-                            width = 0.6,
-                            min_width = 80,
-                            height = 0.4,
-                            min_height = 10,
+                            width = 0.95,
+                            min_width = 120,
+                            height = 0.5,
+                            min_height = 15,
                             box = "vertical",
                             border = "rounded",
                             title = "{title}",
@@ -73,8 +73,8 @@ return {
                         layout = {
                             box = "horizontal",
                             backdrop = false,
-                            width = 0.8,
-                            height = 0.9,
+                            width = 0.95,
+                            height = 0.95,
                             border = "none",
                             {
                                 box = "vertical",
@@ -95,7 +95,7 @@ return {
                             box = "vertical",
                             backdrop = false,
                             width = 0,
-                            height = 0.4,
+                            height = 0.5,
                             position = "bottom",
                             border = "top",
                             title = " {title} {live} {flags}",
@@ -138,18 +138,32 @@ return {
             { "<leader>fw", function() require("snacks").picker.grep() end, desc = "󰱼 Grep Word" },
             { "<leader>fc", function() require("snacks").picker.grep_word() end, desc = "󰈬 Search Visual Selection or Word", mode = { "n", "x" } },
             { "<leader>fk", function() require("snacks").picker.keymaps({ layout = "ivy" }) end, desc = " Search Keymaps (Snacks Picker)" },
-            { "<leader>ls", function() require("snacks").picker.lsp_symbols() end, desc = "󰈬 LSP Symbols (Snacks Picker)" },
-            { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols (Snacks Picker)" },
+            { "<leader>ls", function() require("snacks").picker.lsp_symbols() end, desc = "󰈬 LSP Symbols" },
+            { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols" },
+            { "<leader>lca",function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
+            { "<leader>lcr",function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },
+            { "<leader>ld", function() require("snacks").picker.diagnostics_buffer() end, desc = "󰈬 LSP Diagnostics (buffer)" },
+            { "<leader>lD", function() require("snacks").picker.diagnostics() end, desc = "󰈬 LSP Workspace Diagnostics" },
+
+            -- lsp
+            { "gd", function() require("snacks").picker.lsp_definitions() end, desc = "Goto Definition" },
+            { "gD", function() require("snacks").picker.lsp_declarations() end, desc = "Goto Declaration" },
+            { "gr", function() require("snacks").picker.lsp_references() end, nowait = true, desc = "References" },
+            { "gI", function() require("snacks").picker.lsp_implementations() end, desc = "Goto Implementation" },
+            { "gy", function() require("snacks").picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+            { "gai", function() require("snacks").picker.lsp_incoming_calls() end, desc = "C[a]lls Incoming" },
+            { "gao", function() require("snacks").picker.lsp_outgoing_calls() end, desc = "C[a]lls Outgoing" },
 
             -- Git Stuff
             { "<leader>gg", function() require("snacks").lazygit() end, desc = " Lazygit" },
             { "<leader>gb", function() require("snacks").git.blame_line() end, desc = " Git Blame" },
             { "<leader>gl", function() require("snacks").lazygit.log() end, desc = "󰦻 Lazygit Logs" },
+            { "<leader>gh", function() require("snacks").lazygit.log_file() end, desc = "󰦻 Lazygit File History" },
             { "<leader>gd", function() require("diffview").open() end, desc = " Diffview Open" },
 
             -- Other Utils
             { "<leader>d", function() require("snacks").dashboard() end, desc = "󰕮 Dashboard" },
-            { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+            { "<leader>e", function() require("snacks").explorer() end, desc = "File Explorer" },
             { "<leader>fh", function() require("snacks").picker.help() end, desc = "󰋖 Help Pages" },
         }
     },

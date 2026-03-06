@@ -1,12 +1,45 @@
-/* We set some default options here.  This is loaded with a low priority,
- * the rest will use whatever default colors are in your main gtk theme */
+/* Dracula notification theme for GTK 3.18 and before */
+
 #XfceNotifyWindow {
-    border-radius: 6px;
-    border-width: 1px;
-    border-color : #ffffff;
-    margin-top: 100px;
+    background-color: #1b1b2f;
+    border: 2px solid #bd93f9;
+    border-radius: 8px;
+    padding: 12px;
 }
 
-#XfceNotifyWindow label#summary {
-    font-weight: Bold;
+#XfceNotifyWindow:hover {
+    border-color: #ff79c6;
+}
+
+#XfceNotifyWindow GtkLabel#summary {
+    color: #f8f8f2;
+    font-weight: bold;
+}
+
+#XfceNotifyWindow GtkLabel#body {
+    color: #cbd6f7;
+}
+
+/* Action buttons */
+#XfceNotifyWindow GtkButton {
+    background-color: #2a2a3f;
+    color: #f8f8f2;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+/* Hover on buttons */
+#XfceNotifyWindow GtkButton:hover {
+    background-color: #44475a;
+    color: #ffffff;
+}
+
+/* Progress bar trough */
+#XfceNotifyWindow GtkProgressbar.trough {
+    background-color: #2a2a3f;
+}
+
+/* Progress bar fill */
+#XfceNotifyWindow GtkProgressbar.progressbar {
+    background-color: #6272a4;
 }

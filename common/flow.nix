@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  nixpkgs-unstable,
   host-info,
   ...
 }: let
@@ -8,7 +9,7 @@
     thunarPlugins = [pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin];
   };
 
-  unstable-pkgs = import <nixos-unstable> {config.allowUnfree = true;};
+  unstable-pkgs = nixpkgs-unstable;
   mkNeovimWrapper = name: ''
     #!/usr/bin/env bash
     source "$HOME/.config/neovim-profile-env.sh"
@@ -40,6 +41,7 @@ in {
 
   home.packages = with pkgs;
     [
+      rofi
       # neovim
       ripgrep
       fd
@@ -90,7 +92,6 @@ in {
       # utils gui
       bruno
       evince
-      wdisplays
       insomnia
       system-config-printer
       meld
