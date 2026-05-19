@@ -47,6 +47,7 @@ let
   orange-3 = "#e0af67";
 
   hostname = nixosConfig.host-info.hostname;
+  laptops = ["gastly" "gengar"];
   hwmonPaths = {                                                     
     "gastly" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";                
     "gengar" = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";                
@@ -98,7 +99,7 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
           
           modules-left = "spacer left xworkspaces slash space slash space xwindow space right";
           modules-center = "left space date space right";
-          modules-right = "left space cpu slash space slash memory slash space slash battery slash space slash temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space menu space right spacer";
+          modules-right = "left space cpu slash space slash memory slash space slash" + (if builtins.elem hostname laptops then " battery xkeyboard slash space slash" else " xkeyboard slash space slash") + " temperature slash space slash pulseaudio space slash space slash space systray space slash space slash space menu space right spacer";
           # modules-left = "left date right spacer left xwindow right"
           # modules-center = "left xworkspaces right"
           # modules-right = "left pulseaudio spacerbg cpu spacerbg memory right spacer left systray right"
@@ -388,6 +389,20 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "i3") {
         content = "%{B${bg-1}}≡ %{B-}";
         click-left = "${pkgs.rofi}/bin/rofi -modes power:/home/flow/.config/rofi/power.sh -show power";
       };
-    };
+
+      "module/xkeyboard" = {
+        type = "internal/xkeyboard";
+        format = "<label-layout>";
+        format-prefix = "󰌌 ";
+        format-prefix-underline = "${green-2}";
+        format-prefix-background = "${bg-1}";
+        format-prefix-foreground = "${green-2}";
+        format-background = "${bg-1}";
+        label-layout = "%layout%";
+        label-layout-underline = "${green-2}";
+        label-layout-foreground = "${fg-1}";
+        label-layout-background = "${bg-1}";
+      };
+  };
   };
 }

@@ -1,57 +1,24 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running `nixos-help`).
+{ ... }:
 
-{ config, pkgs, lib, ... }:
-
-let
-  sources = import ./nix/sources.nix;
-  nixpkgs = sources.sources_.nixpkgs;
-  nixpkgs-unstable = sources.sources_.nixpkgs-unstable;
-  home-manager = sources.sources_.home-manager;
-in
-
-{
-
-  nix.nixPath = [
-    "nixpkgs=${nixpkgs}"
-    "nixos-unstable=${nixpkgs-unstable}"
-    "home-manager=${home-manager}"
-    "nixos-config=/etc/nixos/configuration.nix"
+let 
+    sources = import ./npins;
+    home-manager = import sources.home-manager {};
+in {
+  imports = [
+    ./pinning.nix
+    ./common/common.nix
+    ./hardware-configuration.nix
+    home-manager.nixos
   ];
 
-  imports =
-    [
-      ../../common/common.nix
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      "${home-manager}/nixos"
-    ];
-
-  _module.args.nixpkgs-unstable = import nixpkgs-unstable {
-    config.allowUnfree = true;
-  };
-
-  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  # boot.loader.grub.enable = true;
-  # boot.loader.grub.configurationLimit = 4;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.device = "nodev";
-  # boot.loader.grub.useOSProber = true;
 
-  networking.hostName = "onix"; # Define your hostname.
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
+  networking.hostName = "onix";
+  networking.nat.enable = true;
+  networking.nat.internalInterfaces = [ "ve-+" ];
+  networking.nat.externalInterface = "wlp13s0";
+  networking.nat.enableIPv6 = true;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It's perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
+  system.stateVersion = "23.05";
 }

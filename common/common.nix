@@ -1,11 +1,11 @@
 {
   config,
-  pkgs,
   lib,
-  nixpkgs-unstable,
+  pkgs,
   ...
 }: let
-  unstable = nixpkgs-unstable;
+  sources = import ../npins;
+  nixpkgs-unstable = import sources.nixpkgs-unstable {};
   firefoxWithEnv = pkgs.symlinkJoin {
     name = "firefox";
     paths = [pkgs.firefox];
@@ -43,6 +43,7 @@ in {
     127.0.0.1 merchant.frisbo.internal
     127.0.0.1 api-admin.frisbo.internal
     127.0.0.1 admin.frisbo.internal
+    127.0.0.1 api-fc.frisbo.internal
     127.0.0.1 task.frisbo.internal
     127.0.0.1 status.frisbo.internal
     127.0.0.1 beta.frisbo.internal
@@ -65,6 +66,16 @@ in {
   i18n.defaultLocale = "en_US.UTF-8";
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.sandbox = true;
+  nix.settings.trusted-public-keys = [
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+    "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+  ];
+  nix.settings.substituters = [
+    "https://nix-community.cachix.org"
+    "https://cache.flox.dev"
+    "https://cuda-maintainers.cachix.org"
+  ];
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
@@ -76,7 +87,8 @@ in {
   services.tailscale.enable = true;
 
   # Configure keymap in X11
-  # services.xserver.layout = "us";
+  # services.xserver.layout = "us,ro";
+  # services.xserver.xkbVariant = ",std";
   # services.xserver.xkbOptions = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
@@ -87,7 +99,7 @@ in {
       dockerCompat = false;
     };
     docker = {
-      package = unstable.docker;
+      package = nixpkgs-unstable.docker;
       enable = true;
       enableOnBoot = false;
       daemon.settings = {
@@ -159,13 +171,13 @@ in {
   environment.systemPackages = with pkgs;
     [
       # niv for dependency management
-      niv
       teams-for-linux
       # nodejs
       nodejs
       corepack
       # zot
-      (unstable.callPackage ./packages/sqlit.nix {} )
+      (nixpkgs-unstable.callPackage ./packages/sqlit.nix {} )
+      npins
       # networking
       dig
       bc
@@ -213,7 +225,7 @@ in {
     ]
     ++ (
       if (config.host-info.gpu == "nvidia")
-      then [cudatoolkit nvtopPackages.nvidia]
+      then [cudatoolkit nvtopPackages.nvidia colmapWithCuda]
       else []
     )
     ++ (
@@ -236,7 +248,6 @@ in {
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
-  programs.light.enable = true;
   programs.dconf.enable = true;
   programs.xfconf.enable = true;
   virtualisation.libvirtd.enable = true;
@@ -399,29 +410,10 @@ in {
     settings.X11Forwarding = true;
   };
 
-  # llama.cpp via Docker with model preload
-  # The model must be downloaded manually or through a different mechanism before starting the service.
-  # To download the model, run:
-  #   ${pkgs.curl}/bin/curl -L -o /home/flow/models/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf https://huggingface.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/resolve/main/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf?download=true
-  systemd.user.services.llama-cpp = lib.mkIf (config.host-info.ai_enabled == true && config.host-info.gpu == "nvidia") {
-    description = "llama.cpp server via Docker";
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.docker} run --rm --shm-size 16g --device=nvidia.com/gpu=all -v /home/flow/models:/root/.cache/llama.cpp -p 8080:8080 docker.io/local/llama.cpp:server-cuda --hf-repo unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF   --hf-file Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf --temp 0.7 --min-p 0.0 --top-p 0.80 --top-k 20 --repeat-penalty 1.05 --jinja  --host 0.0.0.0 --port 8080 -c 32684 -ngl 99";
-      Restart = "on-failure";
-      RestartSec = 10;
-      TimeoutStopSec = 20;
-    };
-  };
-
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
-  networking.nat.enable = true;
-  networking.nat.internalInterfaces = ["ve-+"];
-  networking.nat.externalInterface = "wlp1s0";
-
   boot.enableContainers = true;
 }

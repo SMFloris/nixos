@@ -78,6 +78,10 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
         }
         {
           command = "floating enable";
+          criteria = { title = ".*_floating"; };
+        }
+        {
+          command = "floating enable";
           criteria = { window_role = "alert"; };
         }
         {

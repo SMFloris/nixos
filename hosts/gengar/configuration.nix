@@ -54,6 +54,11 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "gengar"; # Define your hostname.
+  networking.nat.enable = true;
+  networking.nat.internalInterfaces = ["ve-+"];
+  networking.nat.externalInterface = "wlp1s0";
+  networking.nat.enableIPv6 = true;
+
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   systemd.services.ModemManager = {

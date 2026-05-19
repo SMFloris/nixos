@@ -39,15 +39,16 @@ return {
                 },
                 formatters = {
                     file = {
-                        filename_first = true,
+                        filename_first = false,
                         filename_only = false,
                         icon_width = 2,
+                        min_width = 1000,
                     },
                 },
                 layout = {
                     -- presets options : "default" , "ivy" , "ivy-split" , "telescope" , "vscode", "select" , "sidebar"
                     -- override picker layout in keymaps function as a param below
-                    preset = "ivy", -- defaults to this layout unless overidden
+                    preset = "telescope", -- defaults to this layout unless overidden
                     cycle = false,
                 },
                 layouts = {
@@ -69,7 +70,7 @@ return {
                         }
                     },
                     telescope = {
-                        reverse = true, -- set to false for search bar to be on top
+                        reverse = false,
                         layout = {
                             box = "horizontal",
                             backdrop = false,
@@ -78,8 +79,8 @@ return {
                             border = "none",
                             {
                                 box = "vertical",
-                                { win = "list",  title = " Results ", title_pos = "center", border = "rounded" },
                                 { win = "input", height = 1,          border = "rounded",   title = "{title} {live} {flags}", title_pos = "center" },
+                                { win = "list",  title = " Results ", title_pos = "center", border = "rounded" },
                             },
                             {
                                 win = "preview",
@@ -94,7 +95,7 @@ return {
                         layout = {
                             box = "vertical",
                             backdrop = false,
-                            width = 0,
+                            width = 0.95,
                             height = 0.5,
                             position = "bottom",
                             border = "top",
@@ -111,9 +112,9 @@ return {
                 }
             },
         },
-        config = function()
-            vim.notify = require("snacks.notifier").notify
-        end,
+        -- config = function()
+        --     vim.notify = require("snacks.notifier").notify
+        -- end,
         -- NOTE: Keymaps
         keys = {
             {
@@ -140,6 +141,7 @@ return {
             { "<leader>fk", function() require("snacks").picker.keymaps({ layout = "ivy" }) end, desc = " Search Keymaps (Snacks Picker)" },
             { "<leader>ls", function() require("snacks").picker.lsp_symbols() end, desc = "󰈬 LSP Symbols" },
             { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols" },
+            { "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, desc = "LSP format" },
             { "<leader>lca",function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
             { "<leader>lcr",function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },
             { "<leader>ld", function() require("snacks").picker.diagnostics_buffer() end, desc = "󰈬 LSP Diagnostics (buffer)" },

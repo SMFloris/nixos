@@ -22,7 +22,7 @@ in
 
   imports =
     [
-      ../../common/common.nix
+      ./common/common.nix
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       "${home-manager}/nixos"

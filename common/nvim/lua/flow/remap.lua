@@ -58,7 +58,6 @@ vim.keymap.set("n", "#", "#zzzv")
 vim.keymap.set("x", "p", [["_dP]])
 vim.keymap.set("n", "Q", "<nop>")
 
-vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { desc = " Format with LSP" })
 vim.keymap.set("i", "<C-Space>", function() require('cmp').complete() end, { desc = "Manual Completion" })
 
 vim.keymap.set("n", "<leader>cq", function()

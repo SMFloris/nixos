@@ -1,17 +1,4 @@
 -- Bootstrap lazy.nvim
-
-local profile = vim.fn.expand("~/.nix-profile-neovim")
-local state   = vim.fn.expand("~/.local/state/neovim-profile")
-
-vim.env.PATH = table.concat({
-  state .. "/cargo/bin",
-  state .. "/npm/bin",
-  state .. "/composer/vendor/bin",
-  vim.fn.expand("~/.dotnet/tools"),
-  profile .. "/bin",
-  vim.env.PATH,
-}, ":")
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -32,6 +19,7 @@ vim.opt.termguicolors = true
 vim.opt.guicursor = ""
 
 require("lazy").setup({
+    lockfile = "/etc/nixos/common/nvim/lazy-lock.json",
     spec = {
         -- import your plugins
         { import = "plugins" },

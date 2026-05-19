@@ -32,11 +32,6 @@ local lsp_servers = {
         npm_bin .. '/language-server',
         profile .. '/bin/language-server',
     },
-    yamlls = { 
-        'yaml-language-server',
-        npm_bin .. '/yaml-language-server',
-        profile .. '/bin/yaml-language-server',
-    },
     nil_ls = { 
         'nil',
         profile .. '/bin/nil',

@@ -1,20 +1,13 @@
 {
   pkgs,
   lib,
-  nixpkgs-unstable,
   host-info,
+  nixpkgs-unstable,
   ...
 }: let
   thunarWithPlugins = pkgs.xfce.thunar.override {
     thunarPlugins = [pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin];
   };
-
-  unstable-pkgs = nixpkgs-unstable;
-  mkNeovimWrapper = name: ''
-    #!/usr/bin/env bash
-    source "$HOME/.config/neovim-profile-env.sh"
-    exec "$PROFILE/bin/${name}" "$@"
-  '';
 in {
   imports = [
     ../sway/sway.nix
@@ -23,12 +16,22 @@ in {
     ../i3/polybar.nix
     ../i3/rofi.nix
     ../special/cybersecurity.nix
+    ./neonix-hm-module.nix
   ];
   home.stateVersion = "25.11";
   fonts.fontconfig.enable = true;
 
   xdg = {
     enable = true;
+  };
+
+  programs.neonix = {
+    enable = true;
+    packageSets = {
+      pkgs = pkgs;
+      pkgs-unstable = nixpkgs-unstable;
+    };
+    nvimPackage = nixpkgs-unstable.neovim-unwrapped;
   };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
@@ -76,7 +79,7 @@ in {
       btop
       calcurse
       dbus
-      neofetch
+      fastfetch
       tigervnc
       easyocr
       # clouds
@@ -134,78 +137,17 @@ in {
     )
     ++ (
       if (host-info.gpu == "nvidia")
-      then [unstable-pkgs.ollama-cuda]
+      then []
       else []
     );
-
-  programs.neovim = {
-    enable = true;
-    package = unstable-pkgs.neovim-unwrapped;
-    vimAlias = true;
-    withNodeJs = true;
-  };
-
-  home.file.".config/opencode/dev/bin/opencoder-dev".source = ./dev-coder.sh;
-  home.file."./.config/nvim/" = {
-    source = ./nvim;
-    recursive = true;
-  };
-
-  # neovim
-  home.file."./.config/nvim/lua/flow/init.lua".text = ''
-    require("flow.set")
-    require("flow.remap")
-  '';
   home.activation.commonDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
     mkdir -p "$HOME/.npm-global"
     mkdir -p "$HOME/.local/bin"
   '';
-  home.activation.neovimProfileStateDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    STATE="$HOME/.local/state/neovim-profile"
 
-    mkdir -p \
-      "$STATE/cargo" \
-      "$STATE/rustup" \
-      "$STATE/npm" \
-      "$STATE/npm/lib/node_modules" \
-      "$STATE/composer" \
-      "$STATE/nuget"
-  '';
-  home.file.".config/neovim-profile-env.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-
-      PROFILE="$HOME/.nix-profile-neovim"
-      STATE="$HOME/.local/state/neovim-profile"
-
-      export CARGO_HOME="$STATE/cargo"
-      export RUSTUP_HOME="$STATE/rustup"
-
-      export NPM_CONFIG_PREFIX="$STATE/npm"
-      export NODE_PATH="$STATE/npm/lib/node_modules"
-
-      export COMPOSER_HOME="$STATE/composer"
-      export NUGET_PACKAGES="$STATE/nuget"
-
-      export PATH="$PROFILE/bin:$PATH"
-    '';
-  };
-  home.file.".config/neovim-wrapper/bin/cargo" = {
-    text = mkNeovimWrapper "cargo";
-    executable = true;
-  };
-  home.file.".config/neovim-wrapper/bin/composer" = {
-    text = mkNeovimWrapper "composer";
-    executable = true;
-  };
-  home.file.".config/neovim-wrapper/bin/nuget" = {
-    text = mkNeovimWrapper "nuget";
-    executable = true;
-  };
-  home.file.".config/neovim-wrapper/bin/npm" = {
-    text = mkNeovimWrapper "npm";
-    executable = true;
+  home.keyboard = {
+    layout = "us,ro";
+    options = ["grp:alt_shift_toggle"];
   };
 
   # we hardcode a symlink here so that we can refer to it in our lazy config

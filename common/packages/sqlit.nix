@@ -8,7 +8,7 @@ python3Packages.buildPythonApplication rec {
     owner = "Maxteabag";
     repo = "sqlit";
     rev = "v${version}";
-    sha256 = "sha256-thfNsSIGIe19h/jdytxZTABLUmEPOQrszfNjWCYkQw4=";
+    sha256 = "sha256-zPkBdGq4PoAWonMq5FWGaz19QWiZsHuVQcW/45ynqq4=";
   };
 
   pyproject = true;
