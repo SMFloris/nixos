@@ -1,16 +1,9 @@
 {
   "pins": {
     "home-manager": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "nix-community",
-        "repo": "home-manager"
-      },
-      "branch": "release-26.05",
-      "submodules": false,
-      "revision": "3cd22efe6471dc7365c822bd9ad73a21e55f38fb",
-      "url": "https://github.com/nix-community/home-manager/archive/3cd22efe6471dc7365c822bd9ad73a21e55f38fb.tar.gz",
+      "type": "Url",
+      "url": "https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz",
+      "unpack": true,
       "hash": "sha256-qajyHfZY29G2oEQk+uHxmsJcRoBUBXP9maTpFlwP/dI="
     },
     "nixpkgs": {
