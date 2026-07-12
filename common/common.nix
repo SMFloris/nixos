@@ -173,7 +173,7 @@ in {
       corepack
       # zot
       (nixpkgs-unstable.callPackage ./packages/sqlit.nix {})
-      npins
+      nixpkgs-unstable.npins
       alacritty
       # networking
       dig

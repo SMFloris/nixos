@@ -68,9 +68,9 @@
       HoldoffTimeoutSec = "5s";
     };
 
-    systemd.sleep.extraConfig = ''
-      SuspendState=mem
-      MemorySleepMode=s2idle
-    '';
+    systemd.sleep.settings.Sleep = {
+      SuspendState = "mem";
+      MemorySleepMode= "s2idle";
+    };
   };
 }

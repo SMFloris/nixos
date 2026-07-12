@@ -7,31 +7,26 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
-      "branch": "release-25.11",
+      "branch": "release-26.05",
       "submodules": false,
-      "revision": "3ee51fbdac8c8bdfe1e7e1fcaba6520a563f394f",
-      "url": "https://github.com/nix-community/home-manager/archive/3ee51fbdac8c8bdfe1e7e1fcaba6520a563f394f.tar.gz",
-      "hash": "13fmry1jd0na71fxhzms9qf3ybj6shgvnphq4p1akxxmv44gzq20"
+      "revision": "3cd22efe6471dc7365c822bd9ad73a21e55f38fb",
+      "url": "https://github.com/nix-community/home-manager/archive/3cd22efe6471dc7365c822bd9ad73a21e55f38fb.tar.gz",
+      "hash": "sha256-qajyHfZY29G2oEQk+uHxmsJcRoBUBXP9maTpFlwP/dI="
     },
     "nixpkgs": {
       "type": "Channel",
-      "name": "nixos-25.11",
-      "url": "https://releases.nixos.org/nixos/25.11/nixos-25.11.11422.25f538306313/nixexprs.tar.xz",
-      "hash": "16r660pwpfcrn8c4big4w9sz148lwrj2sj8w7i42r250b4n3sbqb"
+      "name": "nixos-26.05",
+      "artifact": "nixexprs.tar.xz",
+      "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.4659.8f0500b96605/nixexprs.tar.xz",
+      "hash": "sha256-Zsi7cADZetY+Qqqpp+gi+iD6nv0XrVeHRVL3xNaroKo="
     },
     "nixpkgs-unstable": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "NixOS",
-        "repo": "nixpkgs"
-      },
-      "branch": "nixos-unstable",
-      "submodules": false,
-      "revision": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
-      "url": "https://github.com/NixOS/nixpkgs/archive/64c08a7ca051951c8eae34e3e3cb1e202fe36786.tar.gz",
-      "hash": "16mzn8kd1x08cgl13csgfmix41qbx2q1g3acpby0cwg92drq375n"
+      "type": "Channel",
+      "name": "nixos-unstable",
+      "artifact": "nixexprs.tar.xz",
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1032869.e7a3ca8092b6/nixexprs.tar.xz",
+      "hash": "sha256-+GVwKnbbSmf4cWMJyRzvw8H5yFknmkLoPD5v6snqPzo="
     }
   },
-  "version": 5
+  "version": 8
 }
