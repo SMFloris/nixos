@@ -301,6 +301,7 @@ in {
       "blender"
       "phpstorm"
       # nvidia proprietary drivers + cuda
+      "nvidia-kernel-modules"
       "nvidia-persistenced"
       "nvidia-x11"
       "nvidia-settings"
@@ -328,7 +329,16 @@ in {
       "libcusparse"
       "libcusolver"
     ];
-  nixpkgs.config.packageOverrides = pkgs: {
+  nixpkgs.config.packageOverrides = pkgs: let
+    firefoxUnwrappedCpuOnnx = pkgs.firefox-unwrapped.override {
+      onnxruntime = pkgs.onnxruntime.override {
+        cudaSupport = false;
+        ncclSupport = false;
+      };
+    };
+  in {
+    firefox-unwrapped = firefoxUnwrappedCpuOnnx;
+    firefox = pkgs.wrapFirefox firefoxUnwrappedCpuOnnx {};
     steam = pkgs.steam.override {
       extraPkgs = pkgs:
         with pkgs; [

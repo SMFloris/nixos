@@ -17,7 +17,7 @@ in {
     ./pinning.nix
     ./common/common.nix
     ./hardware-configuration.nix
-    home-manager.nixos
+    "${home-manager}/nixos"
   ];
 
   boot.loader.systemd-boot.enable = true;

@@ -15,7 +15,7 @@
     boot.kernelModules = [ "kvm-amd" ];
     boot.kernelParams = [ "nvidia_drm.fbdev=1" ];
     boot.extraModulePackages = [ ];
-    # boot.kernelPackages = pkgs.linuxPackages_xanmod;
+    boot.kernelPackages = pkgs.linuxPackages_latest;
 
     fileSystems."/" =
       { device = "/dev/disk/by-uuid/06204b02-1dbf-403d-9fd2-e84b963da8b0";
@@ -95,7 +95,7 @@
     # set host info
     host-info.gpu = "nvidia";
     host-info.hostname = "onix";
-    host-info.preferred_wm = "i3";
+    host-info.preferred_wm = "cosmic";
     host-info.ai_enabled = true;
   };
 }
