@@ -1,0 +1,92 @@
+[colors.primary]
+background = "#2b2e34"
+foreground = "#f2eaff"
+bright_foreground = "#ffffff"
+
+[colors.normal]
+black = "#12121f"
+red = "#ff5c8a"
+green = "#7dffb2"
+yellow = "#ffe58a"
+blue = "#8aa7ff"
+magenta = "#ff4fd8"
+cyan = "#82f7ff"
+white = "#eee7ff"
+
+[colors.bright]
+black = "#4a4a63"
+red = "#ff7aa8"
+green = "#9cffc8"
+yellow = "#fff0a8"
+blue = "#a9bdff"
+magenta = "#ff8ee7"
+cyan = "#a9fbff"
+white = "#ffffff"
+
+[colors.cursor]
+cursor = "#ff4fd8"
+text = "#2b2e34"
+
+[colors.footer_bar]
+background = "#2b2e34"
+foreground = "#f2eaff"
+
+[colors.hints.end]
+background = "#2b2e34"
+foreground = "#ff8ee7"
+
+[colors.hints.start]
+background = "#ff4fd8"
+foreground = "#2b2e34"
+
+[colors.line_indicator]
+background = "None"
+foreground = "None"
+
+[colors.search.focused_match]
+background = "#ffd1f4"
+foreground = "#2b2e34"
+
+[colors.search.matches]
+background = "#ff4fd8"
+foreground = "#2b2e34"
+
+[colors.selection]
+background = "#4a345d"
+text = "CellForeground"
+
+[colors.vi_mode_cursor]
+cursor = "#ff4fd8"
+text = "#2b2e34"
+
+[font]
+size = 16.0
+
+[font.normal]
+family = "Noto Sans Mono"
+style = "Regular"
+
+[window]
+padding = { x = 5, y = 5 }
+dynamic_padding = false
+opacity = 1.0
+decorations = "None"
+
+[selection]
+save_to_clipboard = true
+
+[[hints.enabled]]
+command = "xdg-open"
+hyperlinks = true
+post_processing = true
+persist = false
+mouse.enabled = true
+binding = { key = "O", mods = "Control|Shift" }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[keyboard]
+bindings = [
+  { key = "Return", mods = "Shift", chars = "\n" },
+  { key = "n", mods = "Super|Command", action = "CreateNewWindow" },
+  { key = "Return", mods = "Super|Command", action = "CreateNewWindow" },
+]

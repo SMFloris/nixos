@@ -12,24 +12,19 @@
     buildInputs = [pkgs.makeWrapper];
     postBuild = ''
       wrapProgram $out/bin/firefox \
-        --set MOZ_USE_XINPUT2 1
+        --set MOZ_USE_XINPUT2 1 \
+        --set MOZ_ENABLE_WAYLAND 1
     '';
   };
 in {
-  nixpkgs.overlays = [
-    # not compatible with latest c3
-    (import ./overlays/c3c.nix)
-  ];
   imports = [
-    ./tuigreet.nix
-    ../i3/wm.nix
+    ./wm/i3/wm.nix
+    ./wm/cosmic/wm.nix
   ];
   services.usbmuxd.enable = true;
   environment.variables = {
     NPM_CONFIG_PREFIX = "$HOME/.npm-global";
     PREFERRED_WM = "${config.host-info.preferred_wm}";
-    OLLAMA_API_BASE = "http://100.112.153.1:11434";
-    AIDER_MODEL = "ollama/qwen3:30b-a3b";
   };
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.networkmanager.unmanaged = ["interface-name:ve-*"];
@@ -106,26 +101,26 @@ in {
         insecure-registries = ["registry.stoica-marcu.ro"];
       };
     };
-    vswitch = {
-      enable = true;
-      resetOnStart = true;
-    };
-
-    oci-containers = {
-      backend = "docker";
-      containers = {
-        jupyter = {
-          image = "quay.io/jupyter/base-notebook";
-          cmd = ["start-notebook.py" "--NotebookApp.token='mumstheword'"];
-          volumes = [
-            "jupyter-data:/home/jovyan/work"
-          ];
-          ports = [
-            "8889:8888"
-          ];
-        };
-      };
-    };
+    # vswitch = {
+    #   enable = true;
+    #   resetOnStart = true;
+    # };
+    # 
+    # oci-containers = {
+    #   backend = "docker";
+    #   containers = {
+    #     jupyter = {
+    #       image = "quay.io/jupyter/base-notebook";
+    #       cmd = ["start-notebook.py" "--NotebookApp.token='mumstheword'"];
+    #       volumes = [
+    #         "jupyter-data:/home/jovyan/work"
+    #       ];
+    #       ports = [
+    #         "8889:8888"
+    #       ];
+    #     };
+    #   };
+    # };
   };
 
   # Enable sound.
@@ -170,14 +165,16 @@ in {
   # $ nix search wget
   environment.systemPackages = with pkgs;
     [
+      android-studio
       # niv for dependency management
       teams-for-linux
       # nodejs
       nodejs
       corepack
       # zot
-      (nixpkgs-unstable.callPackage ./packages/sqlit.nix {} )
+      (nixpkgs-unstable.callPackage ./packages/sqlit.nix {})
       npins
+      alacritty
       # networking
       dig
       bc
@@ -225,7 +222,7 @@ in {
     ]
     ++ (
       if (config.host-info.gpu == "nvidia")
-      then [cudatoolkit nvtopPackages.nvidia colmapWithCuda]
+      then [cudatoolkit nvtopPackages.nvidia]
       else []
     )
     ++ (

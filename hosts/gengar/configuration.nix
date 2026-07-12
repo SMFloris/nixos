@@ -5,10 +5,10 @@
 { config, pkgs, lib, ... }:
 
 let
-  sources = import ./nix/sources.nix;
-  nixpkgs = sources.sources_.nixpkgs;
-  nixpkgs-unstable = sources.sources_.nixpkgs-unstable;
-  home-manager = sources.sources_.home-manager;
+  sources = import ./npins;
+  nixpkgs = sources.nixpkgs;
+  nixpkgs-unstable = sources.nixpkgs-unstable;
+  home-manager = sources.home-manager;
 
   fccUnlockScript = pkgs.writeScript "fcc-unlock.sh" ''
      #!/run/current-system/sw/bin/bash
@@ -41,10 +41,6 @@ in
       ./hardware-configuration.nix
       "${home-manager}/nixos"
     ];
-
-  _module.args.nixpkgs-unstable = import nixpkgs-unstable {
-    config.allowUnfree = true;
-  };
 
   environment.variables = {
     WINIT_X11_SCALE_FACTOR = "1.2";

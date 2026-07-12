@@ -5,10 +5,10 @@
 { config, pkgs, lib, ... }:
 
 let
-  sources = import ./nix/sources.nix;
-  nixpkgs = sources.sources_.nixpkgs;
-  nixpkgs-unstable = sources.sources_.nixpkgs-unstable;
-  home-manager = sources.sources_.home-manager;
+  sources = import ./npins;
+  nixpkgs = sources.nixpkgs;
+  nixpkgs-unstable = sources.nixpkgs-unstable;
+  home-manager = sources.home-manager;
 in
 
 {

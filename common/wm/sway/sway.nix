@@ -12,8 +12,10 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "sway") {
       glib dracula-theme dracula-icon-theme 
       wbg
     # wayland
+      foot
       wayvnc
   ];
+  home.file.".config/foot/foot.ini".source = ./foot.ini;
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
   home.file.".config/organizeOutputs.sh".source = ./organizeOutputs.sh;
   home.file.".config/switchWorkspace.sh".source = ./switchWorkspace.sh;
@@ -63,5 +65,5 @@ in lib.mkIf (nixosConfig.host-info.preferred_wm == "sway") {
     style = (builtins.readFile ./wofi_style.css);
   };
   programs.waybar = import ./waybar.nix;
-  wayland.windowManager.sway = import ./wm.nix { pkgs = pkgs; lib = lib; };
+  wayland.windowManager.sway = import ./sway_config.nix { pkgs = pkgs; lib = lib; };
 }

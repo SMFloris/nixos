@@ -8,7 +8,7 @@ let cfg = config.host-info; in {
       description = "Which GPU do you use?";
     };
     host-info.preferred_wm = lib.mkOption {
-      type = lib.types.enum ["i3" "sway"];
+      type = lib.types.enum ["i3" "sway" "cosmic"];
       default = "sway";
       example = "sway";
       description = "Which WM would you like?";

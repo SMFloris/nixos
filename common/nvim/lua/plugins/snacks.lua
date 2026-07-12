@@ -141,6 +141,7 @@ return {
             { "<leader>fk", function() require("snacks").picker.keymaps({ layout = "ivy" }) end, desc = " Search Keymaps (Snacks Picker)" },
             { "<leader>ls", function() require("snacks").picker.lsp_symbols() end, desc = "󰈬 LSP Symbols" },
             { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols" },
+            { "<leader>lh", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch C/C++ source/header" },
             { "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, desc = "LSP format" },
             { "<leader>lca",function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
             { "<leader>lcr",function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },

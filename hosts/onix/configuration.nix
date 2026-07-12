@@ -1,9 +1,18 @@
 { ... }:
 
 let 
-    sources = import ./npins;
-    home-manager = import sources.home-manager {};
+  sources = import ./npins;
+  nixpkgs = sources.nixpkgs;
+  nixpkgs-unstable = sources.nixpkgs-unstable;
+  home-manager = sources.home-manager;
 in {
+  nix.nixPath = [
+    "nixpkgs=${nixpkgs}"
+    "nixos-unstable=${nixpkgs-unstable}"
+    "home-manager=${home-manager}"
+    "nixos-config=/etc/nixos/configuration.nix"
+  ];
+
   imports = [
     ./pinning.nix
     ./common/common.nix

@@ -1,27 +1,23 @@
 # NixOS Configuration
 
-This repository contains the NixOS configuration for my systems, using a multi-host setup with pinned dependencies via [niv](https://github.com/nmattia/niv).
+This repository contains the NixOS configuration for my systems, using a
+multi-host setup with pinned dependencies via
+[npins](https://github.com/andir/npins).
 
 ## Structure
 
-- `configuration.nix` & `hardware-configuration.nix` - Symlinks to current host config
-- `nix/` - Pinned dependencies (nixpkgs, nixpkgs-unstable, home-manager)
+- `configuration.nix` & `hardware-configuration.nix` - Symlinks to current host
+  config
+- `npins/` - Pinned dependencies (nixpkgs, nixpkgs-unstable, home-manager)
 - `common/` - Shared system and home-manager configurations
 - `hosts/` - Host-specific configurations (gengar, gastly, onix)
 - `rebuild.sh` - Helper script for rebuilding
-- `update.sh` - Helper script for updating pinned dependencies
 
 ## Quick Start
 
 ```bash
 # Rebuild the system
 ./rebuild.sh switch
-
-# Update all pinned dependencies
-./update.sh
-
-# Update a specific dependency
-./update.sh nixpkgs-unstable
 ```
 
 ## Managing Hosts
@@ -37,44 +33,27 @@ Available hosts: `gengar`, `gastly`, `onix`
 
 ## Pinned Dependencies
 
-Dependencies are pinned in `nix/sources.json` using niv:
+Dependencies are pinned in `npins/sources.json` using npins.
 
-- **nixpkgs** - NixOS 25.11 stable
-- **nixpkgs-unstable** - Latest unstable
-- **home-manager** - release-25.11
+## New Host
 
-## Available Scripts
+Either use an existing host as a base or create a new one completely.
 
-### rebuild.sh
+Steps:
 
-```bash
-./rebuild.sh [action]
+1. Install NixOs
+2. Make /etc/nixos belong to your user (chown -R <user>:users /etc/nixos) 
+3. First: nixos-rebuild switch first
+4. Backup configuration.nix/hardware-configuration.nix
+5. Empty /etc/nixos
+6. Do `git clone https://github.com/SMFloris/nixos.git .`
+7. Add your configuration.nix/hardware-configuration.nix to hosts folder. Here
+   make sure you follow the conventions for npins and nixpaths. Take
+   inspiration from @hosts/gengear/configuration.nix
+8. Do `./symlink.sh <hostname>`
+9. Do `./rebuild.sh switch`
+10. You can now remove channels completely `sudo nix-channel --list` and `sudo nix-channel --remove <channel>`
 
-Actions:
-  switch     # Build and activate (default)
-  build      # Build only
-  test       # Build and activate, don't add to boot
-  dry-build  # Test without building
-```
+## Updating
 
-### update.sh
-
-```bash
-./update.sh [source]
-
-Sources:
-  nixpkgs          # Update stable nixpkgs
-  nixpkgs-unstable # Update unstable nixpkgs
-  home-manager     # Update home-manager
-  all              # Update all (default)
-```
-
-### symlink.sh
-
-```bash
-./symlink.sh <hostname>
-
-# Creates symlinks:
-#   configuration.nix -> hosts/<hostname>/configuration.nix
-#   hardware-configuration.nix -> hosts/<hostname>/hardware-configuration.nix
-```
+Just use `npins update` and `npins upgrade`

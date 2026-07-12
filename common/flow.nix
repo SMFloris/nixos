@@ -4,18 +4,13 @@
   host-info,
   nixpkgs-unstable,
   ...
-}: let
-  thunarWithPlugins = pkgs.xfce.thunar.override {
-    thunarPlugins = [pkgs.xfce.thunar-volman pkgs.xfce.thunar-archive-plugin];
-  };
-in {
+}:
+
+{
   imports = [
-    ../sway/sway.nix
-    ../i3/i3.nix
-    ../i3/picom.nix
-    ../i3/polybar.nix
-    ../i3/rofi.nix
-    ../special/cybersecurity.nix
+    ./wm/i3/i3.nix
+    ./wm/sway/sway.nix
+    ./wm/cosmic/cosmic.nix
     ./neonix-hm-module.nix
   ];
   home.stateVersion = "25.11";
@@ -44,7 +39,6 @@ in {
 
   home.packages = with pkgs;
     [
-      rofi
       # neovim
       ripgrep
       fd
@@ -60,13 +54,10 @@ in {
       tmux
       gcr
       cargo
-      foot
       git
       gcc
       fzf
-      c3c
-      c3-lsp
-      godot_4
+      nixpkgs-unstable.godot
       # utils cli
       bc
       jq
@@ -93,6 +84,8 @@ in {
       awscli2
       google-cloud-sdk-gce
       # utils gui
+      nixpkgs-unstable.yaak
+      ipe
       bruno
       evince
       insomnia
@@ -115,20 +108,11 @@ in {
       vial
       qmk
       # extra
-      file-roller
-      thunarWithPlugins
-      xfce.ristretto
-      xfce.thunar-volman
-      xfce.thunar-archive-plugin
-      sway-contrib.grimshot
-      gnome-clocks
-      gnome-calculator
       gnome-disk-utility
       simple-scan
       networkmanagerapplet
       transmission_4-gtk
       hexchat
-      gImageReader
     ]
     ++ (
       if (host-info.ai_enabled)
@@ -150,10 +134,5 @@ in {
     options = ["grp:alt_shift_toggle"];
   };
 
-  # we hardcode a symlink here so that we can refer to it in our lazy config
-   home.file.".config/foot/foot.ini".source = ./foot.ini;
-   home.file.".config/alacritty/alacritty.toml".source = ./alacritty.toml;
-   home.file.".bashrc".source = ./bashrc;
-   home.file."startWm.sh".source = ./startWm.sh;
-   home.file.".config/rofi/edit.sh".source = ../i3/rofi/edit.sh;
- }
+  home.file.".bashrc".source = ./bashrc;
+}

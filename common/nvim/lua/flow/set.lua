@@ -60,3 +60,7 @@ vim.opt.mouse = "a"
 
 -- gets rid of line with white spaces
 vim.g.editorconfig = true
+
+-- .nvim.lua per repo
+vim.o.exrc = true
+vim.o.secure = true

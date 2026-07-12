@@ -15,7 +15,50 @@ let
     '';
   };
 in lib.mkIf (host-info.preferred_wm == "i3") {
+
+  services.picom = {
+    enable = false;
+    # experimentalBackends = true;
+
+    # blur = true;
+    # blurExclude = [ "window_type = 'dock'" "window_type = 'desktop'" ];
+
+    fade = true;
+    fadeDelta = 5;
+
+    shadow = true;
+    shadowOffsets = [ (-7) (-7) ];
+    shadowOpacity = 0.7;
+    shadowExclude = [ "window_type *= 'normal' && ! name ~= ''" ];
+    # noDockShadow = true;
+    # noDNDShadow = true;
+
+    activeOpacity = 1.0;
+    inactiveOpacity = 0.9;
+    menuOpacity = 0.8;
+
+    backend = "glx";
+    vSync = true;
+
+    settings = {
+      shadow-radius = 7;
+      clear-shadow = true;
+      frame-opacity = 0.7;
+      blur-method = "dual_kawase";
+      blur-strength = 5;
+      alpha-step = 0.06;
+      detect-client-opacity = true;
+      detect-rounded-corners = true;
+      paint-on-overlay = true;
+      detect-transient = true;
+      mark-wmwin-focused = true;
+      mark-ovredir-focused = true;
+    };
+  };
+
+  home.file."startWm.sh".source = ./startWm.sh;
   home.file.".xinitrc".source = ./xfiles/xinitrc;
+  home.file.".config/alacritty/alacritty.toml".source = ./alacritty.toml;
   home.file.".config/dunst/dunstrc.d/00-theme.conf".source = ./dunstrc;
   home.file.".themes/floris/xfce-notify-4.0/gtk.css".source = ./xfce4-notifyd/gtk.css;
   home.file.".config/openTerminal.sh".source = ./openTerminal.sh;
@@ -25,6 +68,7 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
     source = ./rofi/power.sh;
     executable = true;
   };
+  home.file.".config/rofi/edit.sh".source = ./rofi/edit.sh;
   home.file."ocr_screenshot.sh".source = ./ocr_screenshot.sh;
 
   services.udiskie = {
@@ -123,6 +167,7 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
         "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modes combi#edit:/home/flow/.config/rofi/edit.sh -combi-hide-mode-prefix -combi-modes drun#window -show combi";
         "${modifier}+Shift+d" = "exec ${pkgs.rofi}/bin/rofi -show window";
         "${modifier}+Shift+x" = "exec systemctl suspend";
+        "${modifier}+Shift+l" = "exec ${pkgs.i3lock-fancy}/bin/i3lock-fancy";
         "${modifier}+Tab" = "workspace back_and_forth";
         "${modifier}+grave" = "workspace 10";
         "${modifier}+~" = "move workspace 10";
@@ -147,7 +192,7 @@ in lib.mkIf (host-info.preferred_wm == "i3") {
           notification = false;
         }
         {
-          command = "set \$playVolumeChangeSound cvlc --play-and-exit ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
+          command = "setxkbmap us,ro";
           always = true;
           notification = false;
         }
