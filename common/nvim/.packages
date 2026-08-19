@@ -1,1 +1,2 @@
 ${pkgs.texlab}
+${pkgs.tree-sitter}

@@ -202,6 +202,7 @@ in {
       firefoxWithEnv
       # chromium
       # utils
+      xournalpp
       tree
       powertop
       # stremio

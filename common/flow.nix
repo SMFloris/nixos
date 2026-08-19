@@ -46,6 +46,9 @@
       rust-analyzer-unwrapped
       lazygit
       black
+      (writeShellScriptBin "wcodex" ''
+        exec env CODEX_HOME=/home/flow/.codex-work codex "$@"
+      '')
       # programming
       k9s
       go

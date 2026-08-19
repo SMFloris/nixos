@@ -143,8 +143,8 @@ return {
             { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols" },
             { "<leader>lh", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch C/C++ source/header" },
             { "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, desc = "LSP format" },
-            { "<leader>lca",function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
-            { "<leader>lcr",function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },
+            { "<leader>lca", function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
+            { "<leader>lcr", function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },
             { "<leader>ld", function() require("snacks").picker.diagnostics_buffer() end, desc = "󰈬 LSP Diagnostics (buffer)" },
             { "<leader>lD", function() require("snacks").picker.diagnostics() end, desc = "󰈬 LSP Workspace Diagnostics" },
 
@@ -183,27 +183,11 @@ return {
         config = function()
             local recall = require("recall")
             local utils = require("recall.utils")
-
-            local function goto_nth(n)
-                local marks = utils.sorted_global_marks()
-                if #marks >= n then
-                    local mark = marks[n].info
-                    vim.cmd("silent buffer " .. mark.file)
-                    vim.api.nvim_win_set_cursor(0, { mark.pos[2], mark.pos[3] })
-                else
-                    print("No " .. n .. "th global mark set")
-                end
-            end
-
-            local function goto_first() goto_nth(1) end
-            local function goto_second() goto_nth(2) end
-            local function goto_third() goto_nth(3) end
-            local function goto_fourth() goto_nth(4) end
+            local snacks = require("recall.snacks")
 
             recall.setup({
                 sign = "",
                 sign_highlight = "@comment.note",
-                cwd = true, -- Enable per-project marks
 
                 snacks = {
                     mappings = {
@@ -214,22 +198,102 @@ return {
                     },
                 },
             })
-            vim.keymap.set("n", "<leader>mm", recall.goto_next, { noremap = true, silent = true, desc = " Next Mark" })
-            vim.keymap.set("n", "<leader>ml", require("recall.snacks").pick,
-                { noremap = true, silent = true, desc = " Show Marks Picker" })
-            vim.keymap.set("n", "<leader>mn", recall.goto_prev, { noremap = true, silent = true, desc = " Prev Mark" })
-            vim.keymap.set("n", "<leader>ma", recall.toggle, { noremap = true, silent = true, desc = " Toggle Mark" })
-            vim.keymap.set("n", "<leader>mc", recall.clear, { noremap = true, silent = true, desc = " Remove Mark" })
-            vim.keymap.set("n", "<leader>fm", require("recall.snacks").pick,
-                { noremap = true, silent = true, desc = " Mark List" })
-            vim.keymap.set("n", "<leader>mq", goto_first,
-                { noremap = true, silent = true, desc = "Jump to 1st Recall Mark" })
-            vim.keymap.set("n", "<leader>mw", goto_second,
-                { noremap = true, silent = true, desc = "Jump to 2nd Recall Mark" })
-            vim.keymap.set("n", "<leader>me", goto_third,
-                { noremap = true, silent = true, desc = "Jump to 3rd Recall Mark" })
-            vim.keymap.set("n", "<leader>mr", goto_fourth,
-                { noremap = true, silent = true, desc = "Jump to 4th Recall Mark" })
+
+            local function goto_nth(n)
+                local marks = utils.sorted_global_marks()
+
+                if #marks < n then
+                    vim.notify(
+                        ("No %dth Recall mark set"):format(n),
+                        vim.log.levels.WARN
+                    )
+                    return
+                end
+
+                local mark = marks[n].info
+                local file = mark.file
+
+                if not file or file == "" then
+                    return
+                end
+
+                vim.cmd.edit(vim.fn.fnameescape(file))
+
+                vim.api.nvim_win_set_cursor(0, {
+                    mark.pos[2],
+                    math.max(mark.pos[3] - 1, 0),
+                })
+            end
+
+            vim.keymap.set(
+                "n",
+                "<leader>mm",
+                recall.goto_next,
+                { silent = true, desc = " Next Mark" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>mn",
+                recall.goto_prev,
+                { silent = true, desc = " Prev Mark" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>ma",
+                recall.toggle,
+                { silent = true, desc = " Toggle Mark" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>mc",
+                recall.clear,
+                { silent = true, desc = " Remove Marks" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>ml",
+                snacks.pick,
+                { silent = true, desc = " Mark List" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>fm",
+                snacks.pick,
+                { silent = true, desc = " Mark List" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>mq",
+                function() goto_nth(1) end,
+                { silent = true, desc = "Jump to 1st Recall Mark" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>mw",
+                function() goto_nth(2) end,
+                { silent = true, desc = "Jump to 2nd Recall Mark" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>me",
+                function() goto_nth(3) end,
+                { silent = true, desc = "Jump to 3rd Recall Mark" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>mr",
+                function() goto_nth(4) end,
+                { silent = true, desc = "Jump to 4th Recall Mark" }
+            )
         end,
     }
 }

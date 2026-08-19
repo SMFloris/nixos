@@ -43,3 +43,27 @@ vim.api.nvim_create_autocmd("LspProgress", {
     })
   end,
 })
+
+-- Project-specific ShaDa
+do
+    local cwd = vim.uv.cwd()
+
+    local root = vim.fs.root(cwd, {
+        ".git",
+        "pyproject.toml",
+        "package.json",
+        "Cargo.toml",
+        "go.mod",
+    }) or cwd
+
+    local shada_dir = vim.fn.stdpath("state") .. "/project-shada"
+    vim.fn.mkdir(shada_dir, "p")
+
+    local project_id = vim.fn.sha256(root):sub(1, 16)
+
+    vim.opt.shadafile = string.format(
+        "%s/%s.shada",
+        shada_dir,
+        project_id
+    )
+end
