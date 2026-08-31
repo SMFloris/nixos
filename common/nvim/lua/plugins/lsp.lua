@@ -2,8 +2,6 @@ return {
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            { "mason-org/mason.nvim",           opts = {} },
-            { "mason-org/mason-lspconfig.nvim", opts = {} },
             "hrsh7th/cmp-nvim-lsp",
         },
         config = function()
@@ -21,7 +19,7 @@ return {
                         return path
                     end
                 end
-                -- Return first default path as fallback (Mason will install it)
+                -- Return first default path as fallback
                 return default_paths[1]
             end
 
@@ -168,24 +166,102 @@ return {
                 capabilities = capabilities,
             })
 
+            -- Configure PHP LSP (phpantom)
+            vim.filetype.add({
+                extension = {
+                    ['blade.php'] = 'blade',
+                },
+            })
+            local phphantom_cmd = find_lsp_executable('phpantom_lsp', {
+                'phpantom_lsp',
+                profile .. '/bin/phpantom_lsp',
+                '/nix/profile/bin/phpantom_lsp',
+            })
+            vim.lsp.config('phpantom_lsp', {
+                cmd = { phphantom_cmd },
+                filetypes = { 'php', 'blade' },
+                root_markers = {
+                    { '.phpantom.toml', 'composer.json' },
+                    '.git',
+                },
+                capabilities = capabilities,
+            })
+
+            -- Configure Go LSP (gopls)
+            local gopls_cmd = find_lsp_executable('gopls', {
+                'gopls',
+                profile .. '/bin/gopls',
+                '/nix/profile/bin/gopls',
+            })
+            vim.lsp.config('gopls', {
+                cmd = { gopls_cmd },
+                filetypes = { 'go' },
+                root_markers = { 'go.mod', 'go.work', '.git' },
+                capabilities = capabilities,
+            })
+
+            -- Configure YAML LSP (yamlls)
+            local yamlls_cmd = find_lsp_executable('yaml-language-server', {
+                'yaml-language-server',
+                profile .. '/bin/yaml-language-server',
+                '/nix/profile/bin/yaml-language-server',
+            })
+            vim.lsp.config('yamlls', {
+                cmd = { yamlls_cmd, '--stdio' },
+                filetypes = { 'yaml', 'yml' },
+                root_markers = { '.yamllint', '.yaml-lint', '.git' },
+                settings = {
+                    yaml = {
+                        schemas = {
+                            kubernetes = '*.yaml',
+                        },
+                    },
+                },
+                capabilities = capabilities,
+            })
+
+            -- Configure Dockerfile LSP (dockerls)
+            local dockerls_cmd = find_lsp_executable('docker-langserver', {
+                'docker-langserver',
+                profile .. '/bin/docker-langserver',
+                '/nix/profile/bin/docker-langserver',
+            })
+            vim.lsp.config('dockerls', {
+                cmd = { dockerls_cmd, '--stdio' },
+                filetypes = { 'dockerfile' },
+                root_markers = { 'Dockerfile', '.dockerignore', '.git' },
+                capabilities = capabilities,
+            })
+
+            -- Configure Kubernetes LSP (helm_ls)
+            local helm_ls_cmd = find_lsp_executable('helm_ls', {
+                'helm_ls',
+                profile .. '/bin/helm_ls',
+                '/nix/profile/bin/helm_ls',
+            })
+            vim.lsp.config('helm_ls', {
+                cmd = { helm_ls_cmd, 'serve' },
+                filetypes = { 'helm', 'yaml', 'yml' },
+                root_markers = { 'Chart.yaml', 'values.yaml', '.git' },
+                capabilities = capabilities,
+            })
+
             -- Enable all configured LSP servers
             vim.lsp.enable('pyright')
             vim.lsp.enable('vtsls')
             vim.lsp.enable('nil_ls')
             vim.lsp.enable('lua_ls')
+            vim.lsp.enable('phpantom_lsp')
+            vim.lsp.enable('gopls')
+            vim.lsp.enable('yamlls')
+            vim.lsp.enable('dockerls')
+            vim.lsp.enable('helm_ls')
 
             vim.lsp.config('clangd', {
                 cmd = { 'clangd', '--query-driver=/nix/store/*/bin/g++', '--query-driver=/nix/store/*/bin/gcc'}
             })
             vim.lsp.enable('clangd')
             vim.lsp.enable('texlab')
-
-
-            -- Setup Mason to ensure LSP servers are installed
-            require("mason-lspconfig").setup {
-                ensure_installed = { "pyright", "vtsls", "nil_ls", "lua_ls" },
-                automatic_install = true,
-            }
         end,
     }
 }

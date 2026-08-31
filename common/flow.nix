@@ -23,7 +23,9 @@
   programs.neonix = {
     enable = true;
     packageSets = {
-      pkgs = pkgs;
+      pkgs = pkgs.extend (final: prev: {
+        phpantom = final.callPackage ./packages/phpantom-lsp.nix {};
+      });
       pkgs-unstable = nixpkgs-unstable;
     };
     nvimPackage = nixpkgs-unstable.neovim-unwrapped;

@@ -16,6 +16,7 @@ in {
   imports = [
     ./pinning.nix
     ./common/common.nix
+    ./hosts/onix/alpha-homebank.nix
     ./hardware-configuration.nix
     "${home-manager}/nixos"
   ];

@@ -28,9 +28,9 @@ local lsp_servers = {
         'pyright'
     },
     vtsls = { 
-        'language-server',
-        npm_bin .. '/language-server',
-        profile .. '/bin/language-server',
+        'vtsls-server',
+        npm_bin .. '/vtsls',
+        profile .. '/bin/vtsls',
     },
     nil_ls = { 
         'nil',

@@ -49,7 +49,11 @@ in {
     127.0.0.1 auth.ocrasig.local
     127.0.0.1 app.ocrasig.local
     127.0.0.1 traefik.ocrasig.local
+    192.168.0.62 alpha.homebank.ro
   '';
+  security.pki.certificateFiles = [
+    /etc/nixos/certs/alpha-homebank-ca.crt
+  ];
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
 
