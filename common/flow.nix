@@ -24,6 +24,9 @@
     enable = true;
     packageSets = {
       pkgs = pkgs.extend (final: prev: {
+        c3-lsp = final.callPackage ./packages/c3-lsp.nix {
+          c3c = nixpkgs-unstable.c3c;
+        };
         phpantom = final.callPackage ./packages/phpantom-lsp.nix {};
       });
       pkgs-unstable = nixpkgs-unstable;
@@ -59,6 +62,7 @@
       tmux
       gcr
       cargo
+      nixpkgs-unstable.c3c
       git
       gcc
       fzf

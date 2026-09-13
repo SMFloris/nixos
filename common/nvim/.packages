@@ -2,6 +2,7 @@ ${pkgs.texlab}
 ${pkgs.tree-sitter}
 ${pkgs.phpantom}
 ${pkgs.gopls}
+${pkgs.c3-lsp}
 ${pkgs.nil}
 ${pkgs.alejandra}
 ${pkgs.yaml-language-server}

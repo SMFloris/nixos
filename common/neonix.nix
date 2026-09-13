@@ -4,7 +4,7 @@
   packageSets ? {
     pkgs = pkgs;
   },
-  ensureInstalled ? ["pkgs.hello"],
+  ensureInstalled ? [],
   nvimPackage ? pkgs.neovim,
   nvimConfigPath ? ./nvim,
   nvimProfileName ? "neonix",

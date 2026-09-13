@@ -200,6 +200,19 @@ return {
                 capabilities = capabilities,
             })
 
+            -- Configure C3 LSP
+            local c3_lsp_cmd = find_lsp_executable('c3-lsp', {
+                'c3-lsp',
+                profile .. '/bin/c3-lsp',
+                '/nix/profile/bin/c3-lsp',
+            })
+            vim.lsp.config('c3_lsp', {
+                cmd = { c3_lsp_cmd },
+                filetypes = { 'c3' },
+                root_markers = { 'project.json', '.git' },
+                capabilities = capabilities,
+            })
+
             -- Configure YAML LSP (yamlls)
             local yamlls_cmd = find_lsp_executable('yaml-language-server', {
                 'yaml-language-server',
@@ -253,6 +266,7 @@ return {
             vim.lsp.enable('lua_ls')
             vim.lsp.enable('phpantom_lsp')
             vim.lsp.enable('gopls')
+            vim.lsp.enable('c3_lsp')
             vim.lsp.enable('yamlls')
             vim.lsp.enable('dockerls')
             vim.lsp.enable('helm_ls')
