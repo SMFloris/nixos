@@ -57,7 +57,6 @@ return {
                 ['<C-f>'] = cmp.mapping.scroll_docs(4),
                 ['<C-Space>'] = cmp.mapping.complete(),
                 ['<C-e>'] = cmp.mapping.abort(),
-                ['<Esc>'] = cmp.mapping.abort(),
                 ['<Tab>'] = cmp.mapping(tab, { "i", "s" }),
                 ['<S-Tab>'] = cmp.mapping(shift_tab, { "i", "s" }),
                 ['<C-y>'] = cmp.mapping.confirm({ select = true }),

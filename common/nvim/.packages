@@ -6,5 +6,5 @@ ${pkgs.c3-lsp}
 ${pkgs.nil}
 ${pkgs.alejandra}
 ${pkgs.yaml-language-server}
-${pkgs.dockerfile-language-server-nodejs}
+${pkgs.dockerfile-language-server}
 ${pkgs.helm-ls}

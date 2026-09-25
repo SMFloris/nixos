@@ -102,6 +102,8 @@ in
       package = mkDefault neonix.nvim-wrapped;
       vimAlias = mkDefault cfg.enableVimAlias;
       withNodeJs = mkDefault cfg.enableNodeJs;
+      withRuby = mkDefault true;
+      withPython3 = mkDefault true;
     };
 
     home.file.".config/nvim".source = neonix.nvim-config;

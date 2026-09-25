@@ -18,7 +18,7 @@ in lib.mkIf (config.host-info.preferred_wm == "i3") {
     xfce.xfce4-notifyd
     file-roller
     thunarWithPlugins
-    xfce.ristretto
+    ristretto
     xfce.thunar-volman
     xfce.thunar-archive-plugin
     sway-contrib.grimshot

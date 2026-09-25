@@ -17,6 +17,6 @@ lib.mkIf (config.host-info.preferred_wm == "cosmic") {
   };
 
   environment.systemPackages = with pkgs; [
-    xfce.ristretto
+    ristretto
   ];
 }

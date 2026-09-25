@@ -44,6 +44,7 @@
 
   home.packages = with pkgs;
     [
+      tldr
       # neovim
       ripgrep
       fd
