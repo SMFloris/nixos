@@ -6,21 +6,42 @@
 }: let
   sources = import ../npins;
   nixpkgs-unstable = import sources.nixpkgs-unstable {};
-  firefoxWithEnv = pkgs.symlinkJoin {
-    name = "firefox";
-    paths = [pkgs.firefox];
-    buildInputs = [pkgs.makeWrapper];
-    postBuild = ''
-      wrapProgram $out/bin/firefox \
-        --set MOZ_USE_XINPUT2 1 \
-        --set MOZ_ENABLE_WAYLAND 1
-    '';
-  };
+  openlogi = builtins.getFlake "path:${builtins.unsafeDiscardStringContext (toString sources.openlogi)}";
 in {
   imports = [
     ./wm/i3/wm.nix
     ./wm/cosmic/wm.nix
+    openlogi.nixosModules.default
   ];
+
+  programs.openlogi.enable = true;
+
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox.overrideAttrs (old: {
+      makeWrapperArgs = old.makeWrapperArgs ++ [
+        "--set" "MOZ_USE_XINPUT2" "1"
+        "--set-default" "MOZ_ENABLE_WAYLAND" "1"
+      ] ++ lib.optionals (config.host-info.gpu == "nvidia") [
+        "--set" "LIBVA_DRIVER_NAME" "nvidia"
+        "--set" "NVD_BACKEND" "direct"
+        # Required by nvidia-vaapi-driver; limit the sandbox exception to Firefox.
+        "--set" "MOZ_DISABLE_RDD_SANDBOX" "1"
+      ];
+    });
+    # Reset both the former managed value and any saved about:config override.
+    policies.Preferences = lib.mkIf (config.host-info.gpu == "nvidia") {
+      "media.hardware-video-decoding.force-enabled".Status = "clear";
+    };
+    preferences = lib.mkIf (config.host-info.gpu == "nvidia") {
+      "media.rdd-ffmpeg.enabled" = true;
+      # Use the installed NVDEC-backed VA-API driver rather than Vulkan decoding.
+      "media.hardware-video-decoding-vulkan.enabled" = false;
+      "gfx.x11-egl.force-enabled" = true;
+      "media.av1.enabled" = true;
+    };
+  };
+
   services.usbmuxd.enable = true;
   environment.variables = {
     NPM_CONFIG_PREFIX = "$HOME/.npm-global";
@@ -52,7 +73,7 @@ in {
     192.168.0.62 alpha.homebank.ro
   '';
   security.pki.certificateFiles = [
-    /etc/nixos/certs/alpha-homebank-ca.crt
+    ./certs/alpha-homebank-ca.crt
   ];
   # Set your time zone.
   time.timeZone = "Europe/Bucharest";
@@ -201,7 +222,6 @@ in {
       cdrtools
       openjdk17
       # browsers
-      firefoxWithEnv
       # chromium
       # utils
       xournalpp

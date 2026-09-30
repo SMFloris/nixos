@@ -25,6 +25,13 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "onix";
+
+  # Disable Wi-Fi power saving while investigating RTL8852CE stalls.
+  networking.networkmanager.wifi.powersave = false;
+  boot.extraModprobeConfig = ''
+    options rtw89_core disable_ps_mode=Y
+  '';
+
   networking.nat.enable = true;
   networking.nat.internalInterfaces = [ "ve-+" ];
   networking.nat.externalInterface = "wlp13s0";

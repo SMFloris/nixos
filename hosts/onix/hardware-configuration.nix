@@ -73,7 +73,10 @@
       open = false;
       nvidiaPersistenced = false;
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      # Use the newer driver from unstable, built for this system's kernel.
+      package = (config.boot.kernelPackages.callPackage
+        ((import ./npins).nixpkgs-unstable + "/pkgs/os-specific/linux/nvidia-x11")
+        {}).latest;
       # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
       #   version = "560.31.02";
       #   sha256_aarch64 = lib.fakeSha256;

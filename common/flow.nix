@@ -55,6 +55,11 @@
       (writeShellScriptBin "wcodex" ''
         exec env CODEX_HOME=/home/flow/.codex-work codex "$@"
       '')
+      (writeShellScriptBin "tnvim" ''
+        tmp_dir="$(${coreutils}/bin/mktemp -d --tmpdir tnvim.XXXXXX)"
+        printf '%s\n' '#!/usr/bin/env bash' > "$tmp_dir/tmp.sh"
+        exec nvim "$tmp_dir/tmp.sh"
+      '')
       # programming
       k9s
       go
