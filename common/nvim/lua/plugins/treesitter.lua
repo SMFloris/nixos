@@ -17,6 +17,8 @@ return {
                 'dockerfile',
                 'typescript',
                 'javascript',
+                'markdown',
+                'markdown_inline',
             }
         end,
     }

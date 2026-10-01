@@ -17,6 +17,10 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.opt.termguicolors = true
 vim.opt.guicursor = ""
+vim.opt.cmdheight = 0
+vim.opt.showcmd = false
+vim.opt.showmode = false
+vim.opt.winbar = " "
 
 require("lazy").setup({
     lockfile = "/etc/nixos/common/nvim/lazy-lock.json",

@@ -27,6 +27,7 @@
         c3-lsp = final.callPackage ./packages/c3-lsp.nix {
           c3c = nixpkgs-unstable.c3c;
         };
+        c3fmt = final.callPackage ./packages/c3fmt.nix {};
         phpantom = final.callPackage ./packages/phpantom-lsp.nix {};
       });
       pkgs-unstable = nixpkgs-unstable;

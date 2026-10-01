@@ -224,11 +224,13 @@ in {
       # browsers
       # chromium
       # utils
+      gnome-calculator
       xournalpp
       tree
       powertop
       # stremio
       vlc
+      obs-studio
       gcr
       xdg-utils
       coreutils

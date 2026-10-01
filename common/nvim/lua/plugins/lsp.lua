@@ -5,6 +5,13 @@ return {
             "hrsh7th/cmp-nvim-lsp",
         },
         config = function()
+            vim.api.nvim_create_user_command("LspInfo", function()
+                vim.cmd("checkhealth lsp")
+            end, {
+                desc = "Run LSP health checks",
+                force = true,
+            })
+
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
             -- Profile paths from your neovim-profile-env.sh

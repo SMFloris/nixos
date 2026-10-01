@@ -1,3 +1,125 @@
+local function picker_hint(opts)
+    local hint = {
+        { " ", "SnacksFooter" },
+        { " <C-v> ", "SnacksFooterKey" },
+        { "vertical", "SnacksFooterDesc" },
+    }
+
+    local function add(key, description)
+        hint[#hint + 1] = { "  " .. key .. " ", "SnacksFooterKey" }
+        hint[#hint + 1] = { description, "SnacksFooterDesc" }
+    end
+
+    local source = opts.source
+    if source ~= "git_status" and source ~= "git_diff" then
+        add("<Tab>", "select")
+    end
+
+    if source == "explorer" then
+        add("<leader>ma", "mark")
+    elseif source == "files" or source == "recent" or source == "smart" then
+        add(".lua$", "type")
+        add("^src/", "prefix")
+        add("<A-r>", "regex")
+    elseif source == "grep" or source == "grep_word" or source == "grep_buffers" then
+        add("query -- -g '*.lua'", "type")
+        add("<A-r>", "regex")
+    elseif source == "buffers" then
+        add("dd", "delete")
+    elseif source == "diagnostics" or source == "diagnostics_buffer" then
+        add("<C-q>", "quickfix")
+    elseif source == "git_status" or source == "git_diff" then
+        add("<Tab>", "stage")
+        add("<C-r>", "restore")
+    elseif source == "keymaps" then
+        add("<A-g>", "global")
+        add("<A-b>", "buffer")
+    elseif source == "marks" then
+        add("<C-x>", "delete")
+    elseif opts.title == "Global Marks" then
+        add("A-Z", "jump")
+        add("dd", "delete")
+    end
+
+    add("?", "help")
+    hint[#hint + 1] = { " ", "SnacksFooter" }
+    return hint
+end
+
+local function show_picker_hints(opts)
+    opts.win.list.footer = picker_hint(opts)
+    opts.win.list.footer_pos = "center"
+
+    local function add_footer_border(node)
+        if type(node) ~= "table" then
+            return
+        end
+        if node.win == "list" and (node.border == nil or node.border == "none") then
+            node.border = "bottom"
+        end
+        for _, child in ipairs(node) do
+            add_footer_border(child)
+        end
+    end
+
+    for _, preset in pairs(opts.layouts or {}) do
+        add_footer_border(preset.layout)
+    end
+    add_footer_border(opts.layout and opts.layout.layout)
+
+    return opts
+end
+
+local function is_recall_marked(path)
+    return require("flow.marks").is_marked(path)
+end
+
+local function toggle_explorer_mark(picker, item)
+    if not item or item.dir then
+        vim.notify("Recall marks can only be set on files", vim.log.levels.INFO)
+        return
+    end
+
+    if require("flow.marks").toggle(item.file) then
+        picker:find({ refresh = true })
+    end
+end
+
+local function reveal_marked_files(picker)
+    local actions = require("snacks.explorer.actions")
+    local tree = require("snacks.explorer.tree")
+    local cwd = vim.fs.normalize(picker:cwd())
+    local include = vim.deepcopy(picker.opts.include or {})
+    local included = {}
+
+    for _, path in ipairs(include) do
+        included[path] = true
+    end
+
+    local revealed = false
+    for _, mark in ipairs(require("recall.utils").sorted_global_marks()) do
+        local file = vim.fs.normalize(mark.info.file)
+        if tree:in_cwd(cwd, file) and vim.uv.fs_stat(file) then
+            tree:open(file)
+            revealed = true
+
+            local path = file
+            while path and path ~= cwd do
+                if not included[path] then
+                    include[#include + 1] = path
+                    included[path] = true
+                end
+                path = vim.fs.dirname(path)
+            end
+        end
+    end
+
+    if revealed then
+        picker.opts.include = include
+        actions.update(picker, { target = false, refresh = true })
+    end
+end
+
 return {
     -- HACK: docs @ https://github.com/folke/snacks.nvim/blob/main/docs
     {
@@ -33,6 +155,60 @@ return {
             -- HACK: read picker docs @ https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
             picker = {
                 enabled = true,
+                config = show_picker_hints,
+                sources = {
+                    explorer = {
+                        on_show = reveal_marked_files,
+                        format = function(item, picker)
+                            local marked = not item.dir and is_recall_marked(item.file)
+                            local formatted = {
+                                { marked and " " or "  ", marked and "@comment.note" or nil },
+                            }
+                            vim.list_extend(formatted, require("snacks").picker.format.file(item, picker))
+                            return formatted
+                        end,
+                        actions = {
+                            toggle_recall_mark = toggle_explorer_mark,
+                        },
+                        jump = {
+                            close = true,
+                        },
+                        layout = {
+                            preset = "telescope",
+                            preview = true,
+                        },
+                        win = {
+                            list = {
+                                keys = {
+                                    ["<leader>ma"] = {
+                                        "toggle_recall_mark",
+                                        desc = "Toggle Recall mark",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    files = {
+                        matcher = {
+                            frecency = true,
+                            sort_empty = true,
+                        },
+                        format = function(item, picker)
+                            local formatted = require("snacks").picker.format.file(item, picker)
+                            local recent = (item.frecency or 0) >= 0.5
+                            table.insert(formatted, 1, {
+                                recent and "󰋚 " or "  ",
+                                recent and "SnacksPickerSpecial" or nil,
+                            })
+                            return formatted
+                        end,
+                        layout = {
+                            preset = function()
+                                return vim.o.columns >= 120 and "telescope" or "telescope_no_preview"
+                            end,
+                        },
+                    },
+                },
                 matchers = {
                     frecency = true,
                     cwd_bonus = false,
@@ -91,6 +267,18 @@ return {
                             },
                         },
                     },
+                    telescope_no_preview = {
+                        preview = false,
+                        layout = {
+                            box = "vertical",
+                            backdrop = false,
+                            width = 0.95,
+                            height = 0.95,
+                            border = "none",
+                            { win = "input", height = 1, border = "rounded", title = "{title} {live} {flags}", title_pos = "center" },
+                            { win = "list", title = " Results ", title_pos = "center", border = "rounded" },
+                        },
+                    },
                     ivy = {
                         layout = {
                             box = "vertical",
@@ -142,7 +330,7 @@ return {
             { "<leader>ls", function() require("snacks").picker.lsp_symbols() end, desc = "󰈬 LSP Symbols" },
             { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols" },
             { "<leader>lh", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch C/C++ source/header" },
-            { "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, desc = "LSP format" },
+            { "<leader>lf", function() require("flow.format").format() end, desc = "Format buffer" },
             { "<leader>lca", function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
             { "<leader>lcr", function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },
             { "<leader>ld", function() require("snacks").picker.diagnostics_buffer() end, desc = "󰈬 LSP Diagnostics (buffer)" },
@@ -183,7 +371,7 @@ return {
         config = function()
             local recall = require("recall")
             local utils = require("recall.utils")
-            local snacks = require("recall.snacks")
+            local marking = require("recall.marking")
 
             recall.setup({
                 sign = "",
@@ -198,6 +386,92 @@ return {
                     },
                 },
             })
+
+            local function marks_picker()
+                local marks = utils.sorted_global_marks()
+                local actions = {}
+                local jump_keys = {}
+
+                local function jump_to_mark(picker, mark)
+                    picker:close()
+                    vim.schedule(function()
+                        local file = mark.info.file
+                        if not file or file == "" then
+                            return
+                        end
+
+                        vim.cmd.edit(vim.fn.fnameescape(file))
+                        vim.api.nvim_win_set_cursor(0, {
+                            mark.info.pos[2],
+                            math.max(mark.info.pos[3] - 1, 0),
+                        })
+                    end)
+                end
+
+                for _, mark in ipairs(marks) do
+                    local current_mark = mark
+                    local action = "jump_mark_" .. current_mark.char
+                    actions[action] = function(picker)
+                        jump_to_mark(picker, current_mark)
+                    end
+                    jump_keys[current_mark.char] = {
+                        action,
+                        mode = { "n" },
+                        nowait = true,
+                        desc = "Jump to mark " .. current_mark.char,
+                    }
+                end
+
+                actions.delete_mark = function(picker, item)
+                    if not item then
+                        return
+                    end
+                    vim.cmd("delmarks " .. item.char)
+                    marking.on_mark_update()
+                    picker:find({ refresh = true })
+                end
+
+                local delete_key = {
+                    "delete_mark",
+                    mode = { "n" },
+                    desc = "Delete mark",
+                }
+                local list_keys = vim.tbl_extend("force", {}, jump_keys, { dd = delete_key })
+
+                require("snacks").picker.pick({
+                    title = "Global Marks",
+                    focus = "list",
+                    finder = function()
+                        local items = {}
+                        for _, mark in ipairs(utils.sorted_global_marks()) do
+                            items[#items + 1] = {
+                                char = mark.char,
+                                text = mark.char .. " " .. mark.info.file,
+                                pos = { mark.info.pos[2], mark.info.pos[3] },
+                                file = mark.info.file,
+                            }
+                        end
+                        return items
+                    end,
+                    format = function(item, picker)
+                        local formatted = {
+                            { ("[%s]"):format(item.char), "SnacksPickerLabel" },
+                            { " ", virtual = true },
+                        }
+                        vim.list_extend(formatted, require("snacks").picker.format.file(item, picker))
+                        return formatted
+                    end,
+                    actions = actions,
+                    on_show = function(picker)
+                        picker:focus("list")
+                        vim.cmd.stopinsert()
+                    end,
+                    win = {
+                        input = { keys = jump_keys },
+                        list = { keys = list_keys },
+                    },
+                })
+            end
 
             local function goto_nth(n)
                 local marks = utils.sorted_global_marks()
@@ -256,14 +530,14 @@ return {
             vim.keymap.set(
                 "n",
                 "<leader>ml",
-                snacks.pick,
+                marks_picker,
                 { silent = true, desc = " Mark List" }
             )
 
             vim.keymap.set(
                 "n",
                 "<leader>fm",
-                snacks.pick,
+                marks_picker,
                 { silent = true, desc = " Mark List" }
             )
 
