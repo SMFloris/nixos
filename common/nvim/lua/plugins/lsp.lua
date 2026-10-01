@@ -208,14 +208,14 @@ return {
             })
 
             -- Configure C3 LSP
-            local c3_lsp_cmd = find_lsp_executable('c3-lsp', {
-                'c3-lsp',
-                profile .. '/bin/c3-lsp',
-                '/nix/profile/bin/c3-lsp',
+            local c3_ls_cmd = find_lsp_executable('c3_ls', {
+                'c3_ls',
+                profile .. '/bin/c3_ls',
+                '/nix/profile/bin/c3_ls',
             })
-            vim.lsp.config('c3_lsp', {
-                cmd = { c3_lsp_cmd },
-                filetypes = { 'c3' },
+            vim.lsp.config('c3_ls', {
+                cmd = { c3_ls_cmd },
+                filetypes = { 'c3', 'c3i' },
                 root_markers = { 'project.json', '.git' },
                 capabilities = capabilities,
             })
@@ -273,13 +273,13 @@ return {
             vim.lsp.enable('lua_ls')
             vim.lsp.enable('phpantom_lsp')
             vim.lsp.enable('gopls')
-            vim.lsp.enable('c3_lsp')
+            vim.lsp.enable('c3_ls')
             vim.lsp.enable('yamlls')
             vim.lsp.enable('dockerls')
             vim.lsp.enable('helm_ls')
 
             vim.lsp.config('clangd', {
-                cmd = { 'clangd', '--query-driver=/nix/store/*/bin/g++', '--query-driver=/nix/store/*/bin/gcc'}
+                cmd = { 'clangd', '--query-driver=/nix/store/*/bin/clang*,/nix/store/*/bin/gcc,/nix/store/*/bin/g++' },
             })
             vim.lsp.enable('clangd')
             vim.lsp.enable('texlab')

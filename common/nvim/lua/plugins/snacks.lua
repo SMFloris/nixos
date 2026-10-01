@@ -218,7 +218,32 @@ return {
                         filename_first = false,
                         filename_only = false,
                         icon_width = 2,
-                        min_width = 1000,
+                        truncate = "left",
+                        min_width = 60,
+                    },
+                },
+                on_change = function(picker, item)
+                    if not (item and item.file and picker.layout and picker.layout.root:win_valid()) then
+                        return
+                    end
+
+                    local path = item.file
+                    if vim.startswith(path, "/") then
+                        path = vim.fs.relpath(picker:cwd() or vim.fn.getcwd(), path) or path
+                    end
+
+                    pcall(vim.api.nvim_win_set_config, picker.layout.root.win, {
+                        title = " " .. path .. " ",
+                        title_pos = "left",
+                    })
+                end,
+                win = {
+                    preview = {
+                        wo = {
+                            wrap = true,
+                            linebreak = true,
+                            breakindent = true,
+                        },
                     },
                 },
                 layout = {
@@ -252,7 +277,7 @@ return {
                             backdrop = false,
                             width = 0.95,
                             height = 0.95,
-                            border = "none",
+                            border = "rounded",
                             {
                                 box = "vertical",
                                 { win = "input", height = 1,          border = "rounded",   title = "{title} {live} {flags}", title_pos = "center" },
