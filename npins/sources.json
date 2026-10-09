@@ -19,19 +19,6 @@
       "artifact": "nixexprs.tar.xz",
       "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1068089.c043004d1c69/nixexprs.tar.xz",
       "hash": "sha256-PRK1fSEiAcO29DkUoOlsVLGYRK3h1YKVr+qQJB0VcYQ="
-    },
-    "openlogi": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "AprilNEA",
-        "repo": "OpenLogi"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "bc21025d7a96faa8bb0f8dfeb880664a2daa3c31",
-      "url": "https://github.com/AprilNEA/OpenLogi/archive/bc21025d7a96faa8bb0f8dfeb880664a2daa3c31.tar.gz",
-      "hash": "sha256-3t+0VhDUeEt8QMgSpiOCjVOvZb/BgPowpb28kEUxYnU="
     }
   },
   "version": 8

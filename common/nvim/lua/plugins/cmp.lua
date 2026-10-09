@@ -55,6 +55,15 @@ return {
             mapping = cmp.mapping.preset.insert({
                 ['<C-b>'] = cmp.mapping.scroll_docs(-4),
                 ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                ['<C-n>'] = cmp.mapping(function(fallback)
+                    if vim.bo.filetype == "conduit_ask" then
+                        fallback()
+                    elseif cmp.visible() then
+                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                    else
+                        cmp.complete()
+                    end
+                end, { "i" }),
                 ['<C-Space>'] = cmp.mapping.complete(),
                 ['<C-e>'] = cmp.mapping.abort(),
                 ['<Tab>'] = cmp.mapping(tab, { "i", "s" }),

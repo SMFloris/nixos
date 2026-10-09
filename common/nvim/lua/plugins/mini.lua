@@ -4,7 +4,22 @@ return {
         "echasnovski/mini.nvim",
         version = false,
         config = function()
+            require("mini.ai").setup({})
             require("mini.bracketed").setup({})
+            require("mini.surround").setup({
+                mappings = {
+                    add = "ys",
+                    delete = "ds",
+                    replace = "cs",
+                    find = "",
+                    find_left = "",
+                    highlight = "",
+                    suffix_last = "",
+                    suffix_next = "",
+                },
+                search_method = "cover_or_next",
+            })
+            vim.keymap.set("n", "yss", "ys_", { remap = true, desc = "Surround line" })
 
             local jump2d = require("mini.jump2d")
 
@@ -12,48 +27,46 @@ return {
                 mappings = {
                     start_jumping = "",
                 },
-                allowed_windows = {
-                    current = true,
-                    not_current = false,
-                },
             })
 
-            local function directional_spotter(forward)
-                return function(line_num, args)
-                    local spots = jump2d.default_spotter(line_num, args)
-                    local cursor = vim.api.nvim_win_get_cursor(args.win_id)
-
-                    if line_num ~= cursor[1] then
-                        return spots
-                    end
-
-                    local cursor_column = cursor[2] + 1
-                    return vim.tbl_filter(function(column)
-                        if forward then
-                            return column > cursor_column
-                        end
-                        return column < cursor_column
-                    end, spots)
+            local function start_jump(backward)
+                local ok, char = pcall(vim.fn.getcharstr)
+                if not ok or char == "\027" or char == "\003" then
+                    return
                 end
-            end
 
-            local function start_jump(forward)
+                local cursor = vim.api.nvim_win_get_cursor(0)
+                local spotter = jump2d.gen_spotter.pattern(vim.pesc(char))
+
                 jump2d.start({
-                    spotter = directional_spotter(forward),
+                    spotter = function(line_num, args)
+                        local spots = spotter(line_num, args)
+                        if line_num ~= cursor[1] then
+                            return spots
+                        end
+                        return vim.tbl_filter(function(col)
+                            if backward then
+                                return col < cursor[2] + 1
+                            end
+                            return col > cursor[2] + 1
+                        end, spots)
+                    end,
                     allowed_lines = {
-                        cursor_before = not forward,
-                        cursor_at = true,
-                        cursor_after = forward,
+                        blank = false,
+                        fold = false,
+                        cursor_before = backward,
+                        cursor_after = not backward,
                     },
                     allowed_windows = {
-                        current = true,
                         not_current = false,
                     },
                 })
             end
 
-            vim.keymap.set("n", "s", function() start_jump(true) end, { desc = "Jump forward" })
-            vim.keymap.set("n", "S", function() start_jump(false) end, { desc = "Jump backward" })
+            vim.keymap.set({ "n", "x", "o" }, "s", function() start_jump(false) end,
+                { desc = "Jump forward to character" })
+            vim.keymap.set({ "n", "x", "o" }, "S", function() start_jump(true) end,
+                { desc = "Jump backward to character" })
 
             local function goto_edge_mark(first)
                 local marks = require("recall.utils").sorted_global_marks()

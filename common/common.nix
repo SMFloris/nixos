@@ -6,15 +6,12 @@
 }: let
   sources = import ../npins;
   nixpkgs-unstable = import sources.nixpkgs-unstable {};
-  openlogi = builtins.getFlake "path:${builtins.unsafeDiscardStringContext (toString sources.openlogi)}";
 in {
   imports = [
     ./wm/i3/wm.nix
     ./wm/cosmic/wm.nix
-    openlogi.nixosModules.default
+    ./services/mx4ctl.nix
   ];
-
-  programs.openlogi.enable = true;
 
   programs.firefox = {
     enable = true;

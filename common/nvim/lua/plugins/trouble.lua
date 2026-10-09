@@ -1,3 +1,12 @@
+local function move_result(direction)
+    local trouble = require("trouble")
+    if trouble.is_open() then
+        trouble[direction]({ jump = true, focus = false })
+    else
+        vim.notify("Open a Trouble list first", vim.log.levels.INFO)
+    end
+end
+
 return {
     {
         "folke/trouble.nvim",
@@ -136,6 +145,21 @@ return {
             },
         },
         keys = {
+            {
+                "<leader>xs",
+                "<cmd>Trouble symbols toggle<cr>",
+                desc = "Trouble Symbol Sidebar",
+            },
+            {
+                "[x",
+                function() move_result("prev") end,
+                desc = "Previous Trouble result",
+            },
+            {
+                "]x",
+                function() move_result("next") end,
+                desc = "Next Trouble result",
+            },
             {
                 "<leader>xx",
                 mode = "n",

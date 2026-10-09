@@ -6,6 +6,20 @@
   ...
 }:
 
+let
+  mx4ctl = pkgs.callPackage ./packages/mx4ctl.nix { };
+  mx4ctlServicePath = lib.makeBinPath (with pkgs; [
+    alacritty
+    alsa-utils
+    brightnessctl
+    dbus
+    libnotify
+    systemd
+    wireplumber
+    xdotool
+    xprop
+  ]);
+in
 {
   imports = [
     ./wm/i3/i3.nix
@@ -18,6 +32,10 @@
 
   xdg = {
     enable = true;
+    configFile."mx4ctl/config.ini" = {
+      source = ./services/mx4ctl.ini;
+      force = true;
+    };
   };
 
   programs.neonix = {
@@ -35,6 +53,20 @@
     nvimPackage = nixpkgs-unstable.neovim-unwrapped;
   };
 
+  systemd.user.services.mx4ctl = {
+    Unit = {
+      Description = "MX Master 4 haptics and extras daemon";
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      Environment = "PATH=${mx4ctlServicePath}";
+      ExecStart = "${mx4ctl}/bin/mx4ctl daemon";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "teams-for-linux"
@@ -45,6 +77,7 @@
 
   home.packages = with pkgs;
     [
+      mx4ctl
       tldr
       # neovim
       ripgrep

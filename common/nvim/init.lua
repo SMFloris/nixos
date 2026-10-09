@@ -31,7 +31,7 @@ require("lazy").setup({
     rocks = { enabled = false },
 })
 require("flow")
-vim.cmd("colorscheme tokyonight")
+vim.cmd("colorscheme onedark")
 vim.cmd('hi IlluminatedWordText guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordRead guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordWrite guibg=none gui=underline')

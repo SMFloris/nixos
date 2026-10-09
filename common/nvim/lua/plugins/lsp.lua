@@ -5,6 +5,7 @@ return {
             "hrsh7th/cmp-nvim-lsp",
         },
         config = function()
+            require("flow.lsp-ui").setup()
             vim.api.nvim_create_user_command("LspInfo", function()
                 vim.cmd("checkhealth lsp")
             end, {

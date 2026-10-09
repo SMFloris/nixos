@@ -2,6 +2,7 @@ ${pkgs.texlab}
 ${pkgs.tree-sitter}
 ${pkgs.phpantom}
 ${pkgs.gopls}
+${pkgs.black}
 ${pkgs.c3-lsp}
 ${pkgs.nil}
 ${pkgs.alejandra}

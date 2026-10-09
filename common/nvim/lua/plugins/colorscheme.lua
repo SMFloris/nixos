@@ -1,4 +1,16 @@
 return {
+    {
+        "navarasu/onedark.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {
+            style = "dark",
+            transparent = true,
+            highlights = {
+                SnacksPickerSearch = { fg = "$fg", bg = "$bg3", fmt = "bold" },
+            },
+        },
+    },
     -- NOTE: Rose pine
     {
         "rose-pine/neovim",
@@ -72,9 +84,11 @@ return {
             })
         end,
     },
-    -- NOTE: Kanagwa
+    -- NOTE: Kanagawa
     {
         "rebelot/kanagawa.nvim",
+        lazy = false,
+        priority = 1000,
         config = function()
             require('kanagawa').setup({
                 compile = false,  -- enable compiling the colorscheme
@@ -127,9 +141,10 @@ return {
                         TelescopePreviewBorder = { fg = theme.ui.special },
                     }
                 end,
-                theme = "wave",    -- Load "wave" theme when 'background' option is not set
+                theme = "wave",    -- Load Wave by default
                 background = {     -- map the value of 'background' option to a theme
-                    dark = "wave", -- try "dragon" !
+                    dark = "wave",
+                    light = "lotus",
                 },
             })
         end
@@ -254,4 +269,3 @@ return {
         end,
     },
 }
-

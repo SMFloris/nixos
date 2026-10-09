@@ -74,6 +74,36 @@ local function is_recall_marked(path)
     return require("flow.marks").is_marked(path)
 end
 
+local function buffer_diagnostics()
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+    require("snacks").picker.diagnostics_buffer({
+        on_show = function(picker)
+            require("flow.diagnostic-format").prepare(picker)
+            local function select_nearest()
+                if picker.closed then
+                    return
+                end
+                local nearest, distance = nil, math.huge
+                for item, index in picker:iter() do
+                    local delta = math.abs(item.pos[1] - line)
+                    if delta < distance then
+                        nearest, distance = index, delta
+                    end
+                end
+                if nearest then
+                    picker.list:view(nearest)
+                end
+            end
+
+            if picker.matcher.task:running() then
+                picker.matcher.task:on("done", vim.schedule_wrap(select_nearest))
+            else
+                select_nearest()
+            end
+        end,
+    })
+end
+
 local function toggle_explorer_mark(picker, item)
     if not item or item.dir then
         vim.notify("Recall marks can only be set on files", vim.log.levels.INFO)
@@ -157,6 +187,52 @@ return {
                 enabled = true,
                 config = show_picker_hints,
                 sources = {
+                    lsp_references = {
+                        include_current = true,
+                        auto_confirm = false,
+                        formatters = {
+                            file = { min_width = 20 },
+                        },
+                        layout = {
+                            preset = function()
+                                return vim.o.columns >= 120 and "telescope" or "telescope_no_preview"
+                            end,
+                        },
+                    },
+                    lsp_symbols = {
+                        tree = true,
+                        keep_parents = true,
+                        layout = {
+                            preset = "telescope_no_preview",
+                            preview = false,
+                        },
+                        format = function(item, picker)
+                            return require("flow.symbols").format(item, picker)
+                        end,
+                    },
+                    diagnostics_buffer = {
+                        format = function(item, picker)
+                            return require("flow.diagnostic-format").format(item, picker)
+                        end,
+                        icons = { files = { enabled = false } },
+                        formatters = {
+                            file = { min_width = 0 },
+                            severity = { icons = true, level = false, pos = "left" },
+                        },
+                        layout = {
+                            preset = "telescope_no_preview",
+                            preview = false,
+                        },
+                        win = {
+                            list = {
+                                wo = {
+                                    wrap = true,
+                                    linebreak = true,
+                                    breakindent = true,
+                                },
+                            },
+                        },
+                    },
                     explorer = {
                         on_show = reveal_marked_files,
                         format = function(item, picker)
@@ -352,23 +428,25 @@ return {
             { "<leader>fw", function() require("snacks").picker.grep() end, desc = "󰱼 Grep Word" },
             { "<leader>fc", function() require("snacks").picker.grep_word() end, desc = "󰈬 Search Visual Selection or Word", mode = { "n", "x" } },
             { "<leader>fk", function() require("snacks").picker.keymaps({ layout = "ivy" }) end, desc = " Search Keymaps (Snacks Picker)" },
-            { "<leader>ls", function() require("snacks").picker.lsp_symbols() end, desc = "󰈬 LSP Symbols" },
+            { "<leader>ls", function() require("flow.symbols").open() end, desc = "󰈬 LSP Symbols" },
             { "<leader>lw", function() require("snacks").picker.lsp_workspace_symbols() end, desc = "󰈬 LSP Workspace Symbols" },
             { "<leader>lh", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch C/C++ source/header" },
             { "<leader>lf", function() require("flow.format").format() end, desc = "Format buffer" },
             { "<leader>lca", function() vim.lsp.buf.code_action() end, desc = "󰈬 LSP Code Actions" },
             { "<leader>lcr", function() vim.lsp.buf.rename() end, desc = "󰈬 LSP Rename" },
-            { "<leader>ld", function() require("snacks").picker.diagnostics_buffer() end, desc = "󰈬 LSP Diagnostics (buffer)" },
+            { "<leader>ld", buffer_diagnostics, desc = "󰈬 LSP Diagnostics (buffer)" },
             { "<leader>lD", function() require("snacks").picker.diagnostics() end, desc = "󰈬 LSP Workspace Diagnostics" },
 
             -- lsp
+            { "gO", function() require("flow.symbols").open() end, desc = "LSP Symbols" },
             { "gd", function() require("snacks").picker.lsp_definitions() end, desc = "Goto Definition" },
             { "gD", function() require("snacks").picker.lsp_declarations() end, desc = "Goto Declaration" },
-            { "gr", function() require("snacks").picker.lsp_references() end, nowait = true, desc = "References" },
+            { "gp", function() require("flow.parent-symbol").jump() end, desc = "Parent LSP symbol" },
+            { "gr", function() require("flow.references").open() end, nowait = true, desc = "References" },
             { "gI", function() require("snacks").picker.lsp_implementations() end, desc = "Goto Implementation" },
             { "gy", function() require("snacks").picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
-            { "gai", function() require("snacks").picker.lsp_incoming_calls() end, desc = "C[a]lls Incoming" },
-            { "gao", function() require("snacks").picker.lsp_outgoing_calls() end, desc = "C[a]lls Outgoing" },
+            { "gai", function() require("flow.calls").open(true) end, desc = "C[a]lls Incoming" },
+            { "gao", function() require("flow.calls").open(false) end, desc = "C[a]lls Outgoing" },
 
             -- Git Stuff
             { "<leader>gg", function() require("snacks").lazygit() end, desc = " Lazygit" },

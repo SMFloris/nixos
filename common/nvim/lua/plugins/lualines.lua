@@ -57,7 +57,7 @@ return {
         require("lualine").setup({
             options = {
                 globalstatus = true,
-                theme = "tokyonight",
+                theme = "onedark",
             },
             sections = {
                 lualine_a = { "mode" },
