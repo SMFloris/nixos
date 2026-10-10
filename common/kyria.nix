@@ -4,7 +4,7 @@ let
   source = args.kyriaSource or (builtins.fetchGit {
     url = "https://github.com/SMFloris/vial-kyria.git";
     ref = "master";
-    rev = "3806d25ba343218007f1b4ec13824d9586f08449";
+    rev = "1c04eb0b2af8459ded5cead612021a5e9cfc1337";
   });
 
   key = color: { inherit color; brightness = 255; };
