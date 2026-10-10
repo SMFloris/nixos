@@ -5,7 +5,7 @@ let
   source = args.kyriaSource or (builtins.fetchGit {
     url = "https://github.com/SMFloris/vial-kyria.git";
     ref = "master";
-    rev = "7395edfbc32dd6cb42a991fef1d23927019b9996";
+    rev = "23adecf3a300012868f945e52bc2963427a81528";
   });
 in {
   imports = [ "${source}/kyria/nix/module.nix" ];
@@ -14,6 +14,11 @@ in {
     enable = true;
     user = "flow";
     pollIntervalMs = 50;
+    applet = {
+      enable = true;
+      installToPanel = true;
+      panel = "Panel";
+    };
     layers = {
       "0" = {
         name = "Typing";
