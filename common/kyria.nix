@@ -1,12 +1,25 @@
-args@{ ... }:
+args@{ lib, ... }:
 let
-  # Pin the keyboard firmware/service repository. specialArgs.kyriaSource can
-  # supply a local Git snapshot for development and pre-push validation.
+  # Use a local Git snapshot for development, or the tested pushed revision.
   source = args.kyriaSource or (builtins.fetchGit {
     url = "https://github.com/SMFloris/vial-kyria.git";
     ref = "master";
-    rev = "0a21a2f301a1b407dd8e3062da493871c116a048";
+    rev = "66cb0bac607670ac20fdb3587e0e4d3dae8698f7";
   });
+
+  key = color: { inherit color; brightness = 255; };
+  pair = keys: color: lib.genAttrs keys (_: key color);
+  numbers = pair [ "G" "H" ] "#92dce5"
+    // pair [ "F" "J" ] "#af1b3f"
+    // pair [ "D" "K" ] "#ead637"
+    // pair [ "S" "L" ] "#473144"
+    // pair [ "A" "Semicolon" ] "#2b590f";
+  directions = keys: pair keys "#4fea55";
+  layer = name: color: keys: {
+    inherit name;
+    underglow = { inherit color; brightness = 128; };
+    keys = { "*" = { inherit color; brightness = 8; }; } // keys;
+  };
 in {
   imports = [ "${source}/kyria/nix/module.nix" ];
 
@@ -19,51 +32,18 @@ in {
       installToPanel = true;
       panel = "Panel";
     };
+    # Lighting and layer names are controlled here; firmware only displays frames.
     layers = {
-      "0" = {
-        name = "Typing";
-        underglow = { color = "#005aff"; brightness = 255; };
-      };
-      "1" = {
-        name = "Numbers";
-        underglow = { color = "#ff9600"; brightness = 255; };
-      };
-      "2" = {
-        name = "COSMIC";
-        underglow = { color = "#b400ff"; brightness = 255; };
-        keys = {
-          N = { color = "#4fea55"; brightness = 255; };
-          M = { color = "#4fea55"; brightness = 255; };
-          Comma = { color = "#4fea55"; brightness = 255; };
-          Period = { color = "#4fea55"; brightness = 255; };
-        };
-      };
-      "3" = {
-        name = "Navigation";
-        underglow = { color = "#00ff3c"; brightness = 255; };
-        keys = {
-          H = { color = "#4fea55"; brightness = 255; };
-          J = { color = "#4fea55"; brightness = 255; };
-          K = { color = "#4fea55"; brightness = 255; };
-          L = { color = "#4fea55"; brightness = 255; };
-        };
-      };
-      "4" = {
-        name = "Editor";
-        underglow = { color = "#00ffff"; brightness = 255; };
-      };
-      "5" = {
-        name = "Function";
-        underglow = { color = "#ff0000"; brightness = 255; };
-      };
-      "6" = {
-        name = "Settings";
-        underglow = { color = "#ffffff"; brightness = 255; };
-      };
-      "7" = {
-        name = "Spare";
-        underglow = { color = "#ff0078"; brightness = 255; };
-      };
+      "0" = layer "Typing" "#005aff" { };
+      "1" = layer "Numbers" "#ff9600" numbers;
+      "2" = layer "COSMIC" "#b400ff"
+        (numbers // directions [ "N" "M" "Comma" "Period" ]);
+      "3" = layer "Navigation" "#00ff3c"
+        (directions [ "H" "J" "K" "L" ]);
+      "4" = layer "Editor" "#00ffff" { };
+      "5" = layer "Function" "#ff0000" { };
+      "6" = layer "Settings" "#ffffff" { };
+      "7" = layer "Spare" "#ff0078" { };
     };
   };
 }
