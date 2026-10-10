@@ -5,7 +5,7 @@ let
   source = args.kyriaSource or (builtins.fetchGit {
     url = "https://github.com/SMFloris/vial-kyria.git";
     ref = "master";
-    rev = "bdb7ab6bc532cb5bc7c8b26904fed2d36c4d8da6";
+    rev = "eac7e70a6e9f94f0440d430b2064654b8113552c";
   });
 in {
   imports = [ "${source}/kyria/nix/module.nix" ];
